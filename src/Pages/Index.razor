@@ -1,0 +1,22 @@
+﻿@page "/"
+
+@if (WizardVisibility)
+{
+    <NewOrOpenWizard />
+}
+else
+{
+    <button class="btn btn-primary" @onclick="IncrementCount">Click me</button>
+}
+
+
+@code {
+
+    private bool WizardVisibility = true;
+    private int currentCount = 0;
+
+    private void IncrementCount()
+    {
+        currentCount++;
+    }
+}
