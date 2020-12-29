@@ -2,14 +2,18 @@
 <section>
     <aside>
         <h3>Create a new CommonSecrets file</h3>
-        <button>New...</button>
+        <button @onclick="OnNewClickCallback">New...</button>
     </aside>
     <aside>
         <h3>Open an existing CommonSecrets file</h3>
-        <button>Open...</button>
+        <button @onclick="OnOpenClickCallback">Open...</button>
     </aside>
 </section>
 
 @code {
+    [Parameter]
+    public EventCallback<MouseEventArgs> OnNewClickCallback { get; set; }
 
+    [Parameter]
+    public EventCallback<MouseEventArgs> OnOpenClickCallback { get; set; }
 }

@@ -1,22 +1,49 @@
-﻿@page "/"
+@page "/"
 
-@if (WizardVisibility)
+@if (visibleElement == VisibleElement.NewAndOpenWizard)
 {
-    <NewOrOpenWizard />
+    <NewOrOpenWizard OnNewClickCallback="@CreateNewContainer" OnOpenClickCallback="@OpenExistingContainer" />
+}
+else if (visibleElement == VisibleElement.CreateNewCommonSecretsContainer)
+{
+    <CreateNewCommonSecretsContainer OnCancelClickCallback="@CancelNewCommonSecretsContainerCreation" OnCreateClickCallback="@CreateNewCommonSecretsContainerCreation" />
 }
 else
 {
-    <button class="btn btn-primary" @onclick="IncrementCount">Click me</button>
+    <p>Should not be visible!</p>
 }
 
 
 @code {
 
-    private bool WizardVisibility = true;
-    private int currentCount = 0;
-
-    private void IncrementCount()
+    public enum VisibleElement
     {
-        currentCount++;
+        NewAndOpenWizard,
+        CreateNewCommonSecretsContainer,
+        OpenExistingCommonSecretsContainer,
+    }
+
+    private VisibleElement visibleElement = VisibleElement.NewAndOpenWizard;
+
+    // Wizard
+    private void CreateNewContainer(MouseEventArgs e)
+    {
+        visibleElement = VisibleElement.CreateNewCommonSecretsContainer;
+    }
+
+    private void OpenExistingContainer(MouseEventArgs e)
+    {
+        visibleElement = VisibleElement.OpenExistingCommonSecretsContainer;
+    }
+
+    // Create new common secrets container
+    private void CancelNewCommonSecretsContainerCreation(MouseEventArgs e)
+    {
+        visibleElement = VisibleElement.NewAndOpenWizard;
+    }
+
+    private void CreateNewCommonSecretsContainerCreation(MouseEventArgs e)
+    {
+
     }
 }
