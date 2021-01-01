@@ -8,6 +8,10 @@ else if (visibleElement == VisibleElement.CreateNewCommonSecretsContainer)
 {
     <CreateNewCommonSecretsContainer OnCancelClickCallback="@CancelNewCommonSecretsContainerCreation" OnCreateClickCallback="@CreateNewCommonSecretsContainerCreation" />
 }
+else if (visibleElement == VisibleElement.ShowLoginInformations)
+{
+
+}
 else
 {
     <p>Should not be visible!</p>
@@ -21,6 +25,7 @@ else
         NewAndOpenWizard,
         CreateNewCommonSecretsContainer,
         OpenExistingCommonSecretsContainer,
+        ShowLoginInformations,
     }
 
     private VisibleElement visibleElement = VisibleElement.NewAndOpenWizard;
