@@ -1,5 +1,6 @@
 using System;
 using System.ComponentModel.DataAnnotations;
+//using System.Security.Cryptography;
 
 public class KeyDerivationFunctionData
 {
@@ -17,5 +18,21 @@ public class KeyDerivationFunctionData
 	public int Iterations { get; set; } = 100_000;
 
 	[Required]
-	public string Identifier { get; set; } = "Master";
+	public string Identifier { get; set; } = "Primary";
+
+	public KeyDerivationFunctionData()
+	{
+		this.GenerateSalt();
+	}
+
+	private void GenerateSalt()
+	{
+		// TODO: Remove unsafe way when doing actual release
+		Random random = new Random();
+		random.NextBytes(this.salt);
+		/*using (RNGCryptoServiceProvider rng = new RNGCryptoServiceProvider())
+		{
+			rng.GetBytes(this.salt);
+		}*/
+	}
 }
