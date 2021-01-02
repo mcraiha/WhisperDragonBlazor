@@ -2,53 +2,94 @@
 
 @if (visibleElement == VisibleElement.NewAndOpenWizard)
 {
-    <NewOrOpenWizard OnNewClickCallback="@CreateNewContainer" OnOpenClickCallback="@OpenExistingContainer" />
+	<NewOrOpenWizard OnNewClickCallback="@CreateNewContainer" OnOpenClickCallback="@OpenExistingContainer" />
 }
 else if (visibleElement == VisibleElement.CreateNewCommonSecretsContainer)
 {
-    <CreateNewCommonSecretsContainer OnCancelClickCallback="@CancelNewCommonSecretsContainerCreation" OnCreateClickCallback="@CreateNewCommonSecretsContainerCreation" />
+	<CreateNewCommonSecretsContainer OnCancelClickCallback="@CancelNewCommonSecretsContainerCreation" OnCreateClickCallback="@CreateNewCommonSecretsContainerCreation" />
 }
 else if (visibleElement == VisibleElement.ShowLoginInformations)
 {
-
+	<CommonSecretsTopNav />
+	<ShowLoginInformations Logins="@logins" />
+}
+else if (visibleElement == VisibleElement.ShowNotes)
+{
+	<CommonSecretsTopNav />
+}
+else if (visibleElement == VisibleElement.ShowFiles)
+{
+	<CommonSecretsTopNav />
 }
 else
 {
-    <p>Should not be visible!</p>
+	<p>Should not be visible!</p>
 }
 
 
 @code {
 
-    public enum VisibleElement
-    {
-        NewAndOpenWizard,
-        CreateNewCommonSecretsContainer,
-        OpenExistingCommonSecretsContainer,
-        ShowLoginInformations,
-    }
+	public enum VisibleElement
+	{
+		NewAndOpenWizard,
+		CreateNewCommonSecretsContainer,
+		OpenExistingCommonSecretsContainer,
+		ShowLoginInformations,
+		ShowNotes,
+		ShowFiles,
+	}
 
-    private VisibleElement visibleElement = VisibleElement.NewAndOpenWizard;
+	private VisibleElement visibleElement = VisibleElement.NewAndOpenWizard;
 
-    // Wizard
-    private void CreateNewContainer(MouseEventArgs e)
-    {
-        visibleElement = VisibleElement.CreateNewCommonSecretsContainer;
-    }
+	private List<LoginSimplified> logins = new List<LoginSimplified>();
 
-    private void OpenExistingContainer(MouseEventArgs e)
-    {
-        visibleElement = VisibleElement.OpenExistingCommonSecretsContainer;
-    }
+	// Wizard
+	private void CreateNewContainer(MouseEventArgs e)
+	{
+		visibleElement = VisibleElement.CreateNewCommonSecretsContainer;
+	}
 
-    // Create new common secrets container
-    private void CancelNewCommonSecretsContainerCreation(MouseEventArgs e)
-    {
-        visibleElement = VisibleElement.NewAndOpenWizard;
-    }
+	private void OpenExistingContainer(MouseEventArgs e)
+	{
+		//visibleElement = VisibleElement.OpenExistingCommonSecretsContainer;
 
-    private void CreateNewCommonSecretsContainerCreation(MouseEventArgs e)
-    {
+		logins = new List<LoginSimplified>() 
+		{
+			new LoginSimplified() 
+			{
+				IsSecure = true,
+				Title = "Fake service",
+				URL = "https://fakeservice.com",
+				Email = "sample@email.com",
+				Username = "Dragon",
+				Password = "gwWTY#¤&%36",
+				Category = "Samples",
+				Tags = "Samples Demo",
+			},
+			new LoginSimplified() 
+			{
+				IsSecure = false,
+				Title = "Fake mail",
+				URL = "https://fakemail.com",
+				Email = "sample@email.com",
+				Username = "Dragon",
+				Password = "Si0bSww5bYeKp7Rs",
+				Category = "Samples",
+				Tags = "Samples Demo",
+			},
+		};
 
-    }
+		visibleElement = VisibleElement.ShowLoginInformations;
+	}
+
+	// Create new common secrets container
+	private void CancelNewCommonSecretsContainerCreation(MouseEventArgs e)
+	{
+		visibleElement = VisibleElement.NewAndOpenWizard;
+	}
+
+	private void CreateNewCommonSecretsContainerCreation(MouseEventArgs e)
+	{
+
+	}
 }

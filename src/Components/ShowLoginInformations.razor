@@ -1,0 +1,78 @@
+
+<table id="logins">
+	<thead>
+		<tr>
+			<th>
+				Secure
+			</th>
+			<th>
+				Title
+			</th>
+			<th>
+				Address / URL
+			</th>
+			<th>
+				Email
+			</th>
+			<th>
+				Username
+			</th>
+			<th>
+				Password
+			</th>
+			<th>
+				Category
+			</th>
+			<th>
+				Tags
+			</th>
+		</tr>
+	</thead>
+
+	<tbody>
+		@foreach (var item in Logins)
+        {
+			<tr>
+				<th>
+					@if (item.IsSecure == true)
+					{
+						@secureIcon
+					}
+					else
+					{
+						@unsecureIcon
+					}
+				</th>
+				<th>
+					@item.Title
+				</th>
+				<th>
+					@item.URL
+				</th>
+				<th>
+					@item.Email
+				</th>
+				<th>
+					@item.Username
+				</th>
+				<th>
+					@item.Password
+				</th>
+				<th>
+					@item.Category
+				</th>
+				<th>
+					@item.Tags
+				</th>
+			</tr>
+        }
+	</tbody>
+</table>
+
+@code {
+    [Parameter]
+    public IReadOnlyList<LoginSimplified> Logins { get; set; }
+
+	private static readonly string secureIcon = "🔐";
+	private static readonly string unsecureIcon = "❌";
+}
