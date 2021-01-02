@@ -4,7 +4,7 @@ using System.ComponentModel.DataAnnotations;
 public class CreateNewCommonSecretsContainerData
 {
 	private string password = "";
-	[Required]
+	[Required, MinLength(1)]
 	public string Password 
 	{ 
 		get 

@@ -17,7 +17,7 @@ public class KeyDerivationFunctionData
 	[Range(1, 100_000_000, ErrorMessage = "Iterations Range invalid (1 - 100 000 000).")]
 	public int Iterations { get; set; } = 100_000;
 
-	[Required]
+	[Required, MinLength(1)]
 	public string Identifier { get; set; } = "Primary";
 
 	public KeyDerivationFunctionData()
