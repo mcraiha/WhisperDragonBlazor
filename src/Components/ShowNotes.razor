@@ -1,0 +1,47 @@
+<table id="notes">
+	<thead>
+		<tr>
+			<th>
+				Secure
+			</th>
+			<th>
+				Title
+			</th>
+			<th>
+				Text
+			</th>
+		</tr>
+	</thead>
+
+	<tbody>
+		@foreach (var item in Notes)
+        {
+			<tr>
+				<th>
+					@if (item.IsSecure == true)
+					{
+						@secureIcon
+					}
+					else
+					{
+						@unsecureIcon
+					}
+				</th>
+				<th>
+					@item.Title
+				</th>
+				<th>
+					@item.Text
+				</th>
+			</tr>
+        }
+	</tbody>
+</table>
+<button title="Add note">+ Add</button>
+@code {
+    [Parameter]
+    public IReadOnlyList<NoteSimplified> Notes { get; set; }
+
+	private static readonly string secureIcon = "🔐";
+	private static readonly string unsecureIcon = "❌";
+}

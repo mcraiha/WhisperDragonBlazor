@@ -16,6 +16,7 @@ else if (visibleElement == VisibleElement.ShowLoginInformations)
 else if (visibleElement == VisibleElement.ShowNotes)
 {
 	<CommonSecretsTopNav OnLoginsClickCallback="@TopNavShowLoginInformations" OnNotesClickCallback="@TopNavShowNotes" OnFilesClickCallback="@TopNavShowFiles" OnContactsClickCallback="@TopNavShowContacts" OnPaymentCardsClickCallback="@TopNavShowPaymentCards" />
+	<ShowNotes Notes="@notes" />
 }
 else if (visibleElement == VisibleElement.ShowFiles)
 {
@@ -53,6 +54,8 @@ else
 
 	private List<LoginSimplified> logins = new List<LoginSimplified>();
 
+	private List<NoteSimplified> notes = new List<NoteSimplified>();
+
 	// Wizard
 	private void CreateNewContainer(MouseEventArgs e)
 	{
@@ -87,6 +90,22 @@ else
 				Category = "Samples",
 				Tags = "Samples Demo",
 			},
+		};
+
+		notes = new List<NoteSimplified>()
+		{
+			new NoteSimplified()
+			{
+				IsSecure = true,
+				Title = "Shopping list",
+				Text = "Butter, milk, eggs, cucumber"
+			},
+			new NoteSimplified()
+			{
+				IsSecure = false,
+				Title = "TODO list",
+				Text = "Call elevator repair person"
+			}
 		};
 
 		visibleElement = VisibleElement.ShowLoginInformations;
