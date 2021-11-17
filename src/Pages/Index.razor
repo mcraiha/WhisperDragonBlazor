@@ -10,16 +10,24 @@ else if (visibleElement == VisibleElement.CreateNewCommonSecretsContainer)
 }
 else if (visibleElement == VisibleElement.ShowLoginInformations)
 {
-	<CommonSecretsTopNav />
+	<CommonSecretsTopNav OnLoginsClickCallback="@TopNavShowLoginInformations" OnNotesClickCallback="@TopNavShowNotes" OnFilesClickCallback="@TopNavShowFiles" OnContactsClickCallback="@TopNavShowContacts" OnPaymentCardsClickCallback="@TopNavShowPaymentCards" />
 	<ShowLoginInformations Logins="@logins" />
 }
 else if (visibleElement == VisibleElement.ShowNotes)
 {
-	<CommonSecretsTopNav />
+	<CommonSecretsTopNav OnLoginsClickCallback="@TopNavShowLoginInformations" OnNotesClickCallback="@TopNavShowNotes" OnFilesClickCallback="@TopNavShowFiles" OnContactsClickCallback="@TopNavShowContacts" OnPaymentCardsClickCallback="@TopNavShowPaymentCards" />
 }
 else if (visibleElement == VisibleElement.ShowFiles)
 {
-	<CommonSecretsTopNav />
+	<CommonSecretsTopNav OnLoginsClickCallback="@TopNavShowLoginInformations" OnNotesClickCallback="@TopNavShowNotes" OnFilesClickCallback="@TopNavShowFiles" OnContactsClickCallback="@TopNavShowContacts" OnPaymentCardsClickCallback="@TopNavShowPaymentCards" />
+}
+else if (visibleElement == VisibleElement.ShowContacts)
+{
+	<CommonSecretsTopNav OnLoginsClickCallback="@TopNavShowLoginInformations" OnNotesClickCallback="@TopNavShowNotes" OnFilesClickCallback="@TopNavShowFiles" OnContactsClickCallback="@TopNavShowContacts" OnPaymentCardsClickCallback="@TopNavShowPaymentCards" />
+}
+else if (visibleElement == VisibleElement.ShowPaymentCards)
+{
+	<CommonSecretsTopNav OnLoginsClickCallback="@TopNavShowLoginInformations" OnNotesClickCallback="@TopNavShowNotes" OnFilesClickCallback="@TopNavShowFiles" OnContactsClickCallback="@TopNavShowContacts" OnPaymentCardsClickCallback="@TopNavShowPaymentCards" />
 }
 else
 {
@@ -37,6 +45,8 @@ else
 		ShowLoginInformations,
 		ShowNotes,
 		ShowFiles,
+		ShowContacts,
+		ShowPaymentCards,
 	}
 
 	private VisibleElement visibleElement = VisibleElement.NewAndOpenWizard;
@@ -91,5 +101,31 @@ else
 	private void CreateNewCommonSecretsContainerCreation(MouseEventArgs e)
 	{
 
+	}
+
+	// TopNav actions
+	private void TopNavShowLoginInformations(MouseEventArgs e)
+	{
+		visibleElement = VisibleElement.ShowLoginInformations;
+	}
+
+	private void TopNavShowNotes(MouseEventArgs e)
+	{
+		visibleElement = VisibleElement.ShowNotes;
+	}
+
+	private void TopNavShowFiles(MouseEventArgs e)
+	{
+		visibleElement = VisibleElement.ShowFiles;
+	}
+
+	private void TopNavShowContacts(MouseEventArgs e)
+	{
+		visibleElement = VisibleElement.ShowContacts;
+	}
+
+	private void TopNavShowPaymentCards(MouseEventArgs e)
+	{
+		visibleElement = VisibleElement.ShowPaymentCards;
 	}
 }
