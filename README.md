@@ -6,11 +6,11 @@ Not there yet
 
 ## Requirements (use)
 
-You have to have newish [internet browser](https://docs.microsoft.com/en-us/aspnet/core/blazor/supported-platforms?view=aspnetcore-5.0)
+You have to have newish [internet browser](https://docs.microsoft.com/en-us/aspnet/core/blazor/supported-platforms?view=aspnetcore-6.0)
 
 ## Requirements (develop)
 
-.NET 5 or newer
+.NET 6 or newer
 
 ## How to run / develop
 Move to [src](src) folder and the run
@@ -26,4 +26,4 @@ Move to [src](src) folder and the run
 dotnet publish -c Release
 ```
   
-and content should be in **bin\Release\net5.0\publish\wwwroot** folder.
+and content should be in **bin\Release\net6.0\publish\wwwroot** folder.
