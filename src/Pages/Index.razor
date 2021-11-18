@@ -21,6 +21,7 @@ else if (visibleElement == VisibleElement.ShowNotes)
 else if (visibleElement == VisibleElement.ShowFiles)
 {
 	<CommonSecretsTopNav OnLoginsClickCallback="@TopNavShowLoginInformations" OnNotesClickCallback="@TopNavShowNotes" OnFilesClickCallback="@TopNavShowFiles" OnContactsClickCallback="@TopNavShowContacts" OnPaymentCardsClickCallback="@TopNavShowPaymentCards" />
+	<ShowFiles Files="@files" />
 }
 else if (visibleElement == VisibleElement.ShowContacts)
 {
@@ -55,6 +56,8 @@ else
 	private List<LoginSimplified> logins = new List<LoginSimplified>();
 
 	private List<NoteSimplified> notes = new List<NoteSimplified>();
+
+	private List<FileSimplified> files = new List<FileSimplified>();
 
 	// Wizard
 	private void CreateNewContainer(MouseEventArgs e)
@@ -105,6 +108,24 @@ else
 				IsSecure = false,
 				Title = "TODO list",
 				Text = "Call elevator repair person"
+			}
+		};
+
+		files = new List<FileSimplified>()
+		{
+			new FileSimplified()
+			{
+				IsSecure = true,
+				Filename = "nature.jpg",
+				Filesize = "234 kB",
+				Filetype = "JPEG"
+			},
+			new FileSimplified()
+			{
+				IsSecure = false,
+				Filename = "cv.docx",
+				Filesize = "83 kB",
+				Filetype = "Microsoft Word document"
 			}
 		};
 

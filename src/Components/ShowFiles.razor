@@ -1,0 +1,53 @@
+<table id="files">
+	<thead>
+		<tr>
+			<th>
+				Secure
+			</th>
+			<th>
+				Filename
+			</th>
+			<th>
+				File size
+			</th>
+            <th>
+				File type
+			</th>
+		</tr>
+	</thead>
+
+	<tbody>
+		@foreach (var item in Files)
+        {
+			<tr>
+				<th>
+					@if (item.IsSecure == true)
+					{
+						@secureIcon
+					}
+					else
+					{
+						@unsecureIcon
+					}
+				</th>
+				<th>
+					@item.Filename
+				</th>
+				<th>
+					@item.Filesize
+				</th>
+                <th>
+					@item.Filetype
+				</th>
+			</tr>
+        }
+	</tbody>
+</table>
+<button title="Add file">+ Add</button>
+@code {
+    [Parameter]
+    public IReadOnlyList<FileSimplified> Files { get; set; }
+
+	private static readonly string secureIcon = "🔐";
+	private static readonly string unsecureIcon = "❌";
+}
