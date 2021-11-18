@@ -26,6 +26,7 @@ else if (visibleElement == VisibleElement.ShowFiles)
 else if (visibleElement == VisibleElement.ShowContacts)
 {
 	<CommonSecretsTopNav OnLoginsClickCallback="@TopNavShowLoginInformations" OnNotesClickCallback="@TopNavShowNotes" OnFilesClickCallback="@TopNavShowFiles" OnContactsClickCallback="@TopNavShowContacts" OnPaymentCardsClickCallback="@TopNavShowPaymentCards" />
+	<ShowContacts Contacts="@contacts" />
 }
 else if (visibleElement == VisibleElement.ShowPaymentCards)
 {
@@ -58,6 +59,8 @@ else
 	private List<NoteSimplified> notes = new List<NoteSimplified>();
 
 	private List<FileSimplified> files = new List<FileSimplified>();
+
+	private List<ContactSimplified> contacts = new List<ContactSimplified>();
 
 	// Wizard
 	private void CreateNewContainer(MouseEventArgs e)
@@ -126,6 +129,26 @@ else
 				Filename = "cv.docx",
 				Filesize = "83 kB",
 				Filetype = "Microsoft Word document"
+			}
+		};
+
+		contacts = new List<ContactSimplified>()
+		{
+			new ContactSimplified()
+			{
+				IsSecure = true,
+				FirstName = "Hanna",
+				LastName = "Hard Worker",
+				Emails = "hanna@localhost (work)",
+				PhoneNumbers = "1-800-123123 (work)"
+			},
+			new ContactSimplified()
+			{
+				IsSecure = true,
+				FirstName = "Mike",
+				LastName = "Madr",
+				Emails = "mike@localhost (work)",
+				PhoneNumbers = "1-800-123321 (home)"
 			}
 		};
 

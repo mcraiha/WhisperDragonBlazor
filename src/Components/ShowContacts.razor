@@ -1,0 +1,59 @@
+<table id="contacts">
+	<thead>
+		<tr>
+			<th>
+				Secure
+			</th>
+			<th>
+				First name
+			</th>
+			<th>
+				Last name
+			</th>
+            <th>
+				Email(s)
+			</th>
+            <th>
+				Phone number(s)
+			</th>
+		</tr>
+	</thead>
+
+	<tbody>
+		@foreach (var item in Contacts)
+        {
+			<tr>
+				<th>
+					@if (item.IsSecure == true)
+					{
+						@secureIcon
+					}
+					else
+					{
+						@unsecureIcon
+					}
+				</th>
+				<th>
+					@item.FirstName
+				</th>
+				<th>
+					@item.LastName
+				</th>
+                <th>
+					@item.Emails
+				</th>
+                <th>
+					@item.PhoneNumbers
+				</th>
+			</tr>
+        }
+	</tbody>
+</table>
+<button title="Add contact">+ Add</button>
+@code {
+    [Parameter]
+    public IReadOnlyList<ContactSimplified> Contacts { get; set; }
+
+	private static readonly string secureIcon = "🔐";
+	private static readonly string unsecureIcon = "❌";
+}
