@@ -1,0 +1,65 @@
+<table id="paymentcards">
+	<thead>
+		<tr>
+			<th>
+				Secure
+			</th>
+			<th>
+				Title
+			</th>
+			<th>
+				Name on the card
+			</th>
+            <th>
+				Card type
+			</th>
+            <th>
+				Number
+			</th>
+            <th>
+				Security code
+			</th>
+		</tr>
+	</thead>
+
+	<tbody>
+		@foreach (var item in PaymentCards)
+        {
+			<tr>
+				<th>
+					@if (item.IsSecure == true)
+					{
+						@secureIcon
+					}
+					else
+					{
+						@unsecureIcon
+					}
+				</th>
+				<th>
+					@item.Title
+				</th>
+				<th>
+					@item.NameOnTheCard
+				</th>
+                <th>
+					@item.CardType
+				</th>
+                <th>
+					@item.Number
+				</th>
+                <th>
+					@item.SecurityCode
+				</th>
+			</tr>
+        }
+	</tbody>
+</table>
+<button title="Add payment card">+ Add</button>
+@code {
+    [Parameter]
+    public IReadOnlyList<PaymentCardSimplified> PaymentCards { get; set; }
+
+	private static readonly string secureIcon = "🔐";
+	private static readonly string unsecureIcon = "❌";
+}
