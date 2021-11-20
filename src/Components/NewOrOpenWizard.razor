@@ -8,6 +8,10 @@
         <h3>Open an existing CommonSecrets file</h3>
         <button @onclick="OnOpenClickCallback">Open...</button>
     </aside>
+    <aside>
+        <h3>Just generate passwords</h3>
+        <button @onclick="OnGeneratePasswordsCallback">Generate...</button>
+    </aside>
 </section>
 
 @code {
@@ -16,4 +20,7 @@
 
     [Parameter]
     public EventCallback<MouseEventArgs> OnOpenClickCallback { get; set; }
+
+    [Parameter]
+    public EventCallback<MouseEventArgs> OnGeneratePasswordsCallback { get; set; }
 }
