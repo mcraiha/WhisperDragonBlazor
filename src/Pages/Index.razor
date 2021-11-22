@@ -8,9 +8,9 @@ else if (visibleElement == VisibleElement.CreateNewCommonSecretsContainer)
 {
 	<CreateNewCommonSecretsContainer OnCancelClickCallback="@CancelNewCommonSecretsContainerCreation" OnCreateClickCallback="@CreateNewCommonSecretsContainerCreation" />
 }
-else if (visibleElement == VisibleElement.ShowPasswordCreator)
+else if (visibleElement == VisibleElement.ShowRandomPasswordCreator)
 {
-	<CreatePassword />
+	<CreateRandomPassword />
 }
 else if (visibleElement == VisibleElement.ShowLoginInformations)
 {
@@ -50,7 +50,7 @@ else
 		NewAndOpenWizard,
 		CreateNewCommonSecretsContainer,
 		OpenExistingCommonSecretsContainer,
-		ShowPasswordCreator,
+		ShowRandomPasswordCreator,
 		ShowLoginInformations,
 		ShowNotes,
 		ShowFiles,
@@ -187,7 +187,7 @@ else
 
 	private void CreateNewPassword(MouseEventArgs e)
 	{
-		visibleElement = VisibleElement.ShowPasswordCreator;
+		visibleElement = VisibleElement.ShowRandomPasswordCreator;
 	}
 
 	// Create new common secrets container
