@@ -2,7 +2,7 @@
 
 @if (visibleElement == VisibleElement.NewAndOpenWizard)
 {
-	<NewOrOpenWizard OnNewClickCallback="@CreateNewContainer" OnOpenClickCallback="@OpenExistingContainer" OnGeneratePasswordsCallback="@CreateNewPassword" />
+	<NewOrOpenWizard OnNewClickCallback="@CreateNewContainer" OnOpenClickCallback="@OpenExistingContainer" OnGeneratePasswordsCallback="@CreateNewPronounceablePassword" />
 }
 else if (visibleElement == VisibleElement.CreateNewCommonSecretsContainer)
 {
@@ -11,6 +11,10 @@ else if (visibleElement == VisibleElement.CreateNewCommonSecretsContainer)
 else if (visibleElement == VisibleElement.ShowRandomPasswordCreator)
 {
 	<CreateRandomPassword />
+}
+else if (visibleElement == VisibleElement.ShowPronounceablePasswordCreator)
+{
+	<CreatePronounceablePassword />
 }
 else if (visibleElement == VisibleElement.ShowLoginInformations)
 {
@@ -51,6 +55,7 @@ else
 		CreateNewCommonSecretsContainer,
 		OpenExistingCommonSecretsContainer,
 		ShowRandomPasswordCreator,
+		ShowPronounceablePasswordCreator,
 		ShowLoginInformations,
 		ShowNotes,
 		ShowFiles,
@@ -185,9 +190,14 @@ else
 		visibleElement = VisibleElement.ShowLoginInformations;
 	}
 
-	private void CreateNewPassword(MouseEventArgs e)
+	private void CreateNewRandomPassword(MouseEventArgs e)
 	{
 		visibleElement = VisibleElement.ShowRandomPasswordCreator;
+	}
+
+	private void CreateNewPronounceablePassword(MouseEventArgs e)
+	{
+		visibleElement = VisibleElement.ShowPronounceablePasswordCreator;
 	}
 
 	// Create new common secrets container
