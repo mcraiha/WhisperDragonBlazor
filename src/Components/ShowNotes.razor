@@ -37,10 +37,13 @@
         }
 	</tbody>
 </table>
-<button title="Add note">+ Add</button>
+<button title="Add note" @onclick="AddNoteCallback">+ Add</button>
 @code {
     [Parameter]
     public IReadOnlyList<NoteSimplified> Notes { get; set; }
+
+	[Parameter]
+	public EventCallback<MouseEventArgs> AddNoteCallback { get; set; }
 
 	private static readonly string secureIcon = "🔐";
 	private static readonly string unsecureIcon = "❌";

@@ -24,7 +24,7 @@ else if (visibleElement == VisibleElement.ShowLoginInformations)
 else if (visibleElement == VisibleElement.ShowNotes)
 {
 	<CommonSecretsTopNav OnLoginsClickCallback="@TopNavShowLoginInformations" OnNotesClickCallback="@TopNavShowNotes" OnFilesClickCallback="@TopNavShowFiles" OnContactsClickCallback="@TopNavShowContacts" OnPaymentCardsClickCallback="@TopNavShowPaymentCards" />
-	<ShowNotes Notes="@notes" />
+	<ShowNotes Notes="@notes" AddNoteCallback="@ShowAddNote" />
 }
 else if (visibleElement == VisibleElement.ShowFiles)
 {
@@ -40,6 +40,10 @@ else if (visibleElement == VisibleElement.ShowPaymentCards)
 {
 	<CommonSecretsTopNav OnLoginsClickCallback="@TopNavShowLoginInformations" OnNotesClickCallback="@TopNavShowNotes" OnFilesClickCallback="@TopNavShowFiles" OnContactsClickCallback="@TopNavShowContacts" OnPaymentCardsClickCallback="@TopNavShowPaymentCards" />
 	<ShowPaymentCards PaymentCards="@paymentCards" />
+}
+else if (visibleElement == VisibleElement.AddOrEditNote)
+{
+	<AddorEditNote OnAddCallback="@AddNote" OnCancelCallback="@CancelAddNote" />
 }
 else
 {
@@ -61,6 +65,7 @@ else
 		ShowFiles,
 		ShowContacts,
 		ShowPaymentCards,
+		AddOrEditNote,
 	}
 
 	private VisibleElement visibleElement = VisibleElement.NewAndOpenWizard;
@@ -235,5 +240,23 @@ else
 	private void TopNavShowPaymentCards(MouseEventArgs e)
 	{
 		visibleElement = VisibleElement.ShowPaymentCards;
+	}
+
+	// Add or edit note
+	private void ShowAddNote(MouseEventArgs e)
+	{
+		Console.WriteLine("33");
+		visibleElement = VisibleElement.AddOrEditNote;
+	}
+
+	private void AddNote(NoteSimplified newNote)
+	{
+		notes.Add(newNote);
+		visibleElement = VisibleElement.ShowNotes;
+	}
+
+	private void CancelAddNote()
+	{
+		visibleElement = VisibleElement.ShowNotes;
 	}
 }
