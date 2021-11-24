@@ -1,7 +1,7 @@
 <section>
     <form>
         <header>Add note</header>
-        <label for="issecure">Is secure</label>
+        <label for="issecure">Is secure @if (IsSecure) {@CommonIcons.secureIcon} else {@CommonIcons.unsecureIcon}</label>
 		<input type="checkbox" id="issecure" @bind="@IsSecure">
 		<br>
 		<label for="notetitle">Note title</label>
