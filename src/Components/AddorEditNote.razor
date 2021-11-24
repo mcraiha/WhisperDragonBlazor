@@ -11,7 +11,7 @@
         <textarea id="notetext" @bind="@NoteText" rows="20" placeholder="Text for the note"></textarea>
         <br>
         <br>
-        <button type="button" id="cancel" @onclick="CancelAddNote">Cancel</button> <button type="button" id="addnote" @onclick="TryToAddNote">Add note</button>
+        <button type="button" id="cancel" @onclick="OnCancelCallback">Cancel</button> <button type="button" id="addnote" @onclick="TryToAddNote">Add note</button>
     </form>
 </section>
 
@@ -20,7 +20,7 @@
     public Action<NoteSimplified> OnAddCallback { get; set; }
 
     [Parameter, EditorRequired]
-    public Action OnCancelCallback { get; set; }
+    public EventCallback<MouseEventArgs> OnCancelCallback { get; set; }
 
     public bool IsSecure { get; set; } = true;
 
@@ -31,10 +31,5 @@
     private void TryToAddNote()
     {
         OnAddCallback?.Invoke(new NoteSimplified() { IsSecure = this.IsSecure, Title = NoteTitle, Text = NoteText});
-    }
-
-    private void CancelAddNote()
-    {
-        OnCancelCallback?.Invoke();
     }
 }
