@@ -23,11 +23,11 @@
 				<th>
 					@if (item.IsSecure == true)
 					{
-						@secureIcon
+						@CommonIcons.secureIcon
 					}
 					else
 					{
-						@unsecureIcon
+						@CommonIcons.unsecureIcon
 					}
 				</th>
 				<th>
@@ -48,6 +48,4 @@
     [Parameter]
     public IReadOnlyList<FileSimplified> Files { get; set; }
 
-	private static readonly string secureIcon = "🔐";
-	private static readonly string unsecureIcon = "❌";
 }

@@ -26,11 +26,11 @@
 				<th>
 					@if (item.IsSecure == true)
 					{
-						@secureIcon
+						@CommonIcons.secureIcon
 					}
 					else
 					{
-						@unsecureIcon
+						@CommonIcons.unsecureIcon
 					}
 				</th>
 				<th>
@@ -54,6 +54,4 @@
     [Parameter]
     public IReadOnlyList<ContactSimplified> Contacts { get; set; }
 
-	private static readonly string secureIcon = "🔐";
-	private static readonly string unsecureIcon = "❌";
 }
