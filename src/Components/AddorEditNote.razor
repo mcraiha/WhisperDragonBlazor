@@ -17,7 +17,7 @@
 
 @code {
     [Parameter, EditorRequired]
-    public Action<NoteSimplified> OnAddCallback { get; set; }
+    public EventCallback<NoteSimplified> OnAddCallback { get; set; }
 
     [Parameter, EditorRequired]
     public EventCallback<MouseEventArgs> OnCancelCallback { get; set; }
@@ -30,6 +30,6 @@
 
     private void TryToAddNote()
     {
-        OnAddCallback?.Invoke(new NoteSimplified() { IsSecure = this.IsSecure, Title = NoteTitle, Text = NoteText});
+        OnAddCallback.InvokeAsync(new NoteSimplified() { IsSecure = this.IsSecure, Title = NoteTitle, Text = NoteText});
     }
 }
