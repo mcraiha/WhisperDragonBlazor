@@ -19,7 +19,7 @@ else if (visibleElement == VisibleElement.ShowPronounceablePasswordCreator)
 else if (visibleElement == VisibleElement.ShowLoginInformations)
 {
 	<CommonSecretsTopNav OnLoginsClickCallback="@TopNavShowLoginInformations" OnNotesClickCallback="@TopNavShowNotes" OnFilesClickCallback="@TopNavShowFiles" OnContactsClickCallback="@TopNavShowContacts" OnPaymentCardsClickCallback="@TopNavShowPaymentCards" />
-	<ShowLoginInformations Logins="@logins" />
+	<ShowLoginInformations Logins="@logins" AddLoginCallback="@ShowAddLoginInformation" />
 }
 else if (visibleElement == VisibleElement.ShowNotes)
 {
@@ -41,9 +41,13 @@ else if (visibleElement == VisibleElement.ShowPaymentCards)
 	<CommonSecretsTopNav OnLoginsClickCallback="@TopNavShowLoginInformations" OnNotesClickCallback="@TopNavShowNotes" OnFilesClickCallback="@TopNavShowFiles" OnContactsClickCallback="@TopNavShowContacts" OnPaymentCardsClickCallback="@TopNavShowPaymentCards" />
 	<ShowPaymentCards PaymentCards="@paymentCards" />
 }
+else if (visibleElement == VisibleElement.AddOrEditLoginInformation)
+{
+	<AddOrEditLoginInformation OnAddCallback="@AddLoginInformation" OnCancelCallback="@CancelAddLoginInformation" />
+}
 else if (visibleElement == VisibleElement.AddOrEditNote)
 {
-	<AddorEditNote OnAddCallback="@AddNote" OnCancelCallback="@CancelAddNote" />
+	<AddOrEditNote OnAddCallback="@AddNote" OnCancelCallback="@CancelAddNote" />
 }
 else
 {
@@ -65,6 +69,7 @@ else
 		ShowFiles,
 		ShowContacts,
 		ShowPaymentCards,
+		AddOrEditLoginInformation,
 		AddOrEditNote,
 	}
 
@@ -240,6 +245,23 @@ else
 	private void TopNavShowPaymentCards(MouseEventArgs e)
 	{
 		visibleElement = VisibleElement.ShowPaymentCards;
+	}
+
+	// Add or edit login information
+	private void ShowAddLoginInformation(MouseEventArgs e)
+	{
+		visibleElement = VisibleElement.AddOrEditLoginInformation;
+	}
+
+	private void AddLoginInformation(LoginSimplified newLogin)
+	{
+		logins.Add(newLogin);
+		visibleElement = VisibleElement.ShowLoginInformations;
+	}
+
+	private void CancelAddLoginInformation(MouseEventArgs e)
+	{
+		visibleElement = VisibleElement.ShowLoginInformations;
 	}
 
 	// Add or edit note

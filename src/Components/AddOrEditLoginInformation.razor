@@ -1,0 +1,65 @@
+<section>
+    <form>
+        <header>Add login information</header>
+        <label for="issecure">Is secure @if (IsSecure) {@CommonIcons.secureIcon} else {@CommonIcons.unsecureIcon}</label>
+		<input type="checkbox" id="issecure" @bind="@IsSecure">
+		<br>
+		<label for="logininformationtitle">Login title</label>
+		<input type="text" id="logininformationtitle" @bind="@LoginInformationTitle" placeholder="Title for the login information">
+		<br>
+        <label for="logininformationurl">Login URL</label>
+		<input type="text" id="logininformationurl" @bind="@LoginInformationURL" placeholder="URL for the login information">
+		<br>
+        <label for="logininformationemail">Login email</label>
+		<input type="text" id="logininformationemail" @bind="@LoginInformationEmail" placeholder="Email for the login information">
+		<br>
+        <label for="logininformationusername">Login username</label>
+		<input type="text" id="logininformationusername" @bind="@LoginInformationUsername" placeholder="Username for the login information">
+		<br>
+        <label for="logininformationpassword">Login password</label>
+		<input type="text" id="logininformationpassword" @bind="@LoginInformationPassword" placeholder="Password for the login information">
+		<br>
+        <label for="logininformationnote">Login notes</label>
+        <textarea id="logininformationnote" @bind="@LoginInformationNote" rows="5" placeholder="Note for the login information"></textarea>
+        <br>
+        <label for="logininformationcategory">Login category</label>
+		<input type="text" id="logininformationcategory" @bind="@LoginInformationCategory" placeholder="Category for the login information">
+		<br>
+        <label for="logininformationtags">Login tags</label>
+		<input type="text" id="logininformationtags" @bind="@LoginInformationTags" placeholder="Tags for the login information">
+		<br>
+        <br>
+        <button type="button" id="cancel" @onclick="OnCancelCallback">Cancel</button> <button type="button" id="addlogininformation" @onclick="TryToAddLoginInformation">Add login information</button>
+    </form>
+</section>
+
+@code {
+    [Parameter, EditorRequired]
+    public EventCallback<LoginSimplified> OnAddCallback { get; set; }
+
+    [Parameter, EditorRequired]
+    public EventCallback<MouseEventArgs> OnCancelCallback { get; set; }
+
+    public bool IsSecure { get; set; } = true;
+
+    public string LoginInformationTitle { get; set; } = "";
+
+    public string LoginInformationURL { get; set; } = "";
+
+    public string LoginInformationEmail { get; set; } = "";
+
+    public string LoginInformationUsername { get; set; } = "";
+
+    public string LoginInformationPassword { get; set; } = "";
+
+    public string LoginInformationNote { get; set; } = "";
+
+    public string LoginInformationCategory { get; set; } = "";
+
+    public string LoginInformationTags { get; set; } = "";
+
+    private void TryToAddLoginInformation()
+    {
+        OnAddCallback.InvokeAsync(new LoginSimplified() { IsSecure = this.IsSecure, Title = LoginInformationTitle, URL = LoginInformationURL, Email = LoginInformationEmail, Username = LoginInformationUsername, Password = LoginInformationPassword, Notes = LoginInformationNote, Category = LoginInformationCategory, Tags = LoginInformationTags });
+    }
+}
