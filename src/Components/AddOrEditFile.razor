@@ -1,0 +1,47 @@
+<section>
+    <form>
+        <header>Add file</header>
+        <label for="issecure">Is secure @if (IsSecure) {@CommonIcons.secureIcon} else {@CommonIcons.unsecureIcon}</label>
+		<input type="checkbox" id="issecure" @bind="@IsSecure">
+		<br>
+		<label for="filename">Filename</label>
+		<input type="text" id="filename" @bind="@FileName" placeholder="Filename">
+		<br>
+        <InputFile OnChange="@LoadFiles"/>
+        <br>
+        <br>
+        <button type="button" id="cancel" @onclick="OnCancelCallback">Cancel</button> <button type="button" id="addnote" @onclick="TryToAddFile">Add file</button>
+    </form>
+</section>
+
+@code {
+    [Parameter, EditorRequired]
+    public EventCallback<FileSimplified> OnAddCallback { get; set; }
+
+    [Parameter, EditorRequired]
+    public EventCallback<MouseEventArgs> OnCancelCallback { get; set; }
+
+    public bool IsSecure { get; set; } = true;
+
+    public string FileName { get; set; } = "";
+
+    public byte[] fileContent { get; set; }
+
+    private void LoadFiles(InputFileChangeEventArgs e)
+    {
+        MemoryStream ms = new MemoryStream();
+
+        e.File.OpenReadStream().CopyToAsync(ms);
+        fileContent = ms.ToArray();
+
+        if (string.IsNullOrEmpty(FileName))
+        {
+            FileName = e.File.Name;
+        }
+    }
+
+    private void TryToAddFile()
+    {
+        OnAddCallback.InvokeAsync();
+    }
+}

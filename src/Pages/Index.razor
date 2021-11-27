@@ -29,7 +29,7 @@ else if (visibleElement == VisibleElement.ShowNotes)
 else if (visibleElement == VisibleElement.ShowFiles)
 {
 	<CommonSecretsTopNav OnLoginsClickCallback="@TopNavShowLoginInformations" OnNotesClickCallback="@TopNavShowNotes" OnFilesClickCallback="@TopNavShowFiles" OnContactsClickCallback="@TopNavShowContacts" OnPaymentCardsClickCallback="@TopNavShowPaymentCards" />
-	<ShowFiles Files="@files" />
+	<ShowFiles Files="@files" AddFileCallback="@ShowAddFile" />
 }
 else if (visibleElement == VisibleElement.ShowContacts)
 {
@@ -48,6 +48,10 @@ else if (visibleElement == VisibleElement.AddOrEditLoginInformation)
 else if (visibleElement == VisibleElement.AddOrEditNote)
 {
 	<AddOrEditNote OnAddCallback="@AddNote" OnCancelCallback="@CancelAddNote" />
+}
+else if (visibleElement == VisibleElement.AddOrEditFile)
+{
+	<AddOrEditFile OnAddCallback="@AddFile" OnCancelCallback="@CancelAddFile" />
 }
 else
 {
@@ -71,6 +75,7 @@ else
 		ShowPaymentCards,
 		AddOrEditLoginInformation,
 		AddOrEditNote,
+		AddOrEditFile,
 	}
 
 	private VisibleElement visibleElement = VisibleElement.NewAndOpenWizard;
@@ -279,5 +284,22 @@ else
 	private void CancelAddNote(MouseEventArgs e)
 	{
 		visibleElement = VisibleElement.ShowNotes;
+	}
+
+	// Add or edit file
+	private void ShowAddFile(MouseEventArgs e)
+	{
+		visibleElement = VisibleElement.AddOrEditFile;
+	}
+
+	private void AddFile(FileSimplified newFile)
+	{
+		files.Add(newFile);
+		visibleElement = VisibleElement.ShowFiles;
+	}
+
+	private void CancelAddFile(MouseEventArgs e)
+	{
+		visibleElement = VisibleElement.ShowFiles;
 	}
 }
