@@ -34,7 +34,7 @@ else if (visibleElement == VisibleElement.ShowFiles)
 else if (visibleElement == VisibleElement.ShowContacts)
 {
 	<CommonSecretsTopNav OnLoginsClickCallback="@TopNavShowLoginInformations" OnNotesClickCallback="@TopNavShowNotes" OnFilesClickCallback="@TopNavShowFiles" OnContactsClickCallback="@TopNavShowContacts" OnPaymentCardsClickCallback="@TopNavShowPaymentCards" />
-	<ShowContacts Contacts="@contacts" />
+	<ShowContacts Contacts="@contacts" AddContactCallback="@ShowAddContact" />
 }
 else if (visibleElement == VisibleElement.ShowPaymentCards)
 {
@@ -52,6 +52,10 @@ else if (visibleElement == VisibleElement.AddOrEditNote)
 else if (visibleElement == VisibleElement.AddOrEditFile)
 {
 	<AddOrEditFile OnAddCallback="@AddFile" OnCancelCallback="@CancelAddFile" />
+}
+else if (visibleElement == VisibleElement.AddOrEditContact)
+{
+	<AddOrEditContact OnAddCallback="@AddContact" OnCancelCallback="@CancelAddContact" />
 }
 else
 {
@@ -76,6 +80,7 @@ else
 		AddOrEditLoginInformation,
 		AddOrEditNote,
 		AddOrEditFile,
+		AddOrEditContact,
 	}
 
 	private VisibleElement visibleElement = VisibleElement.NewAndOpenWizard;
@@ -301,5 +306,22 @@ else
 	private void CancelAddFile(MouseEventArgs e)
 	{
 		visibleElement = VisibleElement.ShowFiles;
+	}
+
+	// Add or edit contact
+	private void ShowAddContact(MouseEventArgs e)
+	{
+		visibleElement = VisibleElement.AddOrEditContact;
+	}
+
+	private void AddContact(ContactSimplified newContact)
+	{
+		contacts.Add(newContact);
+		visibleElement = VisibleElement.ShowContacts;
+	}
+
+	private void CancelAddContact(MouseEventArgs e)
+	{
+		visibleElement = VisibleElement.ShowContacts;
 	}
 }

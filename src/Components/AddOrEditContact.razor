@@ -1,0 +1,130 @@
+<section>
+    <form>
+        <header>Add contact</header>
+        <label for="issecure">Is secure @if (IsSecure) {@CommonIcons.secureIcon} else {@CommonIcons.unsecureIcon}</label>
+		<input type="checkbox" id="issecure" @bind="@IsSecure">
+		<br>
+		<label for="contactfirstname">First name</label>
+		<input type="text" id="contactfirstname" @bind="@ContactFirstName" placeholder="First name">
+		<br>
+        <label for="contactlastname">Last name</label>
+		<input type="text" id="contactlastname" @bind="@ContactLastName" placeholder="Last name">
+		<br>
+        <label for="contactmiddlename">Middle name</label>
+		<input type="text" id="contactmiddlename" @bind="@ContactMiddleName" placeholder="Middle name">
+		<br>
+        <label for="contactnameprefix">Name prefix</label>
+		<input type="text" id="contactnameprefix" @bind="@ContactNamePrefix" placeholder="Name prefix">
+		<br>
+        <label for="contactnamesuffix">Name suffix</label>
+		<input type="text" id="contactnamesuffix" @bind="@ContactNameSuffix" placeholder="Name suffix">
+		<br>
+        <label for="contactnickname">Nickname</label>
+		<input type="text" id="contactnickname" @bind="@ContactNickname" placeholder="nickname">
+		<br>
+        <label for="contactcompany">Company</label>
+		<input type="text" id="contactcompany" @bind="@ContactCompany" placeholder="company">
+		<br>
+        <label for="contactjobtitle">Job title</label>
+		<input type="text" id="contactjobtitle" @bind="@ContactJobTitle" placeholder="job title">
+		<br>
+        <label for="contactdepartment">Department</label>
+		<input type="text" id="contactdepartment" @bind="@ContactDepartment" placeholder="department">
+		<br>
+        <label for="contactemail">Email</label>
+		<input type="text" id="contactemail" @bind="@ContactEmail" placeholder="email">
+		<br>
+        <label for="contactphonenumber">Phone number</label>
+		<input type="text" id="contactphonenumber" @bind="@ContactPhoneNumber" placeholder="phone number">
+		<br>
+        <label for="contactcountry">Country</label>
+		<input type="text" id="contactcountry" @bind="@ContactCountry" placeholder="country">
+		<br>
+        <label for="contactstreetaddress">Street address</label>
+		<input type="text" id="contactstreetaddress" @bind="@ContactStreetAddress" placeholder="street address">
+		<br>
+        <label for="contactstreetaddressadditional">Street address additional</label>
+		<input type="text" id="contactstreetaddressadditional" @bind="@ContactStreetAddressAdditional" placeholder="street address additional">
+		<br>
+        <label for="contactpostalcode">Postal code</label>
+		<input type="text" id="contactpostalcode" @bind="@ContactPostalCode" placeholder="postal code">
+		<br>
+        <label for="contactcity">City</label>
+		<input type="text" id="contactcity" @bind="@ContactCity" placeholder="city">
+		<br>
+        <label for="contactpobox">PO Box</label>
+		<input type="text" id="contactpobox" @bind="@ContactPOBox" placeholder="po box">
+		<br>
+        <label for="contactbirthday">Birthday</label>
+		<input type="text" id="contactbirthday" @bind="@ContactBirthday" placeholder="birthday">
+		<br>
+        <label for="contactwebsite">Website</label>
+		<input type="text" id="contactwebsite" @bind="@ContactWebsite" placeholder="website">
+		<br>
+        <label for="contactrelationship">Relationship</label>
+		<input type="text" id="contactrelationship" @bind="@ContactRelationship" placeholder="relationship">
+		<br>
+        <label for="contactnote">Notes</label>
+        <textarea id="contactnote" @bind="@ContactNote" rows="5" placeholder="Note for the contact"></textarea>
+		<br>
+        <br>
+        <button type="button" id="cancel" @onclick="OnCancelCallback">Cancel</button> <button type="button" id="addcontact" @onclick="TryToAddContact">Add contact</button>
+    </form>
+</section>
+
+@code {
+    [Parameter, EditorRequired]
+    public EventCallback<ContactSimplified> OnAddCallback { get; set; }
+
+    [Parameter, EditorRequired]
+    public EventCallback<MouseEventArgs> OnCancelCallback { get; set; }
+
+    public bool IsSecure { get; set; } = true;
+
+    public string ContactFirstName { get; set; } = "";
+
+    public string ContactLastName { get; set; } = "";
+
+    public string ContactMiddleName { get; set; } = "";
+
+    public string ContactNamePrefix { get; set; } = "";
+
+    public string ContactNameSuffix { get; set; } = "";
+
+    public string ContactNickname { get; set; } = "";
+
+    public string ContactCompany { get; set; } = "";
+
+    public string ContactJobTitle { get; set; } = "";
+
+    public string ContactDepartment { get; set; } = "";
+
+    public string ContactEmail { get; set; } = "";
+
+    public string ContactPhoneNumber { get; set; } = "";
+
+    public string ContactCountry { get; set; } = "";
+
+    public string ContactStreetAddress { get; set; } = "";
+
+    public string ContactStreetAddressAdditional { get; set; } = "";
+
+    public string ContactPostalCode { get; set; } = "";
+
+    public string ContactCity { get; set; } = "";
+
+    public string ContactPOBox { get; set; } = "";
+
+    public string ContactBirthday { get; set; } = "";
+
+    public string ContactWebsite { get; set; } = "";
+
+    public string ContactRelationship { get; set; } = "";
+
+    public string ContactNote { get; set; } = "";
+
+    private void TryToAddContact()
+    {
+        OnAddCallback.InvokeAsync();
+    }
+}

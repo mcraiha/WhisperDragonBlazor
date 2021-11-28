@@ -52,9 +52,11 @@
 
 <br>
 
-<button title="Add contact">+ Add</button>
+<button title="Add contact" @onclick="AddContactCallback">+ Add</button>
 @code {
-    [Parameter]
+    [Parameter, EditorRequired]
     public IReadOnlyList<ContactSimplified> Contacts { get; set; }
 
+	[Parameter, EditorRequired]
+	public EventCallback<MouseEventArgs> AddContactCallback { get; set; }
 }
