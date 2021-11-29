@@ -1,0 +1,65 @@
+<section>
+    <form>
+        <header>Add payment card</header>
+        <label for="issecure">Is secure @if (IsSecure) {@CommonIcons.secureIcon} else {@CommonIcons.unsecureIcon}</label>
+		<input type="checkbox" id="issecure" @bind="@IsSecure">
+		<br>
+		<label for="cardtitle">Title</label>
+		<input type="text" id="cardtitle" @bind="@CardTitle" placeholder="Title for the card">
+		<br>
+        <label for="nameoncard">Name on card</label>
+		<input type="text" id="nameoncard" @bind="@NameOnCard" placeholder="Name on card">
+		<br>
+        <label for="cardtype">Card type</label>
+		<input type="text" id="cardtype" @bind="@CardType" placeholder="Type of the card">
+		<br>
+        <label for="cardnumber">Number</label>
+		<input type="text" id="cardnumber" @bind="@CardNumber" placeholder="Number of the card">
+		<br>
+        <label for="cardsecuritycode">Security code</label>
+		<input type="text" id="cardsecuritycode" @bind="@CardSecurityCode" placeholder="Security code of the card">
+		<br>
+        <label for="cardstartdate">Start date</label>
+		<input type="text" id="cardstartdate" @bind="@CardStartDate" placeholder="Start date of the card">
+		<br>
+        <label for="cardexpirationdate">Expiration date</label>
+		<input type="text" id="cardexpirationdate" @bind="@CardExpirationDate" placeholder="Expiration date of the card">
+		<br>
+        <label for="notetext">Notes</label>
+        <textarea id="notetext" @bind="@NoteText" rows="20" placeholder="Notes for the card"></textarea>
+        <br>
+        <br>
+        <button type="button" id="cancel" @onclick="OnCancelCallback">Cancel</button> <button type="button" id="addpaymentcard" @onclick="TryToAddPaymentCard">Add payment card</button>
+    </form>
+</section>
+
+@code {
+    [Parameter, EditorRequired]
+    public EventCallback<PaymentCardSimplified> OnAddCallback { get; set; }
+
+    [Parameter, EditorRequired]
+    public EventCallback<MouseEventArgs> OnCancelCallback { get; set; }
+
+    public bool IsSecure { get; set; } = true;
+
+    public string CardTitle { get; set; } = "";
+
+    public string NameOnCard { get; set; } = "";
+
+    public string CardType { get; set; } = "";
+
+    public string CardNumber { get; set; } = "";
+
+    public string CardSecurityCode { get; set; } = "";
+
+    public string CardStartDate { get; set; } = "";
+
+    public string CardExpirationDate { get; set; } = "";
+
+    public string NoteText { get; set; } = "";
+
+    private void TryToAddPaymentCard()
+    {
+        OnAddCallback.InvokeAsync(new PaymentCardSimplified() { IsSecure = this.IsSecure, Title = CardTitle, NameOnTheCard = NameOnCard, CardType = CardType, Number = CardNumber, SecurityCode = CardSecurityCode });
+    }
+}
