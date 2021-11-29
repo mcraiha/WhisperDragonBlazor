@@ -42,10 +42,10 @@
 
 <button title="Add note" @onclick="AddNoteCallback">+ Add</button>
 @code {
-    [Parameter]
+    [Parameter, EditorRequired]
     public IReadOnlyList<NoteSimplified> Notes { get; set; }
 
-	[Parameter]
+	[Parameter, EditorRequired]
 	public EventCallback<MouseEventArgs> AddNoteCallback { get; set; }
 
 	
