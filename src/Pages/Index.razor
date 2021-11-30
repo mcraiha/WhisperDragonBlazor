@@ -20,7 +20,7 @@ else if (visibleElement == VisibleElement.ShowLoginInformations)
 {
 	<CommonSecretsTopNav OnLoginsClickCallback="@TopNavShowLoginInformations" OnNotesClickCallback="@TopNavShowNotes" OnFilesClickCallback="@TopNavShowFiles" OnContactsClickCallback="@TopNavShowContacts" OnPaymentCardsClickCallback="@TopNavShowPaymentCards"
 		loginsCount="@logins.Count" notesCount="@notes.Count" filessCount="@files.Count" contactsCount="@contacts.Count" paymentCardsCount="@paymentCards.Count" />
-	<ShowLoginInformations Logins="@logins" AddLoginCallback="@ShowAddLoginInformation" />
+	<ShowLoginInformations Logins="@logins" AddLoginCallback="@ShowAddLoginInformation" DeleteLoginCallback="@DeleteLoginInformationConfirmation" />
 }
 else if (visibleElement == VisibleElement.ShowNotes)
 {
@@ -66,6 +66,10 @@ else if (visibleElement == VisibleElement.AddOrEditPaymentCard)
 {
 	<AddOrEditPaymentCard OnAddCallback="@AddPaymentCard" OnCancelCallback="@CancelAddPaymentCard" />
 }
+else if (visibleElement == VisibleElement.DeleteItemConfirmation)
+{
+	<DeleteItemConfirmation OnDeleteClickCallback="@DeleteLoginInformationActual" OnCancelClickCallback="@DeleteLoginInformationCancel" />
+}
 else
 {
 	<p>Should not be visible!</p>
@@ -77,20 +81,26 @@ else
 	public enum VisibleElement
 	{
 		NewAndOpenWizard,
+		
 		CreateNewCommonSecretsContainer,
 		OpenExistingCommonSecretsContainer,
+		
 		ShowRandomPasswordCreator,
 		ShowPronounceablePasswordCreator,
+		
 		ShowLoginInformations,
 		ShowNotes,
 		ShowFiles,
 		ShowContacts,
 		ShowPaymentCards,
+		
 		AddOrEditLoginInformation,
 		AddOrEditNote,
 		AddOrEditFile,
 		AddOrEditContact,
 		AddOrEditPaymentCard,
+
+		DeleteItemConfirmation,
 	}
 
 	private VisibleElement visibleElement = VisibleElement.NewAndOpenWizard;
@@ -267,7 +277,7 @@ else
 		visibleElement = VisibleElement.ShowPaymentCards;
 	}
 
-	// Add or edit login information
+	// Add, edit or delete login information
 	private void ShowAddLoginInformation(MouseEventArgs e)
 	{
 		visibleElement = VisibleElement.AddOrEditLoginInformation;
@@ -280,6 +290,21 @@ else
 	}
 
 	private void CancelAddLoginInformation(MouseEventArgs e)
+	{
+		visibleElement = VisibleElement.ShowLoginInformations;
+	}
+
+	private void DeleteLoginInformationConfirmation(int zeroBasedIndexNumber)
+	{
+		visibleElement = VisibleElement.DeleteItemConfirmation;
+	}
+
+	private void DeleteLoginInformationCancel(MouseEventArgs e)
+	{
+		visibleElement = VisibleElement.ShowLoginInformations;
+	}
+
+	private void DeleteLoginInformationActual(int zeroBasedIndexNumber)
 	{
 		visibleElement = VisibleElement.ShowLoginInformations;
 	}

@@ -26,6 +26,9 @@
 			<th>
 				Tags
 			</th>
+			<th>
+				Actions
+			</th>
 		</tr>
 	</thead>
 
@@ -64,6 +67,9 @@
 				<th>
 					@item.Tags
 				</th>
+				<th>
+					<a @onclick="() => CallDelete(item.zeroBasedIndexNumber)">🗑️</a>
+				</th>
 			</tr>
         }
 	</tbody>
@@ -78,4 +84,12 @@
 
 	[Parameter, EditorRequired]
 	public EventCallback<MouseEventArgs> AddLoginCallback { get; set; }
+
+	[Parameter, EditorRequired]
+	public EventCallback<int> DeleteLoginCallback { get; set; }
+
+	private async Task CallDelete(int zeroBasedIndexNumber)
+	{
+		await DeleteLoginCallback.InvokeAsync(zeroBasedIndexNumber);
+	}
 }
