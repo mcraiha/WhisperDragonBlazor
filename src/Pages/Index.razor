@@ -68,7 +68,7 @@ else if (visibleElement == VisibleElement.AddOrEditPaymentCard)
 }
 else if (visibleElement == VisibleElement.DeleteItemConfirmation)
 {
-	<DeleteItemConfirmation OnDeleteClickCallback="@deleteActualAction" OnCancelClickCallback="@deleteCancelAction" />
+	<DeleteItemConfirmation OnDeleteClickCallback="@deleteActualAction" OnCancelClickCallback="@deleteCancelAction" WhatToDelete="@whatToDelete" />
 }
 else
 {
@@ -139,6 +139,7 @@ else
 	private int deleteIndex = -1;
 	private Action<MouseEventArgs> deleteCancelAction;
 	private Action<MouseEventArgs> deleteActualAction;
+	private string whatToDelete = "";
 
 	// Wizard
 	private void CreateNewContainer(MouseEventArgs e)
@@ -324,6 +325,7 @@ else
 		deleteActualAction = DeleteLoginInformationActual;
 		deleteCancelAction = DeleteLoginInformationCancel;
 		deleteIndex = zeroBasedIndexNumber;
+		whatToDelete = $"Login information with title '{logins[zeroBasedIndexNumber].Title}'";
 		visibleElement = VisibleElement.DeleteItemConfirmation;
 	}
 
@@ -418,5 +420,6 @@ else
 		deleteCancelAction = null;
 		deleteIndex = -1;
 		deleteType = ItemType.None;
+		whatToDelete = "";
 	}
 }

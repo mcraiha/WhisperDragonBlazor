@@ -1,6 +1,8 @@
 <section>
-    <h3>Delete</h3>
-    <p>Are you sure you want to delete?</p>
+    <header>
+        <h3>Delete</h3>
+        <p>Are you sure you want to delete @WhatToDelete?</p>
+    </header>
     <button @onclick="OnCancelClickCallback">Cancel ❌</button> <button @onclick="OnDeleteClickCallback">Delete 🗑️</button>
 </section>
 
@@ -11,4 +13,6 @@
     [Parameter, EditorRequired]
     public EventCallback<MouseEventArgs> OnCancelClickCallback { get; set; }
 
+    [Parameter, EditorRequired]
+    public string WhatToDelete { get; set; }
 }
