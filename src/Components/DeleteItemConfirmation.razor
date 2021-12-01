@@ -1,12 +1,12 @@
 <section>
     <h3>Delete</h3>
     <p>Are you sure you want to delete?</p>
-    <button>Cancel ❌</button> <button>Delete 🗑️</button>
+    <button @onclick="OnCancelClickCallback">Cancel ❌</button> <button @onclick="OnDeleteClickCallback">Delete 🗑️</button>
 </section>
 
 @code {
     [Parameter]
-    public EventCallback<int> OnDeleteClickCallback { get; set; }
+    public EventCallback<MouseEventArgs> OnDeleteClickCallback { get; set; }
 
     [Parameter]
     public EventCallback<MouseEventArgs> OnCancelClickCallback { get; set; }

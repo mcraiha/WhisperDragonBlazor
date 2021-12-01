@@ -68,7 +68,7 @@ else if (visibleElement == VisibleElement.AddOrEditPaymentCard)
 }
 else if (visibleElement == VisibleElement.DeleteItemConfirmation)
 {
-	<DeleteItemConfirmation OnDeleteClickCallback="@DeleteLoginInformationActual" OnCancelClickCallback="@DeleteLoginInformationCancel" />
+	<DeleteItemConfirmation OnDeleteClickCallback="@deleteActualAction" OnCancelClickCallback="@deleteCancelAction" />
 }
 else
 {
@@ -103,6 +103,25 @@ else
 		DeleteItemConfirmation,
 	}
 
+	public enum ItemType
+	{
+		None = 0,
+		LoginInformationSecret,
+		LoginInformation,
+
+		FileSecret,
+		File,
+
+		NoteSecret,
+		Note,
+
+		ContactSecret,
+		Contact,
+
+		PaymentCardSecret,
+		PaymentCard
+	}
+
 	private VisibleElement visibleElement = VisibleElement.NewAndOpenWizard;
 
 	private List<LoginSimplified> logins = new List<LoginSimplified>();
@@ -114,6 +133,12 @@ else
 	private List<ContactSimplified> contacts = new List<ContactSimplified>();
 
 	private List<PaymentCardSimplified> paymentCards = new List<PaymentCardSimplified>();
+
+	// Delete related
+	private ItemType deleteType = ItemType.None;
+	private int deleteIndex = -1;
+	private Action<MouseEventArgs> deleteCancelAction;
+	private Action<MouseEventArgs> deleteActualAction;
 
 	// Wizard
 	private void CreateNewContainer(MouseEventArgs e)
@@ -296,16 +321,25 @@ else
 
 	private void DeleteLoginInformationConfirmation(int zeroBasedIndexNumber)
 	{
+		deleteActualAction = DeleteLoginInformationActual;
+		deleteCancelAction = DeleteLoginInformationCancel;
+		deleteIndex = zeroBasedIndexNumber;
 		visibleElement = VisibleElement.DeleteItemConfirmation;
 	}
 
 	private void DeleteLoginInformationCancel(MouseEventArgs e)
 	{
+		ResetDelete();
 		visibleElement = VisibleElement.ShowLoginInformations;
 	}
 
-	private void DeleteLoginInformationActual(int zeroBasedIndexNumber)
+	private void DeleteLoginInformationActual(MouseEventArgs e)
 	{
+		if (-1 < deleteIndex && deleteIndex < logins.Count)
+		{
+			logins.RemoveAt(deleteIndex);
+		}
+		ResetDelete();
 		visibleElement = VisibleElement.ShowLoginInformations;
 	}
 
@@ -375,5 +409,14 @@ else
 	private void CancelAddPaymentCard(MouseEventArgs e)
 	{
 		visibleElement = VisibleElement.ShowPaymentCards;
+	}
+
+	// Delete common
+	private void ResetDelete()
+	{
+		deleteActualAction = null;
+		deleteCancelAction = null;
+		deleteIndex = -1;
+		deleteType = ItemType.None;
 	}
 }
