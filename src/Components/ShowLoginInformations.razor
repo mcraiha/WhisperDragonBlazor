@@ -35,6 +35,7 @@
 	<tbody>
 		@foreach (var item in Logins)
         {
+			int indexToDelete = item.zeroBasedIndexNumber;
 			<tr>
 				<th>
 					@if (item.IsSecure == true)
@@ -68,7 +69,7 @@
 					@item.Tags
 				</th>
 				<th>
-					<a @onclick="() => CallDelete(item.zeroBasedIndexNumber)">🗑️</a>
+					<a @onclick="() => CallDelete(indexToDelete)">🗑️</a>
 				</th>
 			</tr>
         }
