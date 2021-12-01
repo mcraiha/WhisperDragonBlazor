@@ -5,10 +5,10 @@
 </section>
 
 @code {
-    [Parameter]
+    [Parameter, EditorRequired]
     public EventCallback<MouseEventArgs> OnDeleteClickCallback { get; set; }
 
-    [Parameter]
+    [Parameter, EditorRequired]
     public EventCallback<MouseEventArgs> OnCancelClickCallback { get; set; }
 
 }

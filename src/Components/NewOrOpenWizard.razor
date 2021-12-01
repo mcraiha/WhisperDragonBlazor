@@ -15,12 +15,12 @@
 </section>
 
 @code {
-    [Parameter]
+    [Parameter, EditorRequired]
     public EventCallback<MouseEventArgs> OnNewClickCallback { get; set; }
 
-    [Parameter]
+    [Parameter, EditorRequired]
     public EventCallback<MouseEventArgs> OnOpenClickCallback { get; set; }
 
-    [Parameter]
+    [Parameter, EditorRequired]
     public EventCallback<MouseEventArgs> OnGeneratePasswordsCallback { get; set; }
 }
