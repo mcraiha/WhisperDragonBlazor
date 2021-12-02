@@ -336,6 +336,7 @@ else
 		deleteCancelAction = DeleteLoginInformationCancel;
 		deleteIndex = zeroBasedIndexNumber;
 		whatToDelete = $"Login information with title '{logins[zeroBasedIndexNumber].Title}'";
+		//deleteType = ItemType.LoginInformation;
 		visibleElement = VisibleElement.DeleteItemConfirmation;
 	}
 
@@ -378,6 +379,7 @@ else
 		deleteCancelAction = DeleteNoteCancel;
 		deleteIndex = zeroBasedIndexNumber;
 		whatToDelete = $"Note with title '{notes[zeroBasedIndexNumber].Title}'";
+		//deleteType = ItemType.Note;
 		visibleElement = VisibleElement.DeleteItemConfirmation;
 	}
 
@@ -420,6 +422,7 @@ else
 		deleteCancelAction = DeleteFileCancel;
 		deleteIndex = zeroBasedIndexNumber;
 		whatToDelete = $"File with filename '{files[zeroBasedIndexNumber].Filename}'";
+		//deleteType = ItemType.File;
 		visibleElement = VisibleElement.DeleteItemConfirmation;
 	}
 
@@ -462,6 +465,7 @@ else
 		deleteCancelAction = DeleteContactCancel;
 		deleteIndex = zeroBasedIndexNumber;
 		whatToDelete = $"Contact with name '{contacts[zeroBasedIndexNumber].FirstName} {contacts[zeroBasedIndexNumber].LastName}'";
+		//deleteType = ItemType.ContactInformation;
 		visibleElement = VisibleElement.DeleteItemConfirmation;
 	}
 
@@ -504,6 +508,7 @@ else
 		deleteCancelAction = DeletePaymentCardCancel;
 		deleteIndex = zeroBasedIndexNumber;
 		whatToDelete = $"Payment card with title '{paymentCards[zeroBasedIndexNumber].Title}'";
+		//deleteType = ItemType.PaymentCard;
 		visibleElement = VisibleElement.DeleteItemConfirmation;
 	}
 
