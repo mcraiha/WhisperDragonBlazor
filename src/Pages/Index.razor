@@ -26,7 +26,7 @@ else if (visibleElement == VisibleElement.ShowNotes)
 {
 	<CommonSecretsTopNav OnLoginsClickCallback="@TopNavShowLoginInformations" OnNotesClickCallback="@TopNavShowNotes" OnFilesClickCallback="@TopNavShowFiles" OnContactsClickCallback="@TopNavShowContacts" OnPaymentCardsClickCallback="@TopNavShowPaymentCards" 
 		loginsCount="@logins.Count" notesCount="@notes.Count" filessCount="@files.Count" contactsCount="@contacts.Count" paymentCardsCount="@paymentCards.Count" />
-	<ShowNotes Notes="@notes" AddNoteCallback="@ShowAddNote" />
+	<ShowNotes Notes="@notes" AddNoteCallback="@ShowAddNote" DeleteLoginCallback="@DeleteNoteConfirmation" />
 }
 else if (visibleElement == VisibleElement.ShowFiles)
 {
@@ -183,12 +183,14 @@ else
 		{
 			new NoteSimplified()
 			{
+				zeroBasedIndexNumber = 0,
 				IsSecure = true,
 				Title = "Shopping list",
 				Text = "Butter, milk, eggs, cucumber"
 			},
 			new NoteSimplified()
 			{
+				zeroBasedIndexNumber = 1,
 				IsSecure = false,
 				Title = "TODO list",
 				Text = "Call elevator repair person"
@@ -349,7 +351,7 @@ else
 		visibleElement = VisibleElement.ShowLoginInformations;
 	}
 
-	// Add or edit note
+	// Add, edit or delete  note
 	private void ShowAddNote(MouseEventArgs e)
 	{
 		visibleElement = VisibleElement.AddOrEditNote;
@@ -366,7 +368,32 @@ else
 		visibleElement = VisibleElement.ShowNotes;
 	}
 
-	// Add or edit file
+	private void DeleteNoteConfirmation(int zeroBasedIndexNumber)
+	{
+		deleteActualAction = DeleteNoteActual;
+		deleteCancelAction = DeleteNoteCancel;
+		deleteIndex = zeroBasedIndexNumber;
+		whatToDelete = $"Note with title '{notes[zeroBasedIndexNumber].Title}'";
+		visibleElement = VisibleElement.DeleteItemConfirmation;
+	}
+
+	private void DeleteNoteCancel(MouseEventArgs e)
+	{
+		ResetDelete();
+		visibleElement = VisibleElement.ShowNotes;
+	}
+
+	private void DeleteNoteActual(MouseEventArgs e)
+	{
+		if (-1 < deleteIndex && deleteIndex < notes.Count)
+		{
+			notes.RemoveAt(deleteIndex);
+		}
+		ResetDelete();
+		visibleElement = VisibleElement.ShowNotes;
+	}
+
+	// Add, edit or delete  file
 	private void ShowAddFile(MouseEventArgs e)
 	{
 		visibleElement = VisibleElement.AddOrEditFile;
@@ -400,7 +427,7 @@ else
 
 	private void DeleteFileActual(MouseEventArgs e)
 	{
-		if (-1 < deleteIndex && deleteIndex < logins.Count)
+		if (-1 < deleteIndex && deleteIndex < files.Count)
 		{
 			files.RemoveAt(deleteIndex);
 		}

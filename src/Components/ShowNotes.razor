@@ -10,12 +10,16 @@
 			<th>
 				Text
 			</th>
+			<th>
+				Actions
+			</th>
 		</tr>
 	</thead>
 
 	<tbody>
 		@foreach (var item in Notes)
         {
+			int indexToDelete = item.zeroBasedIndexNumber;
 			<tr>
 				<th>
 					@if (item.IsSecure == true)
@@ -33,6 +37,9 @@
 				<th>
 					@item.Text
 				</th>
+				<th>
+					<a @onclick="() => CallDelete(indexToDelete)">🗑️</a>
+				</th>
 			</tr>
         }
 	</tbody>
@@ -48,5 +55,11 @@
 	[Parameter, EditorRequired]
 	public EventCallback<MouseEventArgs> AddNoteCallback { get; set; }
 
-	
+	[Parameter, EditorRequired]
+	public EventCallback<int> DeleteLoginCallback { get; set; }
+
+	private async Task CallDelete(int zeroBasedIndexNumber)
+	{
+		await DeleteLoginCallback.InvokeAsync(zeroBasedIndexNumber);
+	}
 }
