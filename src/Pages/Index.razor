@@ -38,7 +38,7 @@ else if (visibleElement == VisibleElement.ShowContacts)
 {
 	<CommonSecretsTopNav OnLoginsClickCallback="@TopNavShowLoginInformations" OnNotesClickCallback="@TopNavShowNotes" OnFilesClickCallback="@TopNavShowFiles" OnContactsClickCallback="@TopNavShowContacts" OnPaymentCardsClickCallback="@TopNavShowPaymentCards" 
 		loginsCount="@logins.Count" notesCount="@notes.Count" filessCount="@files.Count" contactsCount="@contacts.Count" paymentCardsCount="@paymentCards.Count" />
-	<ShowContacts Contacts="@contacts" AddContactCallback="@ShowAddContact" />
+	<ShowContacts Contacts="@contacts" AddContactCallback="@ShowAddContact" DeleteLoginCallback="@DeleteContactConfirmation" />
 }
 else if (visibleElement == VisibleElement.ShowPaymentCards)
 {
@@ -221,6 +221,7 @@ else
 		{
 			new ContactSimplified()
 			{
+				zeroBasedIndexNumber = 0,
 				IsSecure = true,
 				FirstName = "Hanna",
 				LastName = "Hard Worker",
@@ -229,6 +230,7 @@ else
 			},
 			new ContactSimplified()
 			{
+				zeroBasedIndexNumber = 1,
 				IsSecure = true,
 				FirstName = "Mike",
 				LastName = "Madr",
@@ -351,7 +353,7 @@ else
 		visibleElement = VisibleElement.ShowLoginInformations;
 	}
 
-	// Add, edit or delete  note
+	// Add, edit or delete note
 	private void ShowAddNote(MouseEventArgs e)
 	{
 		visibleElement = VisibleElement.AddOrEditNote;
@@ -393,7 +395,7 @@ else
 		visibleElement = VisibleElement.ShowNotes;
 	}
 
-	// Add, edit or delete  file
+	// Add, edit or delete file
 	private void ShowAddFile(MouseEventArgs e)
 	{
 		visibleElement = VisibleElement.AddOrEditFile;
@@ -435,7 +437,7 @@ else
 		visibleElement = VisibleElement.ShowFiles;
 	}
 
-	// Add or edit contact
+	// Add, edit or delete contact
 	private void ShowAddContact(MouseEventArgs e)
 	{
 		visibleElement = VisibleElement.AddOrEditContact;
@@ -449,6 +451,31 @@ else
 
 	private void CancelAddContact(MouseEventArgs e)
 	{
+		visibleElement = VisibleElement.ShowContacts;
+	}
+
+	private void DeleteContactConfirmation(int zeroBasedIndexNumber)
+	{
+		deleteActualAction = DeleteContactActual;
+		deleteCancelAction = DeleteContactCancel;
+		deleteIndex = zeroBasedIndexNumber;
+		whatToDelete = $"Contact with name '{contacts[zeroBasedIndexNumber].FirstName} {contacts[zeroBasedIndexNumber].LastName}'";
+		visibleElement = VisibleElement.DeleteItemConfirmation;
+	}
+
+	private void DeleteContactCancel(MouseEventArgs e)
+	{
+		ResetDelete();
+		visibleElement = VisibleElement.ShowContacts;
+	}
+
+	private void DeleteContactActual(MouseEventArgs e)
+	{
+		if (-1 < deleteIndex && deleteIndex < contacts.Count)
+		{
+			contacts.RemoveAt(deleteIndex);
+		}
+		ResetDelete();
 		visibleElement = VisibleElement.ShowContacts;
 	}
 
