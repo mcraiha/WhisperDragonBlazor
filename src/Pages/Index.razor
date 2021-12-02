@@ -44,7 +44,7 @@ else if (visibleElement == VisibleElement.ShowPaymentCards)
 {
 	<CommonSecretsTopNav OnLoginsClickCallback="@TopNavShowLoginInformations" OnNotesClickCallback="@TopNavShowNotes" OnFilesClickCallback="@TopNavShowFiles" OnContactsClickCallback="@TopNavShowContacts" OnPaymentCardsClickCallback="@TopNavShowPaymentCards" 
 		loginsCount="@logins.Count" notesCount="@notes.Count" filessCount="@files.Count" contactsCount="@contacts.Count" paymentCardsCount="@paymentCards.Count" />
-	<ShowPaymentCards PaymentCards="@paymentCards" AddPaymentCardCallback="@ShowAddPaymentCard" />
+	<ShowPaymentCards PaymentCards="@paymentCards" AddPaymentCardCallback="@ShowAddPaymentCard" DeleteLoginCallback="@DeletePaymentCardConfirmation" />
 }
 else if (visibleElement == VisibleElement.AddOrEditLoginInformation)
 {
@@ -243,6 +243,7 @@ else
 		{
 			new PaymentCardSimplified()
 			{
+				zeroBasedIndexNumber = 0,
 				IsSecure = true,
 				Title = "Dragon credit",
 				NameOnTheCard = "Dave Dragon",
@@ -252,6 +253,7 @@ else
 			},
 			new PaymentCardSimplified()
 			{
+				zeroBasedIndexNumber = 1,
 				IsSecure = false,
 				Title = "Fire bank",
 				NameOnTheCard = "Dave teh Dragon",
@@ -479,7 +481,7 @@ else
 		visibleElement = VisibleElement.ShowContacts;
 	}
 
-	// Add or edit payment card
+	// Add, edit or delete  payment card
 	private void ShowAddPaymentCard(MouseEventArgs e)
 	{
 		visibleElement = VisibleElement.AddOrEditPaymentCard;
@@ -493,6 +495,31 @@ else
 
 	private void CancelAddPaymentCard(MouseEventArgs e)
 	{
+		visibleElement = VisibleElement.ShowPaymentCards;
+	}
+
+	private void DeletePaymentCardConfirmation(int zeroBasedIndexNumber)
+	{
+		deleteActualAction = DeletePaymentCardActual;
+		deleteCancelAction = DeletePaymentCardCancel;
+		deleteIndex = zeroBasedIndexNumber;
+		whatToDelete = $"Payment card with title '{paymentCards[zeroBasedIndexNumber].Title}'";
+		visibleElement = VisibleElement.DeleteItemConfirmation;
+	}
+
+	private void DeletePaymentCardCancel(MouseEventArgs e)
+	{
+		ResetDelete();
+		visibleElement = VisibleElement.ShowPaymentCards;
+	}
+
+	private void DeletePaymentCardActual(MouseEventArgs e)
+	{
+		if (-1 < deleteIndex && deleteIndex < paymentCards.Count)
+		{
+			paymentCards.RemoveAt(deleteIndex);
+		}
+		ResetDelete();
 		visibleElement = VisibleElement.ShowPaymentCards;
 	}
 
