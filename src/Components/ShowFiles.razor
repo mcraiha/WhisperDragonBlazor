@@ -13,12 +13,16 @@
             <th>
 				File type
 			</th>
+			<th>
+				Actions
+			</th>
 		</tr>
 	</thead>
 
 	<tbody>
 		@foreach (var item in Files)
         {
+			int indexToDelete = item.zeroBasedIndexNumber;
 			<tr>
 				<th>
 					@if (item.IsSecure == true)
@@ -39,6 +43,9 @@
                 <th>
 					@item.Filetype
 				</th>
+				<th>
+					<a @onclick="() => CallDelete(indexToDelete)">🗑️</a>
+				</th>
 			</tr>
         }
 	</tbody>
@@ -53,4 +60,12 @@
 
 	[Parameter, EditorRequired]
 	public EventCallback<MouseEventArgs> AddFileCallback { get; set; }
+
+	[Parameter, EditorRequired]
+	public EventCallback<int> DeleteLoginCallback { get; set; }
+
+	private async Task CallDelete(int zeroBasedIndexNumber)
+	{
+		await DeleteLoginCallback.InvokeAsync(zeroBasedIndexNumber);
+	}
 }

@@ -32,7 +32,7 @@ else if (visibleElement == VisibleElement.ShowFiles)
 {
 	<CommonSecretsTopNav OnLoginsClickCallback="@TopNavShowLoginInformations" OnNotesClickCallback="@TopNavShowNotes" OnFilesClickCallback="@TopNavShowFiles" OnContactsClickCallback="@TopNavShowContacts" OnPaymentCardsClickCallback="@TopNavShowPaymentCards" 
 		loginsCount="@logins.Count" notesCount="@notes.Count" filessCount="@files.Count" contactsCount="@contacts.Count" paymentCardsCount="@paymentCards.Count" />
-	<ShowFiles Files="@files" AddFileCallback="@ShowAddFile" />
+	<ShowFiles Files="@files" AddFileCallback="@ShowAddFile" DeleteLoginCallback="@DeleteFileConfirmation" />
 }
 else if (visibleElement == VisibleElement.ShowContacts)
 {
@@ -199,6 +199,7 @@ else
 		{
 			new FileSimplified()
 			{
+				zeroBasedIndexNumber = 0,
 				IsSecure = true,
 				Filename = "nature.jpg",
 				Filesize = "234 kB",
@@ -206,6 +207,7 @@ else
 			},
 			new FileSimplified()
 			{
+				zeroBasedIndexNumber = 1,
 				IsSecure = false,
 				Filename = "cv.docx",
 				Filesize = "83 kB",
@@ -378,6 +380,31 @@ else
 
 	private void CancelAddFile(MouseEventArgs e)
 	{
+		visibleElement = VisibleElement.ShowFiles;
+	}
+
+	private void DeleteFileConfirmation(int zeroBasedIndexNumber)
+	{
+		deleteActualAction = DeleteFileActual;
+		deleteCancelAction = DeleteFileCancel;
+		deleteIndex = zeroBasedIndexNumber;
+		whatToDelete = $"File with filename '{files[zeroBasedIndexNumber].Filename}'";
+		visibleElement = VisibleElement.DeleteItemConfirmation;
+	}
+
+	private void DeleteFileCancel(MouseEventArgs e)
+	{
+		ResetDelete();
+		visibleElement = VisibleElement.ShowFiles;
+	}
+
+	private void DeleteFileActual(MouseEventArgs e)
+	{
+		if (-1 < deleteIndex && deleteIndex < logins.Count)
+		{
+			files.RemoveAt(deleteIndex);
+		}
+		ResetDelete();
 		visibleElement = VisibleElement.ShowFiles;
 	}
 
