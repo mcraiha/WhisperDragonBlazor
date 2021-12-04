@@ -31,6 +31,18 @@
     </main>
 
     <script src="_framework/blazor.webassembly.js"></script>
+    <script>
+        window.copyToClipboard = async (textToWrite) => {
+            try {
+                await navigator.clipboard.writeText(textToWrite);
+                console.log('Copied to clipboard');
+            }
+            catch (err)
+            {
+                console.error('Failed to copy: ', err);
+            }
+        };
+    </script>
 </body>
 
 </html>

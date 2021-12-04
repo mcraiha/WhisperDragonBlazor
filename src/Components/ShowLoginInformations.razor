@@ -1,3 +1,4 @@
+@inject IJSRuntime JS
 
 <table id="logins">
 	<thead>
@@ -35,7 +36,7 @@
 	<tbody>
 		@foreach (var item in Logins)
         {
-			int indexToDelete = item.zeroBasedIndexNumber;
+			int indexToHandle = item.zeroBasedIndexNumber;
 			<tr>
 				<th>
 					@if (item.IsSecure == true)
@@ -48,19 +49,19 @@
 					}
 				</th>
 				<th>
-					@item.Title
+					@item.Title <a title="Copy title" @onclick="() => CallTitleCopy(indexToHandle)">✂️</a>
 				</th>
 				<th>
-					@item.URL
+					@item.URL <a title="Copy URL" @onclick="() => CallURLCopy(indexToHandle)">✂️</a>
 				</th>
 				<th>
-					@item.Email
+					@item.Email <a title="Copy email" @onclick="() => CallEmailCopy(indexToHandle)">✂️</a>
 				</th>
 				<th>
-					@item.Username
+					@item.Username <a title="Copy username" @onclick="() => CallUsernameCopy(indexToHandle)">✂️</a>
 				</th>
 				<th>
-					@item.Password
+					@item.Password <a title="Copy password" @onclick="() => CallPasswordCopy(indexToHandle)">✂️</a>
 				</th>
 				<th>
 					@item.Category
@@ -69,7 +70,7 @@
 					@item.Tags
 				</th>
 				<th>
-					<a title="Delete" @onclick="() => CallDelete(indexToDelete)">🗑️</a>
+					<a title="Delete" @onclick="() => CallDelete(indexToHandle)">🗑️</a>
 				</th>
 			</tr>
         }
@@ -88,6 +89,31 @@
 
 	[Parameter, EditorRequired]
 	public EventCallback<int> DeleteLoginCallback { get; set; }
+
+	private async Task CallTitleCopy(int zeroBasedIndexNumber)
+	{
+		await JS.InvokeVoidAsync("copyToClipboard", Logins[zeroBasedIndexNumber].Title);
+	}
+
+	private async Task CallURLCopy(int zeroBasedIndexNumber)
+	{
+		await JS.InvokeVoidAsync("copyToClipboard", Logins[zeroBasedIndexNumber].URL);
+	}
+
+	private async Task CallEmailCopy(int zeroBasedIndexNumber)
+	{
+		await JS.InvokeVoidAsync("copyToClipboard", Logins[zeroBasedIndexNumber].Email);
+	}
+
+	private async Task CallUsernameCopy(int zeroBasedIndexNumber)
+	{
+		await JS.InvokeVoidAsync("copyToClipboard", Logins[zeroBasedIndexNumber].Username);
+	}
+
+	private async Task CallPasswordCopy(int zeroBasedIndexNumber)
+	{
+		await JS.InvokeVoidAsync("copyToClipboard", Logins[zeroBasedIndexNumber].Password);
+	}
 
 	private async Task CallDelete(int zeroBasedIndexNumber)
 	{
