@@ -1,5 +1,19 @@
 @inject IJSRuntime JS
 
+<br>
+@if (Logins == null || Logins.Count < 1)
+{
+	<p>No login informations</p>
+}
+else
+{
+<input type='text' @bind="@SearchFilter" placeholder="Filter, press Enter to apply" />
+@if (!string.IsNullOrEmpty(searchFilter))
+{
+	<br>
+	<p>Filter is matching @FilteredLogins.Count / @Logins.Count </p>
+}
+
 <table id="logins">
 	<thead>
 		<tr>
@@ -34,7 +48,8 @@
 	</thead>
 
 	<tbody>
-		@foreach (var item in Logins)
+		
+		@foreach (var item in FilteredLogins)
         {
 			int indexToHandle = item.zeroBasedIndexNumber;
 			<tr>
@@ -76,7 +91,7 @@
         }
 	</tbody>
 </table>
-
+}
 <br>
 
 <button title="Add login information" @onclick="AddLoginCallback">+ Add</button>
@@ -90,6 +105,37 @@
 	[Parameter, EditorRequired]
 	public EventCallback<int> DeleteLoginCallback { get; set; }
 
+	private IReadOnlyList<LoginSimplified> FilteredLogins { get; set; }
+
+	private static readonly StringComparison searchComparison = StringComparison.OrdinalIgnoreCase;
+	private string searchFilter = "";
+	private string SearchFilter 
+	{ 
+		get
+		{
+			return this.searchFilter;
+		} 
+		set
+		{
+			this.searchFilter = value;
+			if (string.IsNullOrEmpty(this.searchFilter))
+			{
+				this.FilteredLogins = this.Logins;
+			}
+			else
+			{
+				this.FilteredLogins = this.Logins.Where(x => x.Title.Contains(this.searchFilter, searchComparison) || x.URL.Contains(this.searchFilter, searchComparison) || x.Email.Contains(this.searchFilter, searchComparison) || x.Username.Contains(this.searchFilter, searchComparison)).ToList();
+			}
+			
+		} 
+	}
+
+	protected override void OnInitialized()
+	{
+		this.FilteredLogins = this.Logins;
+	}
+
+	// Copy to clipboard methods
 	private async Task CallTitleCopy(int zeroBasedIndexNumber)
 	{
 		await JS.InvokeVoidAsync("copyToClipboard", Logins[zeroBasedIndexNumber].Title);
@@ -115,6 +161,7 @@
 		await JS.InvokeVoidAsync("copyToClipboard", Logins[zeroBasedIndexNumber].Password);
 	}
 
+	// Delete method
 	private async Task CallDelete(int zeroBasedIndexNumber)
 	{
 		await DeleteLoginCallback.InvokeAsync(zeroBasedIndexNumber);
