@@ -1,3 +1,5 @@
+@inject IJSRuntime JS
+
 <table id="notes">
 	<thead>
 		<tr>
@@ -19,7 +21,7 @@
 	<tbody>
 		@foreach (var item in Notes)
         {
-			int indexToDelete = item.zeroBasedIndexNumber;
+			int indexToHandle = item.zeroBasedIndexNumber;
 			<tr>
 				<th>
 					@if (item.IsSecure == true)
@@ -32,13 +34,13 @@
 					}
 				</th>
 				<th>
-					@item.Title
+					@item.Title <a title="Copy title" @onclick="() => CallTitleCopy(indexToHandle)">✂️</a>
 				</th>
 				<th>
-					@item.Text
+					@item.Text <a title="Copy text" @onclick="() => CallTextCopy(indexToHandle)">✂️</a>
 				</th>
 				<th>
-					<a title="Delete" @onclick="() => CallDelete(indexToDelete)">🗑️</a>
+					<a title="Delete" @onclick="() => CallDelete(indexToHandle)">🗑️</a>
 				</th>
 			</tr>
         }
@@ -58,6 +60,18 @@
 	[Parameter, EditorRequired]
 	public EventCallback<int> DeleteLoginCallback { get; set; }
 
+	// Copy to clipboard methods
+	private async Task CallTitleCopy(int zeroBasedIndexNumber)
+	{
+		await JS.InvokeVoidAsync("copyToClipboard", Notes[zeroBasedIndexNumber].Title);
+	}
+
+	private async Task CallTextCopy(int zeroBasedIndexNumber)
+	{
+		await JS.InvokeVoidAsync("copyToClipboard", Notes[zeroBasedIndexNumber].Text);
+	}
+
+	// Delete method
 	private async Task CallDelete(int zeroBasedIndexNumber)
 	{
 		await DeleteLoginCallback.InvokeAsync(zeroBasedIndexNumber);
