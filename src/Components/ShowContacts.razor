@@ -40,7 +40,7 @@ else
 	<tbody>
 		@foreach (var item in FilteredContacts)
         {
-			int indexToDelete = item.zeroBasedIndexNumber;
+			int indexToHandle = item.zeroBasedIndexNumber;
 			<tr>
 				<th>
 					@if (item.IsSecure == true)
@@ -53,10 +53,10 @@ else
 					}
 				</th>
 				<th>
-					@item.FirstName
+					@item.FirstName <a title="Copy first name" @onclick="() => CallFirstNameCopy(indexToHandle)">✂️</a>
 				</th>
 				<th>
-					@item.LastName
+					@item.LastName <a title="Copy last name" @onclick="() => CallLastNameCopy(indexToHandle)">✂️</a>
 				</th>
                 <th>
 					@item.Emails
@@ -65,7 +65,7 @@ else
 					@item.PhoneNumbers
 				</th>
 				<th>
-					<a title="Delete" @onclick="() => CallDelete(indexToDelete)">🗑️</a>
+					<a title="Delete" @onclick="() => CallDelete(indexToHandle)">🗑️</a>
 				</th>
 			</tr>
         }
@@ -115,6 +115,18 @@ else
 		this.FilteredContacts = this.Contacts;
 	}
 
+	// Copy to clipboard methods
+	private async Task CallFirstNameCopy(int zeroBasedIndexNumber)
+	{
+		await JS.InvokeVoidAsync("copyToClipboard", Contacts[zeroBasedIndexNumber].FirstName);
+	}
+
+	private async Task CallLastNameCopy(int zeroBasedIndexNumber)
+	{
+		await JS.InvokeVoidAsync("copyToClipboard", Contacts[zeroBasedIndexNumber].LastName);
+	}
+
+	// Delete method
 	private async Task CallDelete(int zeroBasedIndexNumber)
 	{
 		await DeleteLoginCallback.InvokeAsync(zeroBasedIndexNumber);
