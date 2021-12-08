@@ -1,3 +1,5 @@
+@inject IJSRuntime JS
+
 <table id="paymentcards">
 	<thead>
 		<tr>
@@ -28,7 +30,7 @@
 	<tbody>
 		@foreach (var item in PaymentCards)
         {
-			int indexToDelete = item.zeroBasedIndexNumber;
+			int indexToHandle = item.zeroBasedIndexNumber;
 			<tr>
 				<th>
 					@if (item.IsSecure == true)
@@ -41,22 +43,22 @@
 					}
 				</th>
 				<th>
-					@item.Title
+					@item.Title <a title="Copy title" @onclick="() => CallTitleCopy(indexToHandle)">✂️</a>
 				</th>
 				<th>
-					@item.NameOnTheCard
+					@item.NameOnTheCard <a title="Copy name on the card" @onclick="() => CallNameOnTheCardCopy(indexToHandle)">✂️</a>
 				</th>
                 <th>
 					@item.CardType
 				</th>
                 <th>
-					@item.Number
+					@item.Number <a title="Copy number" @onclick="() => CallNumberCopy(indexToHandle)">✂️</a>
 				</th>
                 <th>
-					@item.SecurityCode
+					@item.SecurityCode <a title="Copy security code" @onclick="() => CallSecurityCodeCopy(indexToHandle)">✂️</a>
 				</th>
 				<th>
-					<a title="Delete" @onclick="() => CallDelete(indexToDelete)">🗑️</a>
+					<a title="Delete" @onclick="() => CallDelete(indexToHandle)">🗑️</a>
 				</th>
 			</tr>
         }
@@ -76,6 +78,28 @@
 	[Parameter, EditorRequired]
 	public EventCallback<int> DeleteLoginCallback { get; set; }
 
+	// Copy to clipboard methods
+	private async Task CallTitleCopy(int zeroBasedIndexNumber)
+	{
+		await JS.InvokeVoidAsync("copyToClipboard", PaymentCards[zeroBasedIndexNumber].Title);
+	}
+
+	private async Task CallNameOnTheCardCopy(int zeroBasedIndexNumber)
+	{
+		await JS.InvokeVoidAsync("copyToClipboard", PaymentCards[zeroBasedIndexNumber].NameOnTheCard);
+	}
+
+	private async Task CallNumberCopy(int zeroBasedIndexNumber)
+	{
+		await JS.InvokeVoidAsync("copyToClipboard", PaymentCards[zeroBasedIndexNumber].Number);
+	}
+
+	private async Task CallSecurityCodeCopy(int zeroBasedIndexNumber)
+	{
+		await JS.InvokeVoidAsync("copyToClipboard", PaymentCards[zeroBasedIndexNumber].SecurityCode);
+	}
+
+	// Delete method
 	private async Task CallDelete(int zeroBasedIndexNumber)
 	{
 		await DeleteLoginCallback.InvokeAsync(zeroBasedIndexNumber);
