@@ -1,5 +1,18 @@
 @inject IJSRuntime JS
 
+@if (PaymentCards == null || PaymentCards.Count < 1)
+{
+	<p>No contacts</p>
+}
+else
+{
+<input type='text' @bind="@SearchFilter" placeholder="Filter, press Enter to apply" />
+@if (!string.IsNullOrEmpty(searchFilter))
+{
+	<br>
+	<p>Filter is matching @FilteredPaymentCards.Count / @PaymentCards.Count </p>
+}
+
 <table id="paymentcards">
 	<thead>
 		<tr>
@@ -28,7 +41,7 @@
 	</thead>
 
 	<tbody>
-		@foreach (var item in PaymentCards)
+		@foreach (var item in FilteredPaymentCards)
         {
 			int indexToHandle = item.zeroBasedIndexNumber;
 			<tr>
@@ -64,7 +77,7 @@
         }
 	</tbody>
 </table>
-
+}
 <br>
 
 <button title="Add payment card" @onclick="AddPaymentCardCallback">+ Add</button>
@@ -77,6 +90,36 @@
 
 	[Parameter, EditorRequired]
 	public EventCallback<int> DeleteLoginCallback { get; set; }
+
+	private IReadOnlyList<PaymentCardSimplified> FilteredPaymentCards { get; set; }
+
+	private static readonly StringComparison searchComparison = StringComparison.OrdinalIgnoreCase;
+	private string searchFilter = "";
+	private string SearchFilter 
+	{ 
+		get
+		{
+			return this.searchFilter;
+		} 
+		set
+		{
+			this.searchFilter = value;
+			if (string.IsNullOrEmpty(this.searchFilter))
+			{
+				this.FilteredPaymentCards = this.PaymentCards;
+			}
+			else
+			{
+				this.FilteredPaymentCards = this.PaymentCards.Where(x => x.Title.Contains(this.searchFilter, searchComparison) || x.NameOnTheCard.Contains(this.searchFilter, searchComparison) || x.Number.Contains(this.searchFilter, searchComparison) || x.SecurityCode.Contains(this.searchFilter, searchComparison)).ToList();
+			}
+			
+		} 
+	}
+
+	protected override void OnInitialized()
+	{
+		this.FilteredPaymentCards = this.PaymentCards;
+	}
 
 	// Copy to clipboard methods
 	private async Task CallTitleCopy(int zeroBasedIndexNumber)
