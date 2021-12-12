@@ -1,5 +1,18 @@
 @inject IJSRuntime JS
 
+@if (Files == null || Files.Count < 1)
+{
+	<p>No files</p>
+}
+else
+{
+<input type='text' @bind="@SearchFilter" placeholder="Filter, press Enter to apply" />
+@if (!string.IsNullOrEmpty(searchFilter))
+{
+	<br>
+	<p>Filter is matching @FilteredFiles.Count / @Files.Count </p>
+}
+
 <table id="files">
 	<thead>
 		<tr>
@@ -22,7 +35,7 @@
 	</thead>
 
 	<tbody>
-		@foreach (var item in Files)
+		@foreach (var item in FilteredFiles)
         {
 			int indexToHandle = item.zeroBasedIndexNumber;
 			<tr>
@@ -52,7 +65,7 @@
         }
 	</tbody>
 </table>
-
+}
 <br>
 
 <button title="Add file" @onclick="AddFileCallback">+ Add</button>
@@ -65,6 +78,36 @@
 
 	[Parameter, EditorRequired]
 	public EventCallback<int> DeleteLoginCallback { get; set; }
+
+	private IReadOnlyList<FileSimplified> FilteredFiles { get; set; }
+
+	private static readonly StringComparison searchComparison = StringComparison.OrdinalIgnoreCase;
+	private string searchFilter = "";
+	private string SearchFilter 
+	{ 
+		get
+		{
+			return this.searchFilter;
+		} 
+		set
+		{
+			this.searchFilter = value;
+			if (string.IsNullOrEmpty(this.searchFilter))
+			{
+				this.FilteredFiles = this.Files;
+			}
+			else
+			{
+				this.FilteredFiles = this.Files.Where(x => x.Filename.Contains(this.searchFilter, searchComparison)).ToList();
+			}
+			
+		} 
+	}
+
+	protected override void OnInitialized()
+	{
+		this.FilteredFiles = this.Files;
+	}
 
 	// Copy to clipboard methods
 	private async Task CallFilenameCopy(int zeroBasedIndexNumber)
