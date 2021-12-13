@@ -27,3 +27,9 @@ dotnet publish -c Release
 ```
   
 and content should be in **bin\Release\net6.0\publish\wwwroot** folder.
+
+## Licenses
+
+All code files (*.cs, *.blazor) and HTML files (*.html) are under [Unlicense](https://unlicense.org/)
+
+The CSS file (mvp.css) is under [MIT License](https://github.com/andybrewer/mvp/blob/master/LICENSE).
