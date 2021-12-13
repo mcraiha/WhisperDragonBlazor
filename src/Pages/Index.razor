@@ -10,7 +10,7 @@ else if (visibleElement == VisibleElement.CreateNewCommonSecretsContainer)
 }
 else if (visibleElement == VisibleElement.ShowPasswordCreators)
 {
-	<CreatePasswordSelectionNav />
+	<CreatePasswordSelectionNav BackCallback="@BackFromPasswordCreators" />
 }
 else if (visibleElement == VisibleElement.ShowLoginInformations)
 {
@@ -264,6 +264,11 @@ else
 	private void ShowPasswordCreators(MouseEventArgs e)
 	{
 		visibleElement = VisibleElement.ShowPasswordCreators;
+	}
+
+	private void BackFromPasswordCreators(MouseEventArgs e)
+	{
+		visibleElement = VisibleElement.NewAndOpenWizard;
 	}
 
 	// Create new common secrets container
