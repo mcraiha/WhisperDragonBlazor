@@ -6,7 +6,7 @@
 }
 else if (visibleElement == VisibleElement.CreateNewCommonSecretsContainer)
 {
-	<CreateNewCommonSecretsContainer OnCancelClickCallback="@CancelNewCommonSecretsContainerCreation" OnCreateClickCallback="@CreateNewCommonSecretsContainerCreation" />
+	<CreateNewCommonSecretsContainer OnCancelClickCallback="@CancelNewCommonSecretsContainerCreation" OnCreateClickCallback="@CreateNewCommonSecretsContainer" />
 }
 else if (visibleElement == VisibleElement.ShowPasswordCreators)
 {
@@ -118,6 +118,11 @@ else
 	}
 
 	private VisibleElement visibleElement = VisibleElement.NewAndOpenWizard;
+
+	/// <summary>
+	/// Our current common secrets container reference
+	/// </summary>
+	private CommonSecretsContainer csc = null;
 
 	private List<LoginSimplified> logins = new List<LoginSimplified>();
 
@@ -277,9 +282,9 @@ else
 		visibleElement = VisibleElement.NewAndOpenWizard;
 	}
 
-	private void CreateNewCommonSecretsContainerCreation(MouseEventArgs e)
+	private void CreateNewCommonSecretsContainer(KdfeAndPassword kdfeAndPassword)
 	{
-
+		this.csc = new CommonSecretsContainer(kdfeAndPassword.kdfe);
 	}
 
 	// TopNav actions
