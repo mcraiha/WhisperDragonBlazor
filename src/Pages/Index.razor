@@ -124,6 +124,18 @@ else
 	/// </summary>
 	private CommonSecretsContainer csc = null;
 
+	/// <summary>
+	/// Is CommonSecretsContainer modified
+	/// </summary>
+	private bool isModified = false;
+
+	/// <summary>
+	/// Because we do not want to store actual passwords in memory, keep collection of derived ones (TODO: encrypt at some point)
+	/// </summary>
+	/// <typeparam name="string">Key Identifier</typeparam>
+	/// <typeparam name="byte[]">Derived password as bytes</typeparam>
+	private readonly Dictionary<string, byte[]> derivedPasswords = new Dictionary<string, byte[]>();
+
 	private List<LoginSimplified> logins = new List<LoginSimplified>();
 
 	private List<NoteSimplified> notes = new List<NoteSimplified>();
@@ -284,7 +296,14 @@ else
 
 	private void CreateNewCommonSecretsContainer(KdfeAndPassword kdfeAndPassword)
 	{
+		this.derivedPasswords.Clear();
+		this.derivedPasswords[kdfeAndPassword.kdfe.GetKeyIdentifier()] = kdfeAndPassword.kdfe.GeneratePasswordBytes(kdfeAndPassword.password);
+
 		this.csc = new CommonSecretsContainer(kdfeAndPassword.kdfe);
+
+		this.isModified = true;
+
+		visibleElement = VisibleElement.ShowLoginInformations;
 	}
 
 	// TopNav actions
