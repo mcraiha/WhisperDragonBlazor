@@ -1,10 +1,14 @@
 using System;
 using System.ComponentModel.DataAnnotations;
 using System.Security.Cryptography;
+using CSCommonSecrets;
+using Microsoft.AspNetCore.Cryptography.KeyDerivation;
 
 public class KeyDerivationFunctionData
 {
 	private byte[] salt = new byte[16];
+
+	public KeyDerivationPrf SelectedPseudorandomFunction { get; set; } = KeyDerivationPrf.HMACSHA256;
 
 	public string Salt
 	{
@@ -28,5 +32,10 @@ public class KeyDerivationFunctionData
 	private void GenerateSalt()
 	{
 		this.salt = RandomNumberGenerator.GetBytes(this.salt.Length);
+	}
+
+	public byte[] GetSaltAsByteArray()
+	{
+		return this.salt;
 	}
 }
