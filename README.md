@@ -28,6 +28,19 @@ dotnet publish -c Release
   
 and content should be in **bin\Release\net6.0\publish\wwwroot** folder.
 
+## Docker
+
+In case you want to build a docker image that serves the WhisperDragonBlazor then use following command
+```
+docker build -t whisperdragonblazor .
+```
+
+and if you want to run that then
+
+```
+docker run -p 8080:80 whisperdragonblazor
+```
+and you can access it via browser by using [http://localhost:8080/](http://localhost:8080/)
 ## Licenses
 
 All code files (*.cs, *.blazor) and HTML files (*.html) are under [Unlicense](https://unlicense.org/)
