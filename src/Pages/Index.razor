@@ -119,6 +119,8 @@ else
 
 	private VisibleElement visibleElement = VisibleElement.NewAndOpenWizard;
 
+	private static readonly SecurityAsyncFunctions securityAsyncFunctions = new SecurityAsyncFunctions();
+
 	/// <summary>
 	/// Our current common secrets container reference
 	/// </summary>
@@ -294,10 +296,10 @@ else
 		visibleElement = VisibleElement.NewAndOpenWizard;
 	}
 
-	private void CreateNewCommonSecretsContainer(KdfeAndPassword kdfeAndPassword)
+	private async Task CreateNewCommonSecretsContainer(KdfeAndPassword kdfeAndPassword)
 	{
 		this.derivedPasswords.Clear();
-		this.derivedPasswords[kdfeAndPassword.kdfe.GetKeyIdentifier()] = kdfeAndPassword.kdfe.GeneratePasswordBytes(kdfeAndPassword.password);
+		this.derivedPasswords[kdfeAndPassword.kdfe.GetKeyIdentifier()] = await kdfeAndPassword.kdfe.GeneratePasswordBytesAsync(kdfeAndPassword.password, securityAsyncFunctions);
 
 		this.csc = new CommonSecretsContainer(kdfeAndPassword.kdfe);
 

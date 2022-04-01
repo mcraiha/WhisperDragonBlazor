@@ -1,14 +1,13 @@
 using System;
 using System.ComponentModel.DataAnnotations;
-using System.Security.Cryptography;
+//using System.Security.Cryptography;
 using CSCommonSecrets;
-using Microsoft.AspNetCore.Cryptography.KeyDerivation;
 
 public class KeyDerivationFunctionData
 {
 	private byte[] salt = new byte[16];
 
-	public KeyDerivationPrf SelectedPseudorandomFunction { get; set; } = KeyDerivationPrf.HMACSHA256;
+	public KeyDerivationPseudoRandomFunction SelectedPseudorandomFunction { get; set; } = KeyDerivationPseudoRandomFunction.HMACSHA256;
 
 	public string Salt
 	{
@@ -24,14 +23,14 @@ public class KeyDerivationFunctionData
 	[Required, MinLength(1)]
 	public string Identifier { get; set; } = "Primary";
 
-	public KeyDerivationFunctionData()
+	public KeyDerivationFunctionData(ISecurityAsyncFunctions securityAsyncFunctions)
 	{
-		this.GenerateSalt();
+		this.GenerateSalt(securityAsyncFunctions);
 	}
 
-	private void GenerateSalt()
+	private void GenerateSalt(ISecurityAsyncFunctions securityAsyncFunctions)
 	{
-		this.salt = RandomNumberGenerator.GetBytes(this.salt.Length);
+		securityAsyncFunctions.GenerateSecureRandomBytes(this.salt);
 	}
 
 	public byte[] GetSaltAsByteArray()
