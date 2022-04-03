@@ -1,12 +1,19 @@
 using CSCommonSecrets;
 using System.Threading.Tasks;
 using System;
+using Microsoft.JSInterop;
 
 /// <summary>
 /// For async testing purposes only
 /// </summary>
-public class SecurityAsyncFunctions : ISecurityAsyncFunctions
+public sealed class SecurityAsyncFunctions : ISecurityAsyncFunctions
 {
+    private readonly Microsoft.JSInterop.IJSRuntime runtime;
+    public SecurityAsyncFunctions(Microsoft.JSInterop.IJSRuntime jsRuntime)
+    {
+        this.runtime = jsRuntime;
+    }
+
     /// <summary>
     /// Get AES CTR Allowed Counter Length
     /// </summary>
@@ -25,17 +32,7 @@ public class SecurityAsyncFunctions : ISecurityAsyncFunctions
     /// <returns></returns>
     public async Task<byte[]> AES_Encrypt(byte[] bytesToEncrypt, byte[] key, byte[] initialCounter)
     {
-        await Task.Delay(1);
-
-        throw new NotImplementedException();
-
-       /* byte[] returnArray = new byte[bytesToEncrypt.Length];
-        using (AES_CTR forEncrypting = new AES_CTR(key, initialCounter))
-        {
-            forEncrypting.EncryptBytes(returnArray, bytesToEncrypt, bytesToEncrypt.Length);
-        }
-
-        return returnArray;*/
+        return await this.runtime.InvokeAsync<byte[]>("cryptAES_CTR", bytesToEncrypt, key, initialCounter);
     }
 
     /// <summary>

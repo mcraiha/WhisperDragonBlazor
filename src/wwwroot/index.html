@@ -42,6 +42,28 @@
                 console.error('Failed to copy: ', err);
             }
         };
+
+        // Used for both encryption and decryption of AES-CTR content
+        window.cryptAES_CTR = async (bytesToCrypt, key, initialCounter) => {
+            const cryptoKey = await crypto.subtle.importKey(
+                "raw",
+                key,
+                "AES-CTR",
+                false,
+                ["encrypt", "decrypt"]
+            );
+
+            const cryptedArray = await crypto.subtle.encrypt(
+                {
+                name: "AES-CTR",
+                counter: initialCounter,
+                length: initialCounter.length * 8
+                },
+                cryptoKey,
+                bytesToEncrypt);
+
+            return new Uint8Array(cryptedArray);
+        };
     </script>
 </body>
 

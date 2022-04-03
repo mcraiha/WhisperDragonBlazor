@@ -1,4 +1,5 @@
 @page "/"
+@inject IJSRuntime JS
 
 @if (visibleElement == VisibleElement.NewAndOpenWizard)
 {
@@ -119,7 +120,7 @@ else
 
 	private VisibleElement visibleElement = VisibleElement.NewAndOpenWizard;
 
-	private static readonly SecurityAsyncFunctions securityAsyncFunctions = new SecurityAsyncFunctions();
+	private SecurityAsyncFunctions securityAsyncFunctions = null;
 
 	/// <summary>
 	/// Our current common secrets container reference
@@ -154,6 +155,11 @@ else
 	private Action<MouseEventArgs> deleteCancelAction;
 	private Action<MouseEventArgs> deleteActualAction;
 	private string whatToDelete = "";
+
+	protected override void OnInitialized()
+	{
+		this.securityAsyncFunctions = new SecurityAsyncFunctions(JS);
+	}
 
 	// Wizard
 	private void CreateNewContainer(MouseEventArgs e)
