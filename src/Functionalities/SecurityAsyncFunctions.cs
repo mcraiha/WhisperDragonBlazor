@@ -97,14 +97,7 @@ public sealed class SecurityAsyncFunctions : ISecurityAsyncFunctions
     /// <returns></returns>
     public async Task<byte[]> SHA256_Hash(byte[] bytesToHash)
     {
-        await Task.Delay(1);
-
-        throw new NotImplementedException();
-
-        /*using (SHA256 mySHA256 = SHA256.Create())
-        {
-            return mySHA256.ComputeHash(bytesToHash);
-        }*/
+        return await this.runtime.InvokeAsync<byte[]>("hashSha256", bytesToHash);
     }
 
     private static System.Security.Cryptography.RandomNumberGenerator rng = System.Security.Cryptography.RandomNumberGenerator.Create();

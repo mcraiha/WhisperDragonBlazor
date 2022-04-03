@@ -72,6 +72,10 @@
             const params = {name: "PBKDF2", hash: hashFunction, salt: salt, iterations: iterationCount};
             return await crypto.subtle.deriveBits(params, importedKey, keyLengthInBytes * 8);
         };
+
+        window.hashSha256 = async (data) => {
+            return new Uint8Array(await crypto.subtle.digest('SHA-256', data));
+        };
     </script>
 </body>
 
