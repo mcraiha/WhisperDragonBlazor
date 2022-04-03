@@ -70,7 +70,7 @@
             const importedKey = await crypto.subtle.importKey("raw", passwordBuffer, "PBKDF2", false, ["deriveBits"]);
             
             const params = {name: "PBKDF2", hash: hashFunction, salt: salt, iterations: iterationCount};
-            return await crypto.subtle.deriveBits(params, importedKey, keyLengthInBytes * 8);
+            return new Uint8Array(await crypto.subtle.deriveBits(params, importedKey, keyLengthInBytes * 8));
         };
 
         window.hashSha256 = async (data) => {
