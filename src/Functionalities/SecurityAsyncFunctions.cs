@@ -1,6 +1,7 @@
 using CSCommonSecrets;
 using System.Threading.Tasks;
 using System;
+using System.Collections.Generic;
 using Microsoft.JSInterop;
 
 /// <summary>
@@ -67,6 +68,12 @@ public sealed class SecurityAsyncFunctions : ISecurityAsyncFunctions
         return returnArray;*/
     }
 
+    private static readonly Dictionary<KeyDerivationPseudoRandomFunction, string> keyDerivationPseudoRandomFunctionToJS = new Dictionary<KeyDerivationPseudoRandomFunction, string>()
+    {
+        { KeyDerivationPseudoRandomFunction.HMACSHA256, "SHA-256" },
+        { KeyDerivationPseudoRandomFunction.HMACSHA512, "SHA-512" },
+    };
+
     /// <summary>
     /// Performs key derivation using the PBKDF2 algorithm
     /// </summary>
@@ -78,11 +85,8 @@ public sealed class SecurityAsyncFunctions : ISecurityAsyncFunctions
     /// <returns></returns>
     public async Task<byte[]> Pbkdf2(string password, byte[] salt, KeyDerivationPseudoRandomFunction prf, int iterationCount, int numBytesRequested)
     {
-        await Task.Delay(1);
-
-        throw new NotImplementedException();
-
-        //return Microsoft.AspNetCore.Cryptography.KeyDerivation.KeyDerivation.Pbkdf2(password, salt, (Microsoft.AspNetCore.Cryptography.KeyDerivation.KeyDerivationPrf)prf, iterationCount, numBytesRequested);
+        string hashFunction = keyDerivationPseudoRandomFunctionToJS[prf];
+        return await this.runtime.InvokeAsync<byte[]>("deriveKeyWithPbkdf2", password, salt, iterationCount, hashFunction, numBytesRequested);
     }
 
     /// <summary>

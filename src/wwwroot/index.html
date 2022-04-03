@@ -64,6 +64,14 @@
 
             return new Uint8Array(cryptedArray);
         };
+
+        window.deriveKeyWithPbkdf2 = async (password, salt, iterationCount, hashFunction, keyLengthInBytes) => {
+            const passwordBuffer = new TextEncoder("utf-8").encode(password);
+            const importedKey = await crypto.subtle.importKey("raw", passwordBuffer, "PBKDF2", false, ["deriveBits"]);
+            
+            const params = {name: "PBKDF2", hash: hashFunction, salt: salt, iterations: iterationCount};
+            return await crypto.subtle.deriveBits(params, importedKey, keyLengthInBytes * 8);
+        };
     </script>
 </body>
 
