@@ -3,6 +3,7 @@ using System.Threading.Tasks;
 using System;
 using System.Collections.Generic;
 using Microsoft.JSInterop;
+using System.Security.Cryptography;
 
 /// <summary>
 /// For async testing purposes only
@@ -114,8 +115,7 @@ public sealed class SecurityAsyncFunctions : ISecurityAsyncFunctions
     /// <param name="byteArray"></param>
     public void GenerateSecureRandomBytes(byte[] byteArray)
     {
-        throw new NotImplementedException();
-        //rng.GetBytes(byteArray);
+        RandomNumberGenerator.Create().GetBytes(byteArray);
     }
 
     /// <summary>
@@ -126,7 +126,6 @@ public sealed class SecurityAsyncFunctions : ISecurityAsyncFunctions
     /// <param name="count"></param>
     public void GenerateSecureRandomBytes(byte[] byteArray, int offset, int count)
     {
-        throw new NotImplementedException();
-        //rng.GetBytes(byteArray, offset, count);
+        RandomNumberGenerator.Create().GetBytes(byteArray, offset, count);
     }
 }
