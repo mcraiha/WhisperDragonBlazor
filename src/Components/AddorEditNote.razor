@@ -3,7 +3,18 @@
         <header>Add note</header>
         <label for="issecure">Is secure @if (IsSecure) {@CommonIcons.secureIcon} else {@CommonIcons.unsecureIcon}</label>
 		<input type="checkbox" id="issecure" @bind="@IsSecure">
-		<br>
+        <br>
+        @if (IsSecure)
+        {
+            <InputSelect @bind-Value="KeyIdentifier">
+				@foreach (string keyIdentifier in PossibleKeyIdentifiers)
+                {
+                    <option value="@keyIdentifier">@keyIdentifier</option>
+                }
+			</InputSelect>
+            <br>
+        }
+		
 		<label for="notetitle">Note title</label>
 		<input type="text" id="notetitle" @bind="@NoteTitle" placeholder="Title for the note">
 		<br>
@@ -17,6 +28,9 @@
 
 @code {
     [Parameter, EditorRequired]
+    public IEnumerable<string> PossibleKeyIdentifiers { get; set; }
+
+    [Parameter, EditorRequired]
     public EventCallback<NoteSimplified> OnAddCallback { get; set; }
 
     [Parameter, EditorRequired]
@@ -24,12 +38,14 @@
 
     public bool IsSecure { get; set; } = true;
 
+    public string KeyIdentifier { get; set; } = "";
+
     public string NoteTitle { get; set; } = "";
 
     public string NoteText { get; set; } = "";
 
-    private void TryToAddNote()
+    private async Task TryToAddNote()
     {
-        OnAddCallback.InvokeAsync(new NoteSimplified() { IsSecure = this.IsSecure, Title = NoteTitle, Text = NoteText});
+        await OnAddCallback.InvokeAsync(new NoteSimplified() { IsSecure = this.IsSecure, Title = NoteTitle, Text = NoteText});
     }
 }

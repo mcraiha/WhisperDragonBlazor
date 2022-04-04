@@ -15,4 +15,6 @@ public sealed class NoteSimplified
     public string CreationTime { get; set; }
 
     public string ModificationTime { get; set; }
+
+    public string KDFIdentifier { get; set; }
 }

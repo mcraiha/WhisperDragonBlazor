@@ -49,7 +49,7 @@ else if (visibleElement == VisibleElement.AddOrEditLoginInformation)
 }
 else if (visibleElement == VisibleElement.AddOrEditNote)
 {
-	<AddOrEditNote OnAddCallback="@AddNote" OnCancelCallback="@CancelAddNote" />
+	<AddOrEditNote PossibleKeyIdentifiers="@GetKeyIdentifiers()" OnAddCallback="@AddNote" OnCancelCallback="@CancelAddNote" />
 }
 else if (visibleElement == VisibleElement.AddOrEditFile)
 {
@@ -314,6 +314,11 @@ else
 		visibleElement = VisibleElement.ShowLoginInformations;
 	}
 
+	private List<string> GetKeyIdentifiers()
+	{
+		return new List<string>() { "test" };
+	}
+
 	// TopNav actions
 	private void TopNavShowLoginInformations(MouseEventArgs e)
 	{
@@ -389,8 +394,16 @@ else
 		visibleElement = VisibleElement.AddOrEditNote;
 	}
 
-	private void AddNote(NoteSimplified newNote)
+	private async Task AddNote(NoteSimplified newNote)
 	{
+		/*if (newNote.IsSecure)
+		{
+			await this.csc.AddNoteSecretAsync() 
+		}
+		else
+		{
+			this.csc.notes.Add(await Note.CreateNoteAsync(newNote.Title, newNote.Text, this.securityAsyncFunctions));
+		}*/
 		notes.Add(newNote);
 		visibleElement = VisibleElement.ShowNotes;
 	}
