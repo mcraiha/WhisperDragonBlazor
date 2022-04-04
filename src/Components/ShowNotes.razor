@@ -1,5 +1,17 @@
 @inject IJSRuntime JS
 
+@if (Notes == null || Notes.Count < 1)
+{
+	<p>No notes</p>
+}
+else
+{
+<input type='text' @bind="@SearchFilter" placeholder="Filter, press Enter to apply" />
+@if (!string.IsNullOrEmpty(searchFilter))
+{
+	<br>
+	<p>Filter is matching @FilteredNotes.Count / @Notes.Count </p>
+}
 <table id="notes">
 	<thead>
 		<tr>
@@ -19,7 +31,7 @@
 	</thead>
 
 	<tbody>
-		@foreach (var item in Notes)
+		@foreach (var item in FilteredNotes)
         {
 			int indexToHandle = item.zeroBasedIndexNumber;
 			<tr>
@@ -46,7 +58,7 @@
         }
 	</tbody>
 </table>
-
+}
 <br>
 
 <button title="Add note" @onclick="AddNoteCallback">+ Add</button>
@@ -59,6 +71,35 @@
 
 	[Parameter, EditorRequired]
 	public EventCallback<int> DeleteLoginCallback { get; set; }
+
+	private IReadOnlyList<NoteSimplified> FilteredNotes { get; set; }
+
+	private static readonly StringComparison searchComparison = StringComparison.OrdinalIgnoreCase;
+	private string searchFilter = "";
+	private string SearchFilter 
+	{ 
+		get
+		{
+			return this.searchFilter;
+		} 
+		set
+		{
+			this.searchFilter = value;
+			if (string.IsNullOrEmpty(this.searchFilter))
+			{
+				this.FilteredNotes = this.Notes;
+			}
+			else
+			{
+				this.FilteredNotes = this.Notes.Where(x => x.Title.Contains(this.searchFilter, searchComparison) || x.Text.Contains(this.searchFilter, searchComparison)).ToList();
+			}
+		} 
+	}
+
+	protected override void OnInitialized()
+	{
+		this.FilteredNotes = this.Notes;
+	}
 
 	// Copy to clipboard methods
 	private async Task CallTitleCopy(int zeroBasedIndexNumber)
