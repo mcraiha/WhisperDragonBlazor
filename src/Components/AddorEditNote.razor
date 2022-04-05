@@ -6,12 +6,12 @@
         <br>
         @if (IsSecure)
         {
-            <InputSelect @bind-Value="KeyIdentifier">
+            <select @bind="KeyIdentifier">
 				@foreach (string keyIdentifier in PossibleKeyIdentifiers)
                 {
                     <option value="@keyIdentifier">@keyIdentifier</option>
                 }
-			</InputSelect>
+			</select>
             <br>
         }
 		
@@ -27,15 +27,22 @@
 </section>
 
 @code {
+    [Parameter]
+    public Note note { get; set; }
+
+    [Parameter, EditorRequired]
+    public ISecurityAsyncFunctions SecurityAsyncFunctions { get; set; }
+
     [Parameter, EditorRequired]
     public IEnumerable<string> PossibleKeyIdentifiers { get; set; }
 
     [Parameter, EditorRequired]
-    public EventCallback<NoteSimplified> OnAddCallback { get; set; }
+    public EventCallback<Note> OnAddCallback { get; set; }
 
     [Parameter, EditorRequired]
     public EventCallback<MouseEventArgs> OnCancelCallback { get; set; }
 
+    [Parameter]
     public bool IsSecure { get; set; } = true;
 
     public string KeyIdentifier { get; set; } = "";
@@ -44,8 +51,28 @@
 
     public string NoteText { get; set; } = "";
 
+    protected override void OnInitialized()
+	{
+        if (this.note != null)
+        {
+            this.NoteTitle = note.GetNoteTitle();
+            this.NoteText = note.GetNoteText();
+        }
+	}
+
     private async Task TryToAddNote()
     {
-        await OnAddCallback.InvokeAsync(new NoteSimplified() { IsSecure = this.IsSecure, Title = NoteTitle, Text = NoteText});
+        if (this.note != null)
+        {
+            // Existing note
+            await this.note.UpdateNoteAsync(this.NoteTitle, this.NoteText, this.SecurityAsyncFunctions);
+            //await OnAddCallback.InvokeAsync(this.note);
+        }
+        else
+        {
+            // New note
+            Note newNote = await Note.CreateNoteAsync(this.NoteTitle, this.NoteText, this.SecurityAsyncFunctions);
+            await OnAddCallback.InvokeAsync(this.note);
+        }
     }
 }
