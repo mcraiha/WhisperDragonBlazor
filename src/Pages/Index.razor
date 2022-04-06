@@ -16,31 +16,31 @@ else if (visibleElement == VisibleElement.ShowPasswordCreators)
 else if (visibleElement == VisibleElement.ShowLoginInformations)
 {
 	<CommonSecretsTopNav OnLoginsClickCallback="@TopNavShowLoginInformations" OnNotesClickCallback="@TopNavShowNotes" OnFilesClickCallback="@TopNavShowFiles" OnContactsClickCallback="@TopNavShowContacts" OnPaymentCardsClickCallback="@TopNavShowPaymentCards"
-		loginsCount="@logins.Count" notesCount="@notes.Count" filesCount="@files.Count" contactsCount="@contacts.Count" paymentCardsCount="@paymentCards.Count" />
+		loginsCount="@logins.Count" notesCount="@this.csc.notes.Count" filesCount="@files.Count" contactsCount="@contacts.Count" paymentCardsCount="@paymentCards.Count" />
 	<ShowLoginInformations Logins="@logins" AddLoginCallback="@ShowAddLoginInformation" DeleteLoginCallback="@DeleteLoginInformationConfirmation" />
 }
 else if (visibleElement == VisibleElement.ShowNotes)
 {
 	<CommonSecretsTopNav OnLoginsClickCallback="@TopNavShowLoginInformations" OnNotesClickCallback="@TopNavShowNotes" OnFilesClickCallback="@TopNavShowFiles" OnContactsClickCallback="@TopNavShowContacts" OnPaymentCardsClickCallback="@TopNavShowPaymentCards" 
-		loginsCount="@logins.Count" notesCount="@notes.Count" filesCount="@files.Count" contactsCount="@contacts.Count" paymentCardsCount="@paymentCards.Count" />
-	<ShowNotes Notes="@notes" AddNoteCallback="@ShowAddNote" DeleteLoginCallback="@DeleteNoteConfirmation" />
+		loginsCount="@logins.Count" notesCount="@csc.notes.Count" filesCount="@files.Count" contactsCount="@contacts.Count" paymentCardsCount="@paymentCards.Count" />
+	<ShowNotes Notes="@NoteSimplified.CreateNoteSimplifieds(csc.notes)" AddNoteCallback="@ShowAddNote" DeleteLoginCallback="@DeleteNoteConfirmation" />
 }
 else if (visibleElement == VisibleElement.ShowFiles)
 {
 	<CommonSecretsTopNav OnLoginsClickCallback="@TopNavShowLoginInformations" OnNotesClickCallback="@TopNavShowNotes" OnFilesClickCallback="@TopNavShowFiles" OnContactsClickCallback="@TopNavShowContacts" OnPaymentCardsClickCallback="@TopNavShowPaymentCards" 
-		loginsCount="@logins.Count" notesCount="@notes.Count" filesCount="@files.Count" contactsCount="@contacts.Count" paymentCardsCount="@paymentCards.Count" />
+		loginsCount="@logins.Count" notesCount="@this.csc.notes.Count" filesCount="@files.Count" contactsCount="@contacts.Count" paymentCardsCount="@paymentCards.Count" />
 	<ShowFiles Files="@files" AddFileCallback="@ShowAddFile" DeleteLoginCallback="@DeleteFileConfirmation" />
 }
 else if (visibleElement == VisibleElement.ShowContacts)
 {
 	<CommonSecretsTopNav OnLoginsClickCallback="@TopNavShowLoginInformations" OnNotesClickCallback="@TopNavShowNotes" OnFilesClickCallback="@TopNavShowFiles" OnContactsClickCallback="@TopNavShowContacts" OnPaymentCardsClickCallback="@TopNavShowPaymentCards" 
-		loginsCount="@logins.Count" notesCount="@notes.Count" filesCount="@files.Count" contactsCount="@contacts.Count" paymentCardsCount="@paymentCards.Count" />
+		loginsCount="@logins.Count" notesCount="@this.csc.notes.Count" filesCount="@files.Count" contactsCount="@contacts.Count" paymentCardsCount="@paymentCards.Count" />
 	<ShowContacts Contacts="@contacts" AddContactCallback="@ShowAddContact" DeleteLoginCallback="@DeleteContactConfirmation" />
 }
 else if (visibleElement == VisibleElement.ShowPaymentCards)
 {
 	<CommonSecretsTopNav OnLoginsClickCallback="@TopNavShowLoginInformations" OnNotesClickCallback="@TopNavShowNotes" OnFilesClickCallback="@TopNavShowFiles" OnContactsClickCallback="@TopNavShowContacts" OnPaymentCardsClickCallback="@TopNavShowPaymentCards" 
-		loginsCount="@logins.Count" notesCount="@notes.Count" filesCount="@files.Count" contactsCount="@contacts.Count" paymentCardsCount="@paymentCards.Count" />
+		loginsCount="@logins.Count" notesCount="@this.csc.notes.Count" filesCount="@files.Count" contactsCount="@contacts.Count" paymentCardsCount="@paymentCards.Count" />
 	<ShowPaymentCards PaymentCards="@paymentCards" AddPaymentCardCallback="@ShowAddPaymentCard" DeleteLoginCallback="@DeletePaymentCardConfirmation" />
 }
 else if (visibleElement == VisibleElement.AddOrEditLoginInformation)
@@ -49,7 +49,7 @@ else if (visibleElement == VisibleElement.AddOrEditLoginInformation)
 }
 else if (visibleElement == VisibleElement.AddOrEditNote)
 {
-	<AddOrEditNote SecurityAsyncFunctions="@securityAsyncFunctions" PossibleKeyIdentifiers="@GetKeyIdentifiers()" OnAddCallback="@AddNote" OnCancelCallback="@CancelAddNote" />
+	<AddOrEditNote SecurityAsyncFunctions="@securityAsyncFunctions" PossibleKeyIdentifiers="@GetKeyIdentifiers()" OnAddCallback="@AddNote" OnEditedCallback="@EditedNote" OnCancelCallback="@CancelAddNote" />
 }
 else if (visibleElement == VisibleElement.AddOrEditFile)
 {
@@ -141,8 +141,6 @@ else
 
 	private List<LoginSimplified> logins = new List<LoginSimplified>();
 
-	private List<NoteSimplified> notes = new List<NoteSimplified>();
-
 	private List<FileSimplified> files = new List<FileSimplified>();
 
 	private List<ContactSimplified> contacts = new List<ContactSimplified>();
@@ -197,24 +195,6 @@ else
 				Category = "Samples",
 				Tags = "Samples Demo",
 			},
-		};
-
-		notes = new List<NoteSimplified>()
-		{
-			new NoteSimplified()
-			{
-				zeroBasedIndexNumber = 0,
-				IsSecure = true,
-				Title = "Shopping list",
-				Text = "Butter, milk, eggs, cucumber"
-			},
-			new NoteSimplified()
-			{
-				zeroBasedIndexNumber = 1,
-				IsSecure = false,
-				Title = "TODO list",
-				Text = "Call elevator repair person"
-			}
 		};
 
 		files = new List<FileSimplified>()
@@ -404,7 +384,18 @@ else
 		{
 			this.csc.notes.Add(await Note.CreateNoteAsync(newNote.Title, newNote.Text, this.securityAsyncFunctions));
 		}*/
+		if (newNote == null)
+		{
+			Console.WriteLine("FATAL!");
+		}
 		this.csc.notes.Add(newNote);
+		this.isModified = true;
+		visibleElement = VisibleElement.ShowNotes;
+	}
+
+	private void EditedNote()
+	{
+		this.isModified = true;
 		visibleElement = VisibleElement.ShowNotes;
 	}
 
@@ -418,7 +409,7 @@ else
 		deleteActualAction = DeleteNoteActual;
 		deleteCancelAction = DeleteNoteCancel;
 		deleteIndex = zeroBasedIndexNumber;
-		whatToDelete = $"Note with title '{notes[zeroBasedIndexNumber].Title}'";
+		whatToDelete = $"Note with title '{this.csc.notes[zeroBasedIndexNumber].GetNoteTitle()}'";
 		//deleteType = ItemType.Note;
 		visibleElement = VisibleElement.DeleteItemConfirmation;
 	}
@@ -431,9 +422,9 @@ else
 
 	private void DeleteNoteActual(MouseEventArgs e)
 	{
-		if (-1 < deleteIndex && deleteIndex < notes.Count)
+		if (-1 < deleteIndex && deleteIndex < this.csc.notes.Count)
 		{
-			notes.RemoveAt(deleteIndex);
+			this.csc.notes.RemoveAt(deleteIndex);
 		}
 		ResetDelete();
 		visibleElement = VisibleElement.ShowNotes;

@@ -1,6 +1,15 @@
 <section>
     <form>
-        <header>Add note</header>
+
+        @if (note != null)
+        {
+            <header>Edit note</header>
+        }
+        else
+        {
+            <header>Add note</header>
+        }
+        
         <label for="issecure">Is secure @if (IsSecure) {@CommonIcons.secureIcon} else {@CommonIcons.unsecureIcon}</label>
 		<input type="checkbox" id="issecure" @bind="@IsSecure">
         <br>
@@ -22,7 +31,15 @@
         <textarea id="notetext" @bind="@NoteText" rows="20" placeholder="Text for the note"></textarea>
         <br>
         <br>
-        <button type="button" id="cancel" @onclick="OnCancelCallback">Cancel</button> <button type="button" id="addnote" @onclick="TryToAddNote">Add note</button>
+        <button type="button" id="cancel" @onclick="OnCancelCallback">Cancel</button> 
+        @if (note != null)
+        {
+            <button type="button" id="editnote" @onclick="TryToEditNote">Save changes</button>
+        }
+        else
+        {
+            <button type="button" id="addnote" @onclick="TryToAddNote">Add note</button>
+        }
     </form>
 </section>
 
@@ -38,6 +55,9 @@
 
     [Parameter, EditorRequired]
     public EventCallback<Note> OnAddCallback { get; set; }
+
+    [Parameter, EditorRequired]
+    public EventCallback<MouseEventArgs> OnEditedCallback { get; set; }
 
     [Parameter, EditorRequired]
     public EventCallback<MouseEventArgs> OnCancelCallback { get; set; }
@@ -60,19 +80,24 @@
         }
 	}
 
+    /// <summary>
+    /// When user adds new note
+    /// </summary>
+    /// <returns></returns>
     private async Task TryToAddNote()
     {
-        if (this.note != null)
-        {
-            // Existing note
-            await this.note.UpdateNoteAsync(this.NoteTitle, this.NoteText, this.SecurityAsyncFunctions);
-            //await OnAddCallback.InvokeAsync(this.note);
-        }
-        else
-        {
-            // New note
-            Note newNote = await Note.CreateNoteAsync(this.NoteTitle, this.NoteText, this.SecurityAsyncFunctions);
-            await OnAddCallback.InvokeAsync(this.note);
-        }
+        // New note
+        Note newNote = await Note.CreateNoteAsync(this.NoteTitle, this.NoteText, this.SecurityAsyncFunctions);
+        await OnAddCallback.InvokeAsync(newNote);
+    }
+
+    /// <summary>
+    /// When user saves changes to existing note
+    /// </summary>
+    /// <returns></returns>
+    private async Task TryToEditNote()
+    {
+        await this.note.UpdateNoteAsync(this.NoteTitle, this.NoteText, this.SecurityAsyncFunctions);
+        await OnEditedCallback.InvokeAsync();
     }
 }
