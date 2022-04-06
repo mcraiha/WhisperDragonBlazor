@@ -1,3 +1,5 @@
+using System.Collections.Generic;
+using CSCommonSecrets;
 
 public sealed class NoteSimplified
 {
@@ -17,4 +19,23 @@ public sealed class NoteSimplified
     public string ModificationTime { get; set; }
 
     public string KDFIdentifier { get; set; }
+
+    public static NoteSimplified[] CreateNoteSimplifieds(List<Note> notes)
+    {
+        NoteSimplified[] returnValues = new NoteSimplified[notes.Count];
+
+        for (int i = 0; i < notes.Count; i++)
+        {
+            NoteSimplified noteSimplified = new NoteSimplified()
+            {
+                IsSecure = false,
+                Title = notes[i].GetNoteTitle(),
+                Text = notes[i].GetNoteText(),
+            };
+
+            returnValues[i] = noteSimplified;
+        }
+
+        return returnValues;
+    }
 }
