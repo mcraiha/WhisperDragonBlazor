@@ -53,10 +53,10 @@
     [Parameter, EditorRequired]
     public IEnumerable<string> PossibleKeyIdentifiers { get; set; }
 
-    [Parameter, EditorRequired]
+    [Parameter]
     public EventCallback<Note> OnAddCallback { get; set; }
 
-    [Parameter, EditorRequired]
+    [Parameter]
     public EventCallback<MouseEventArgs> OnEditedCallback { get; set; }
 
     [Parameter, EditorRequired]
