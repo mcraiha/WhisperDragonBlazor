@@ -73,7 +73,7 @@ else
 	public EventCallback<int> EditNoteCallback { get; set; }
 
 	[Parameter, EditorRequired]
-	public EventCallback<int> DeleteLoginCallback { get; set; }
+	public EventCallback<int> DeleteNoteCallback { get; set; }
 
 	private IReadOnlyList<NoteSimplified> FilteredNotes { get; set; }
 
@@ -124,6 +124,6 @@ else
 	// Delete method
 	private async Task CallDelete(int zeroBasedIndexNumber)
 	{
-		await DeleteLoginCallback.InvokeAsync(zeroBasedIndexNumber);
+		await DeleteNoteCallback.InvokeAsync(zeroBasedIndexNumber);
 	}
 }

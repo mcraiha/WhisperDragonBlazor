@@ -77,7 +77,7 @@ else
 	public EventCallback<MouseEventArgs> AddFileCallback { get; set; }
 
 	[Parameter, EditorRequired]
-	public EventCallback<int> DeleteLoginCallback { get; set; }
+	public EventCallback<int> DeleteFileCallback { get; set; }
 
 	private IReadOnlyList<FileSimplified> FilteredFiles { get; set; }
 
@@ -118,6 +118,6 @@ else
 	// Delete method
 	private async Task CallDelete(int zeroBasedIndexNumber)
 	{
-		await DeleteLoginCallback.InvokeAsync(zeroBasedIndexNumber);
+		await DeleteFileCallback.InvokeAsync(zeroBasedIndexNumber);
 	}
 }

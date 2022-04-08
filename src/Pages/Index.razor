@@ -23,25 +23,25 @@ else if (visibleElement == VisibleElement.ShowNotes)
 {
 	<CommonSecretsTopNav OnLoginsClickCallback="@TopNavShowLoginInformations" OnNotesClickCallback="@TopNavShowNotes" OnFilesClickCallback="@TopNavShowFiles" OnContactsClickCallback="@TopNavShowContacts" OnPaymentCardsClickCallback="@TopNavShowPaymentCards" 
 		loginsCount="@logins.Count" notesCount="@csc.notes.Count" filesCount="@files.Count" contactsCount="@contacts.Count" paymentCardsCount="@paymentCards.Count" />
-	<ShowNotes Notes="@NoteSimplified.CreateNoteSimplifieds(csc.notes)" AddNoteCallback="@ShowAddNote" EditNoteCallback="@ShowEditNote" DeleteLoginCallback="@DeleteNoteConfirmation" />
+	<ShowNotes Notes="@NoteSimplified.CreateNoteSimplifieds(csc.notes)" AddNoteCallback="@ShowAddNote" EditNoteCallback="@ShowEditNote" DeleteNoteCallback="@DeleteNoteConfirmation" />
 }
 else if (visibleElement == VisibleElement.ShowFiles)
 {
 	<CommonSecretsTopNav OnLoginsClickCallback="@TopNavShowLoginInformations" OnNotesClickCallback="@TopNavShowNotes" OnFilesClickCallback="@TopNavShowFiles" OnContactsClickCallback="@TopNavShowContacts" OnPaymentCardsClickCallback="@TopNavShowPaymentCards" 
 		loginsCount="@logins.Count" notesCount="@this.csc.notes.Count" filesCount="@files.Count" contactsCount="@contacts.Count" paymentCardsCount="@paymentCards.Count" />
-	<ShowFiles Files="@files" AddFileCallback="@ShowAddFile" DeleteLoginCallback="@DeleteFileConfirmation" />
+	<ShowFiles Files="@files" AddFileCallback="@ShowAddFile" DeleteFileCallback="@DeleteFileConfirmation" />
 }
 else if (visibleElement == VisibleElement.ShowContacts)
 {
 	<CommonSecretsTopNav OnLoginsClickCallback="@TopNavShowLoginInformations" OnNotesClickCallback="@TopNavShowNotes" OnFilesClickCallback="@TopNavShowFiles" OnContactsClickCallback="@TopNavShowContacts" OnPaymentCardsClickCallback="@TopNavShowPaymentCards" 
 		loginsCount="@logins.Count" notesCount="@this.csc.notes.Count" filesCount="@files.Count" contactsCount="@contacts.Count" paymentCardsCount="@paymentCards.Count" />
-	<ShowContacts Contacts="@contacts" AddContactCallback="@ShowAddContact" DeleteLoginCallback="@DeleteContactConfirmation" />
+	<ShowContacts Contacts="@contacts" AddContactCallback="@ShowAddContact" DeleteContactCallback="@DeleteContactConfirmation" />
 }
 else if (visibleElement == VisibleElement.ShowPaymentCards)
 {
 	<CommonSecretsTopNav OnLoginsClickCallback="@TopNavShowLoginInformations" OnNotesClickCallback="@TopNavShowNotes" OnFilesClickCallback="@TopNavShowFiles" OnContactsClickCallback="@TopNavShowContacts" OnPaymentCardsClickCallback="@TopNavShowPaymentCards" 
 		loginsCount="@logins.Count" notesCount="@this.csc.notes.Count" filesCount="@files.Count" contactsCount="@contacts.Count" paymentCardsCount="@paymentCards.Count" />
-	<ShowPaymentCards PaymentCards="@paymentCards" AddPaymentCardCallback="@ShowAddPaymentCard" DeleteLoginCallback="@DeletePaymentCardConfirmation" />
+	<ShowPaymentCards PaymentCards="@paymentCards" AddPaymentCardCallback="@ShowAddPaymentCard" DeletePaymentCardCallback="@DeletePaymentCardConfirmation" />
 }
 else if (visibleElement == VisibleElement.AddLoginInformation)
 {

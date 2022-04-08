@@ -89,7 +89,7 @@ else
 	public EventCallback<MouseEventArgs> AddPaymentCardCallback { get; set; }
 
 	[Parameter, EditorRequired]
-	public EventCallback<int> DeleteLoginCallback { get; set; }
+	public EventCallback<int> DeletePaymentCardCallback { get; set; }
 
 	private IReadOnlyList<PaymentCardSimplified> FilteredPaymentCards { get; set; }
 
@@ -145,6 +145,6 @@ else
 	// Delete method
 	private async Task CallDelete(int zeroBasedIndexNumber)
 	{
-		await DeleteLoginCallback.InvokeAsync(zeroBasedIndexNumber);
+		await DeletePaymentCardCallback.InvokeAsync(zeroBasedIndexNumber);
 	}
 }
