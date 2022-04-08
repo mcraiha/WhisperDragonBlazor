@@ -43,23 +43,23 @@ else if (visibleElement == VisibleElement.ShowPaymentCards)
 		loginsCount="@logins.Count" notesCount="@this.csc.notes.Count" filesCount="@files.Count" contactsCount="@contacts.Count" paymentCardsCount="@paymentCards.Count" />
 	<ShowPaymentCards PaymentCards="@paymentCards" AddPaymentCardCallback="@ShowAddPaymentCard" DeleteLoginCallback="@DeletePaymentCardConfirmation" />
 }
-else if (visibleElement == VisibleElement.AddOrEditLoginInformation)
+else if (visibleElement == VisibleElement.AddLoginInformation)
 {
 	<AddOrEditLoginInformation OnAddCallback="@AddLoginInformation" OnCancelCallback="@CancelAddLoginInformation" />
 }
-else if (visibleElement == VisibleElement.AddOrEditNote)
+else if (visibleElement == VisibleElement.AddNote)
 {
 	<AddOrEditNote SecurityAsyncFunctions="@securityAsyncFunctions" PossibleKeyIdentifiers="@GetKeyIdentifiers()" OnAddCallback="@AddNote" OnEditedCallback="@EditedNote" OnCancelCallback="@CancelAddNote" />
 }
-else if (visibleElement == VisibleElement.AddOrEditFile)
+else if (visibleElement == VisibleElement.AddFile)
 {
 	<AddOrEditFile OnAddCallback="@AddFile" OnCancelCallback="@CancelAddFile" />
 }
-else if (visibleElement == VisibleElement.AddOrEditContact)
+else if (visibleElement == VisibleElement.AddContact)
 {
 	<AddOrEditContact OnAddCallback="@AddContact" OnCancelCallback="@CancelAddContact" />
 }
-else if (visibleElement == VisibleElement.AddOrEditPaymentCard)
+else if (visibleElement == VisibleElement.AddPaymentCard)
 {
 	<AddOrEditPaymentCard OnAddCallback="@AddPaymentCard" OnCancelCallback="@CancelAddPaymentCard" />
 }
@@ -90,11 +90,11 @@ else
 		ShowContacts,
 		ShowPaymentCards,
 		
-		AddOrEditLoginInformation,
-		AddOrEditNote,
-		AddOrEditFile,
-		AddOrEditContact,
-		AddOrEditPaymentCard,
+		AddLoginInformation,
+		AddNote,
+		AddFile,
+		AddContact,
+		AddPaymentCard,
 
 		DeleteItemConfirmation,
 	}
@@ -328,7 +328,7 @@ else
 	// Add, edit or delete login information
 	private void ShowAddLoginInformation(MouseEventArgs e)
 	{
-		visibleElement = VisibleElement.AddOrEditLoginInformation;
+		visibleElement = VisibleElement.AddLoginInformation;
 	}
 
 	private void AddLoginInformation(LoginSimplified newLogin)
@@ -371,7 +371,7 @@ else
 	// Add, edit or delete note
 	private void ShowAddNote(MouseEventArgs e)
 	{
-		visibleElement = VisibleElement.AddOrEditNote;
+		visibleElement = VisibleElement.AddNote;
 	}
 
 	private void AddNote(Note newNote)
@@ -421,7 +421,7 @@ else
 	// Add, edit or delete file
 	private void ShowAddFile(MouseEventArgs e)
 	{
-		visibleElement = VisibleElement.AddOrEditFile;
+		visibleElement = VisibleElement.AddFile;
 	}
 
 	private void AddFile(FileSimplified newFile)
@@ -464,7 +464,7 @@ else
 	// Add, edit or delete contact
 	private void ShowAddContact(MouseEventArgs e)
 	{
-		visibleElement = VisibleElement.AddOrEditContact;
+		visibleElement = VisibleElement.AddContact;
 	}
 
 	private void AddContact(ContactSimplified newContact)
@@ -507,7 +507,7 @@ else
 	// Add, edit or delete  payment card
 	private void ShowAddPaymentCard(MouseEventArgs e)
 	{
-		visibleElement = VisibleElement.AddOrEditPaymentCard;
+		visibleElement = VisibleElement.AddPaymentCard;
 	}
 
 	private void AddPaymentCard(PaymentCardSimplified newPaymentCard)
