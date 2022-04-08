@@ -63,6 +63,26 @@ else if (visibleElement == VisibleElement.AddPaymentCard)
 {
 	<AddOrEditPaymentCard OnAddCallback="@AddPaymentCard" OnCancelCallback="@CancelAddPaymentCard" />
 }
+else if (visibleElement == VisibleElement.EditLoginInformation)
+{
+	<AddOrEditLoginInformation OnAddCallback="@AddLoginInformation" OnCancelCallback="@CancelAddLoginInformation" />
+}
+else if (visibleElement == VisibleElement.EditNote)
+{
+	<AddOrEditNote SecurityAsyncFunctions="@securityAsyncFunctions" PossibleKeyIdentifiers="@GetKeyIdentifiers()" OnAddCallback="@AddNote" OnEditedCallback="@EditedNote" OnCancelCallback="@CancelAddNote" />
+}
+else if (visibleElement == VisibleElement.EditFile)
+{
+	<AddOrEditFile OnAddCallback="@AddFile" OnCancelCallback="@CancelAddFile" />
+}
+else if (visibleElement == VisibleElement.EditContact)
+{
+	<AddOrEditContact OnAddCallback="@AddContact" OnCancelCallback="@CancelAddContact" />
+}
+else if (visibleElement == VisibleElement.EditPaymentCard)
+{
+	<AddOrEditPaymentCard OnAddCallback="@AddPaymentCard" OnCancelCallback="@CancelAddPaymentCard" />
+}
 else if (visibleElement == VisibleElement.DeleteItemConfirmation)
 {
 	<DeleteItemConfirmation OnDeleteClickCallback="@deleteActualAction" OnCancelClickCallback="@deleteCancelAction" WhatToDelete="@whatToDelete" />
