@@ -376,18 +376,6 @@ else
 
 	private void AddNote(Note newNote)
 	{
-		/*if (newNote.IsSecure)
-		{
-			await this.csc.AddNoteSecretAsync() 
-		}
-		else
-		{
-			this.csc.notes.Add(await Note.CreateNoteAsync(newNote.Title, newNote.Text, this.securityAsyncFunctions));
-		}*/
-		if (newNote == null)
-		{
-			Console.WriteLine("FATAL!");
-		}
 		this.csc.notes.Add(newNote);
 		this.isModified = true;
 		visibleElement = VisibleElement.ShowNotes;
