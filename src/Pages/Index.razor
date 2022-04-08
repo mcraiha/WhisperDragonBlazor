@@ -23,7 +23,7 @@ else if (visibleElement == VisibleElement.ShowNotes)
 {
 	<CommonSecretsTopNav OnLoginsClickCallback="@TopNavShowLoginInformations" OnNotesClickCallback="@TopNavShowNotes" OnFilesClickCallback="@TopNavShowFiles" OnContactsClickCallback="@TopNavShowContacts" OnPaymentCardsClickCallback="@TopNavShowPaymentCards" 
 		loginsCount="@logins.Count" notesCount="@csc.notes.Count" filesCount="@files.Count" contactsCount="@contacts.Count" paymentCardsCount="@paymentCards.Count" />
-	<ShowNotes Notes="@NoteSimplified.CreateNoteSimplifieds(csc.notes)" AddNoteCallback="@ShowAddNote" DeleteLoginCallback="@DeleteNoteConfirmation" />
+	<ShowNotes Notes="@NoteSimplified.CreateNoteSimplifieds(csc.notes)" AddNoteCallback="@ShowAddNote" EditNoteCallback="@ShowEditNote" DeleteLoginCallback="@DeleteNoteConfirmation" />
 }
 else if (visibleElement == VisibleElement.ShowFiles)
 {
@@ -49,7 +49,7 @@ else if (visibleElement == VisibleElement.AddLoginInformation)
 }
 else if (visibleElement == VisibleElement.AddNote)
 {
-	<AddOrEditNote SecurityAsyncFunctions="@securityAsyncFunctions" PossibleKeyIdentifiers="@GetKeyIdentifiers()" OnAddCallback="@AddNote" OnCancelCallback="@CancelAddNote" />
+	<AddOrEditNote SecurityAsyncFunctions="@securityAsyncFunctions" PossibleKeyIdentifiers="@GetKeyIdentifiers()" OnAddCallback="@AddNote" OnCancelAddCallback="@CancelAddNote" />
 }
 else if (visibleElement == VisibleElement.AddFile)
 {
@@ -69,7 +69,7 @@ else if (visibleElement == VisibleElement.EditLoginInformation)
 }
 else if (visibleElement == VisibleElement.EditNote)
 {
-	<AddOrEditNote SecurityAsyncFunctions="@securityAsyncFunctions" PossibleKeyIdentifiers="@GetKeyIdentifiers()" OnEditedCallback="@EditedNote" OnCancelCallback="@CancelAddNote" />
+	<AddOrEditNote SecurityAsyncFunctions="@securityAsyncFunctions" PossibleKeyIdentifiers="@GetKeyIdentifiers()" Note="@this.noteToEdit" OnEditedCallback="@EditedNote" OnCancelEditCallback="@CancelEditNote" />
 }
 else if (visibleElement == VisibleElement.EditFile)
 {
@@ -172,6 +172,9 @@ else
 	private List<ContactSimplified> contacts = new List<ContactSimplified>();
 
 	private List<PaymentCardSimplified> paymentCards = new List<PaymentCardSimplified>();
+
+	// Edit related
+	private Note noteToEdit = null;
 
 	// Delete related
 	private ItemType deleteType = ItemType.None;
@@ -407,6 +410,12 @@ else
 		visibleElement = VisibleElement.ShowNotes;
 	}
 
+	private void ShowEditNote(int zeroBasedIndexNumber)
+	{
+		this.noteToEdit = this.csc.notes[zeroBasedIndexNumber];
+		visibleElement = VisibleElement.EditNote;
+	}
+
 	private void EditedNote()
 	{
 		this.isModified = true;
@@ -415,6 +424,12 @@ else
 
 	private void CancelAddNote(MouseEventArgs e)
 	{
+		visibleElement = VisibleElement.ShowNotes;
+	}
+
+	private void CancelEditNote(MouseEventArgs e)
+	{
+		this.noteToEdit = null;
 		visibleElement = VisibleElement.ShowNotes;
 	}
 

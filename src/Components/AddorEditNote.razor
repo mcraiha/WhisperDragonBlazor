@@ -31,13 +31,15 @@
         <textarea id="notetext" @bind="@NoteText" rows="20" placeholder="Text for the note"></textarea>
         <br>
         <br>
-        <button type="button" id="cancel" @onclick="OnCancelCallback">Cancel</button> 
+        
         @if (note != null)
         {
+            <button type="button" id="cancelEdit" @onclick="OnCancelEditCallback">Cancel</button> 
             <button type="button" id="editnote" @onclick="TryToEditNote">Save changes</button>
         }
         else
         {
+            <button type="button" id="cancelAdd" @onclick="OnCancelAddCallback">Cancel</button> 
             <button type="button" id="addnote" @onclick="TryToAddNote">Add note</button>
         }
     </form>
@@ -59,8 +61,11 @@
     [Parameter]
     public EventCallback<MouseEventArgs> OnEditedCallback { get; set; }
 
-    [Parameter, EditorRequired]
-    public EventCallback<MouseEventArgs> OnCancelCallback { get; set; }
+    [Parameter]
+    public EventCallback<MouseEventArgs> OnCancelAddCallback { get; set; }
+
+    [Parameter]
+    public EventCallback<MouseEventArgs> OnCancelEditCallback { get; set; }
 
     [Parameter]
     public bool IsSecure { get; set; } = true;
