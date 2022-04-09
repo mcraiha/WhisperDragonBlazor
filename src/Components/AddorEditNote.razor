@@ -1,4 +1,8 @@
 <section>
+    @if (DebugEnabled)
+	{
+	<p><a @onclick="DebugFillValues">🔥 Debug fill 🔥</a></p>
+	}
     <form>
 
         @if (note != null)
@@ -105,4 +109,20 @@
         await this.note.UpdateNoteAsync(this.NoteTitle, this.NoteText, this.SecurityAsyncFunctions);
         await OnEditedCallback.InvokeAsync();
     }
+
+    #if DEBUG
+
+	private const bool DebugEnabled = true;
+
+	private void DebugFillValues()
+	{
+		this.NoteTitle = "Shopping list";
+		this.NoteText = "Buy milk, butter, mustard, chocolate, paper and flowers";
+	}
+
+	#else
+
+	private const bool DebugEnabled = false;
+
+	#endif // DEBUG
 }
