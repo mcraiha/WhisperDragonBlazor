@@ -20,6 +20,8 @@ public sealed class NoteSimplified
 
     public string KDFIdentifier { get; set; }
 
+    private static readonly string dateTimeOffsetToStringConvert = "u";
+
     public static NoteSimplified[] CreateNoteSimplifieds(List<Note> notes)
     {
         NoteSimplified[] returnValues = new NoteSimplified[notes.Count];
@@ -31,6 +33,8 @@ public sealed class NoteSimplified
                 IsSecure = false,
                 Title = notes[i].GetNoteTitle(),
                 Text = notes[i].GetNoteText(),
+                CreationTime = notes[i].GetCreationTime().ToString(dateTimeOffsetToStringConvert),
+                ModificationTime = notes[i].GetModificationTime().ToString(dateTimeOffsetToStringConvert),
             };
 
             returnValues[i] = noteSimplified;
