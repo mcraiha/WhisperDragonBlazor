@@ -3,7 +3,7 @@ using CSCommonSecrets;
 
 public sealed class NoteSimplified
 {
-    // Non visible
+    // Non visible, index is only for secure/non-secure so they aren't combined
     public int zeroBasedIndexNumber { get; set; }
 
     // Visible elements
@@ -30,6 +30,7 @@ public sealed class NoteSimplified
         {
             NoteSimplified noteSimplified = new NoteSimplified()
             {
+                zeroBasedIndexNumber = i,
                 IsSecure = false,
                 Title = notes[i].GetNoteTitle(),
                 Text = notes[i].GetNoteText(),
