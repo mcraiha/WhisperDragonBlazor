@@ -1,0 +1,20 @@
+
+<select @bind="KeyIdentifier">
+    @foreach (string keyIdentifier in PossibleKeyIdentifiers)
+    {
+        <option value="@keyIdentifier">@keyIdentifier</option>
+    }
+</select>
+
+@code {
+    [Parameter, EditorRequired]
+    public IEnumerable<string> PossibleKeyIdentifiers { get; set; }
+
+    [Parameter]
+    public string KeyIdentifier { get; set; } = "";
+
+    protected override void OnInitialized()
+    {
+        this.KeyIdentifier = PossibleKeyIdentifiers.First();
+    }
+}
