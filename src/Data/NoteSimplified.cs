@@ -24,7 +24,7 @@ public sealed class NoteSimplified
 
     private static readonly string dateTimeOffsetToStringConvert = "u";
 
-    public static async Task<NoteSimplified[]> CreateNoteSimplifieds(List<Note> notes, List<NoteSecret> noteSecret, ISecurityAsyncFunctions securityFunctions, ReadOnlyDictionary<string, byte[]> derivedPasswords)
+    public static async Task<NoteSimplified[]> CreateNoteSimplifieds(List<Note> notes, List<NoteSecret> noteSecret, ISecurityAsyncFunctions securityFunctions, IReadDerivedPassword derivedPasswords)
     {
         List<NoteSimplified> returnValues = new List<NoteSimplified>();
 
@@ -46,9 +46,9 @@ public sealed class NoteSimplified
         for (int i = 0; i < noteSecret.Count; i++)
         {
             string keyIdentifier = noteSecret[i].GetKeyIdentifier();
-            if (derivedPasswords.ContainsKey(keyIdentifier))
+            if (derivedPasswords.DoesDerivedPasswordExist(keyIdentifier))
             {
-                byte[] derivedPassword = derivedPasswords[keyIdentifier];
+                byte[] derivedPassword = derivedPasswords.GetDerivedPassword(keyIdentifier);
                 NoteSimplified noteSimplified = new NoteSimplified()
                 {
                     zeroBasedIndexNumber = i,

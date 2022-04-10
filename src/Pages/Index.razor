@@ -23,7 +23,7 @@ else if (visibleElement == VisibleElement.ShowNotes)
 {
 	<CommonSecretsTopNav OnLoginsClickCallback="@TopNavShowLoginInformations" OnNotesClickCallback="@TopNavShowNotes" OnFilesClickCallback="@TopNavShowFiles" OnContactsClickCallback="@TopNavShowContacts" OnPaymentCardsClickCallback="@TopNavShowPaymentCards" 
 		loginsCount="@logins.Count" notesCount="@csc.notes.Count" filesCount="@files.Count" contactsCount="@contacts.Count" paymentCardsCount="@paymentCards.Count" />
-	<ShowNotes Notes="@NoteSimplified.CreateNoteSimplifieds(csc.notes, csc.noteSecrets, securityAsyncFunctions, new ReadOnlyDictionary<string, byte[]>(this.derivedPasswords))" AddNoteCallback="@ShowAddNote" EditNoteCallback="@ShowEditNote" DeleteNoteCallback="@DeleteNoteConfirmation" />
+	<ShowNotes Notes="@NoteSimplified.CreateNoteSimplifieds(csc.notes, csc.noteSecrets, securityAsyncFunctions, this.derivedPasswords)" AddNoteCallback="@ShowAddNote" EditNoteCallback="@ShowEditNote" DeleteNoteCallback="@DeleteNoteConfirmation" />
 }
 else if (visibleElement == VisibleElement.ShowFiles)
 {
@@ -161,9 +161,7 @@ else
 	/// <summary>
 	/// Because we do not want to store actual passwords in memory, keep collection of derived ones (TODO: encrypt at some point)
 	/// </summary>
-	/// <typeparam name="string">Key Identifier</typeparam>
-	/// <typeparam name="byte[]">Derived password as bytes</typeparam>
-	private readonly Dictionary<string, byte[]> derivedPasswords = new Dictionary<string, byte[]>();
+	private readonly DerivedPasswordStorage derivedPasswords = new DerivedPasswordStorage();
 
 	private List<LoginSimplified> logins = new List<LoginSimplified>();
 
@@ -313,8 +311,8 @@ else
 
 	private async Task CreateNewCommonSecretsContainer(KdfeAndPassword kdfeAndPassword)
 	{
-		this.derivedPasswords.Clear();
-		this.derivedPasswords[kdfeAndPassword.kdfe.GetKeyIdentifier()] = await kdfeAndPassword.kdfe.GeneratePasswordBytesAsync(kdfeAndPassword.password, securityAsyncFunctions);
+		this.derivedPasswords.SecureClear();
+		this.derivedPasswords.StorePassword(kdfeAndPassword.kdfe.GetKeyIdentifier(), await kdfeAndPassword.kdfe.GeneratePasswordBytesAsync(kdfeAndPassword.password, securityAsyncFunctions));
 
 		this.csc = new CommonSecretsContainer(kdfeAndPassword.kdfe);
 
