@@ -49,7 +49,7 @@ else if (visibleElement == VisibleElement.AddLoginInformation)
 }
 else if (visibleElement == VisibleElement.AddNote)
 {
-	<AddOrEditNote SecurityAsyncFunctions="@securityAsyncFunctions" PossibleKeyIdentifiers="@GetKeyIdentifiers()" OnAddCallback="@AddNote" OnCancelAddCallback="@CancelAddNote" />
+	<AddOrEditNote SecurityAsyncFunctions="@securityAsyncFunctions" PossibleKeyIdentifiers="@GetKeyIdentifiers()" OnAddCallback="@AddNote" OnAddSecretCallback="@AddNoteSecret" OnCancelAddCallback="@CancelAddNote" />
 }
 else if (visibleElement == VisibleElement.AddFile)
 {
@@ -406,6 +406,17 @@ else
 		this.csc.notes.Add(newNote);
 		this.isModified = true;
 		visibleElement = VisibleElement.ShowNotes;
+	}
+
+	private async Task AddNoteSecret((Note newNote, string keyIdentifier) parameter)
+	{
+		if (this.derivedPasswords.DoesDerivedPasswordExist(parameter.keyIdentifier))
+		{
+			byte[] derivedPassword = this.derivedPasswords.GetDerivedPassword(parameter.keyIdentifier);
+			await this.csc.AddNoteSecretAsync(derivedPassword, parameter.newNote, parameter.keyIdentifier, securityAsyncFunctions);
+			this.isModified = true;
+			visibleElement = VisibleElement.ShowNotes;
+		}
 	}
 
 	private void ShowEditNote(int zeroBasedIndexNumber)

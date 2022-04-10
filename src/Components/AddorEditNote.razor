@@ -63,6 +63,9 @@
     public EventCallback<Note> OnAddCallback { get; set; }
 
     [Parameter]
+    public EventCallback<(Note, string)> OnAddSecretCallback { get; set; }
+
+    [Parameter]
     public EventCallback<MouseEventArgs> OnEditedCallback { get; set; }
 
     [Parameter]
@@ -95,9 +98,17 @@
     /// <returns></returns>
     private async Task TryToAddNote()
     {
-        // New note
         Note newNote = await Note.CreateNoteAsync(this.NoteTitle, this.NoteText, this.SecurityAsyncFunctions);
-        await OnAddCallback.InvokeAsync(newNote);
+
+        // New note (either secret or not)
+        if (IsSecure)
+        {
+            await OnAddSecretCallback.InvokeAsync((newNote, KeyIdentifier));
+        }
+        else
+        {
+            await OnAddCallback.InvokeAsync(newNote);
+        }
     }
 
     /// <summary>
