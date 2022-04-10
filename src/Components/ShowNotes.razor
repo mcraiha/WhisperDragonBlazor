@@ -1,6 +1,6 @@
 @inject IJSRuntime JS
 
-@if (Notes == null || Notes.Count < 1)
+@if (notes == null || notes.Count < 1)
 {
 	<p>No notes</p>
 }
@@ -10,7 +10,7 @@ else
 @if (!string.IsNullOrEmpty(searchFilter))
 {
 	<br>
-	<p>Filter is matching @FilteredNotes.Count / @Notes.Count </p>
+	<p>Filter is matching @filteredNotes.Count / @notes.Count </p>
 }
 <table id="notes">
 	<thead>
@@ -37,7 +37,7 @@ else
 	</thead>
 
 	<tbody>
-		@foreach (var item in FilteredNotes)
+		@foreach (var item in filteredNotes)
         {
 			int indexToHandle = item.zeroBasedIndexNumber;
 			<tr>
@@ -76,7 +76,7 @@ else
 <button title="Add note" @onclick="AddNoteCallback">+ Add</button>
 @code {
     [Parameter, EditorRequired]
-    public IReadOnlyList<NoteSimplified> Notes { get; set; }
+    public Task<NoteSimplified[]> Notes { get; set; }
 
 	[Parameter, EditorRequired]
 	public EventCallback<MouseEventArgs> AddNoteCallback { get; set; }
@@ -87,7 +87,8 @@ else
 	[Parameter, EditorRequired]
 	public EventCallback<int> DeleteNoteCallback { get; set; }
 
-	private IReadOnlyList<NoteSimplified> FilteredNotes { get; set; }
+	private IReadOnlyList<NoteSimplified> notes { get; set; }
+	private IReadOnlyList<NoteSimplified> filteredNotes { get; set; }
 
 	private static readonly StringComparison searchComparison = StringComparison.OrdinalIgnoreCase;
 	private string searchFilter = "";
@@ -102,29 +103,30 @@ else
 			this.searchFilter = value;
 			if (string.IsNullOrEmpty(this.searchFilter))
 			{
-				this.FilteredNotes = this.Notes;
+				this.filteredNotes = this.notes;
 			}
 			else
 			{
-				this.FilteredNotes = this.Notes.Where(x => x.Title.Contains(this.searchFilter, searchComparison) || x.Text.Contains(this.searchFilter, searchComparison)).ToList();
+				this.filteredNotes = this.notes.Where(x => x.Title.Contains(this.searchFilter, searchComparison) || x.Text.Contains(this.searchFilter, searchComparison)).ToList();
 			}
 		} 
 	}
 
-	protected override void OnInitialized()
+	protected override async Task OnInitializedAsync()
 	{
-		this.FilteredNotes = this.Notes;
+		this.notes = await Notes;
+		this.filteredNotes = this.notes;
 	}
 
 	// Copy to clipboard methods
 	private async Task CallTitleCopy(int zeroBasedIndexNumber)
 	{
-		await JS.InvokeVoidAsync("copyToClipboard", Notes[zeroBasedIndexNumber].Title);
+		await JS.InvokeVoidAsync("copyToClipboard", notes[zeroBasedIndexNumber].Title);
 	}
 
 	private async Task CallTextCopy(int zeroBasedIndexNumber)
 	{
-		await JS.InvokeVoidAsync("copyToClipboard", Notes[zeroBasedIndexNumber].Text);
+		await JS.InvokeVoidAsync("copyToClipboard", notes[zeroBasedIndexNumber].Text);
 	}
 
 	// Edit method

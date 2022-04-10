@@ -1,4 +1,6 @@
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.Threading.Tasks;
 using CSCommonSecrets;
 
 public sealed class NoteSimplified
@@ -22,9 +24,9 @@ public sealed class NoteSimplified
 
     private static readonly string dateTimeOffsetToStringConvert = "u";
 
-    public static NoteSimplified[] CreateNoteSimplifieds(List<Note> notes)
+    public static async Task<NoteSimplified[]> CreateNoteSimplifieds(List<Note> notes, List<NoteSecret> noteSecret, ISecurityAsyncFunctions securityFunctions, ReadOnlyDictionary<string, byte[]> derivedPasswords)
     {
-        NoteSimplified[] returnValues = new NoteSimplified[notes.Count];
+        List<NoteSimplified> returnValues = new List<NoteSimplified>();
 
         for (int i = 0; i < notes.Count; i++)
         {
@@ -38,9 +40,29 @@ public sealed class NoteSimplified
                 ModificationTime = notes[i].GetModificationTime().ToString(dateTimeOffsetToStringConvert),
             };
 
-            returnValues[i] = noteSimplified;
+            returnValues.Add(noteSimplified);
         }
 
-        return returnValues;
+        for (int i = 0; i < noteSecret.Count; i++)
+        {
+            string keyIdentifier = noteSecret[i].GetKeyIdentifier();
+            if (derivedPasswords.ContainsKey(keyIdentifier))
+            {
+                byte[] derivedPassword = derivedPasswords[keyIdentifier];
+                NoteSimplified noteSimplified = new NoteSimplified()
+                {
+                    zeroBasedIndexNumber = i,
+                    IsSecure = true,
+                    Title = await noteSecret[i].GetNoteTitleAsync(derivedPassword, securityFunctions),
+                    Text = await noteSecret[i].GetNoteTextAsync(derivedPassword, securityFunctions),
+                    CreationTime = (await noteSecret[i].GetCreationTimeAsync(derivedPassword, securityFunctions)).ToString(dateTimeOffsetToStringConvert),
+                    ModificationTime = (await noteSecret[i].GetModificationTimeAsync(derivedPassword, securityFunctions)).ToString(dateTimeOffsetToStringConvert),
+                };
+
+                returnValues.Add(noteSimplified);
+            }
+        }
+
+        return returnValues.ToArray();
     }
 }

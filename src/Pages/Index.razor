@@ -23,7 +23,7 @@ else if (visibleElement == VisibleElement.ShowNotes)
 {
 	<CommonSecretsTopNav OnLoginsClickCallback="@TopNavShowLoginInformations" OnNotesClickCallback="@TopNavShowNotes" OnFilesClickCallback="@TopNavShowFiles" OnContactsClickCallback="@TopNavShowContacts" OnPaymentCardsClickCallback="@TopNavShowPaymentCards" 
 		loginsCount="@logins.Count" notesCount="@csc.notes.Count" filesCount="@files.Count" contactsCount="@contacts.Count" paymentCardsCount="@paymentCards.Count" />
-	<ShowNotes Notes="@NoteSimplified.CreateNoteSimplifieds(csc.notes)" AddNoteCallback="@ShowAddNote" EditNoteCallback="@ShowEditNote" DeleteNoteCallback="@DeleteNoteConfirmation" />
+	<ShowNotes Notes="@NoteSimplified.CreateNoteSimplifieds(csc.notes, csc.noteSecrets, securityAsyncFunctions, new ReadOnlyDictionary<string, byte[]>(this.derivedPasswords))" AddNoteCallback="@ShowAddNote" EditNoteCallback="@ShowEditNote" DeleteNoteCallback="@DeleteNoteConfirmation" />
 }
 else if (visibleElement == VisibleElement.ShowFiles)
 {
