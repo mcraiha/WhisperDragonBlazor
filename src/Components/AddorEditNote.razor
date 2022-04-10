@@ -19,12 +19,7 @@
         <br>
         @if (IsSecure)
         {
-            <select @bind="KeyIdentifier">
-				@foreach (string keyIdentifier in PossibleKeyIdentifiers)
-                {
-                    <option value="@keyIdentifier">@keyIdentifier</option>
-                }
-			</select>
+            <SelectKeyIdentifier PossibleKeyIdentifiers="@PossibleKeyIdentifiers" @bind-KeyIdentifier="KeyIdentifier" />
             <br>
         }
 		
@@ -77,7 +72,7 @@
     [Parameter]
     public bool IsSecure { get; set; } = true;
 
-    public string KeyIdentifier { get; set; } = "";
+    private string KeyIdentifier { get; set; } = "";
 
     public string NoteTitle { get; set; } = "";
 
