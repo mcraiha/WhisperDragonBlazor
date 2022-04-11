@@ -321,9 +321,9 @@ else
 		visibleElement = VisibleElement.ShowLoginInformations;
 	}
 
-	private List<string> GetKeyIdentifiers()
+	private IEnumerable<string> GetKeyIdentifiers()
 	{
-		return new List<string>() { "test" };
+		return this.csc.GetKeyDerivationFunctionEntryIdentifiers();
 	}
 
 	// TopNav actions
