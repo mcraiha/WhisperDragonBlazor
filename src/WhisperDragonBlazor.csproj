@@ -9,7 +9,7 @@
     <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.DevServer" Version="6.0.0" PrivateAssets="all" />
     <PackageReference Include="System.Net.Http.Json" Version="6.0.0" />
 
-    <PackageReference Include="LibCommonSecretsAsync" Version="1.0.0" />
+    <PackageReference Include="LibCommonSecretsAsync" Version="1.0.1" />
   </ItemGroup>
 
   <ItemGroup>
