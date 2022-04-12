@@ -34,6 +34,15 @@ public sealed class SecurityAsyncFunctions : ISecurityAsyncFunctions
     /// <returns></returns>
     public async Task<byte[]> AES_Encrypt(byte[] bytesToEncrypt, byte[] key, byte[] initialCounter)
     {
+        if (bytesToEncrypt == null)
+        {
+            throw new NullReferenceException("bytesToEncrypt is null!");
+        }
+        else if (bytesToEncrypt.Length < 1)
+        {
+            throw new Exception("Cannot encrypt zero bytes!");
+        }
+        
         return await this.runtime.InvokeAsync<byte[]>("cryptAES_CTR", bytesToEncrypt, key, initialCounter);
     }
 
