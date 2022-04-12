@@ -1,5 +1,5 @@
 
-<select @bind="KeyIdentifier">
+<select @onchange="@OnSelect">
     @foreach (string keyIdentifier in PossibleKeyIdentifiers)
     {
         <option value="@keyIdentifier">@keyIdentifier</option>
@@ -10,11 +10,19 @@
     [Parameter, EditorRequired]
     public IEnumerable<string> PossibleKeyIdentifiers { get; set; }
 
-    [Parameter]
-    public string KeyIdentifier { get; set; } = "";
+    [Parameter, EditorRequired]
+    public EventCallback<string> KeyIdentifierChanged { get; set; }
+
+    private string keyIdentifier { get; set; } = "";
 
     protected override void OnInitialized()
     {
-        this.KeyIdentifier = PossibleKeyIdentifiers.First();
+        this.keyIdentifier = PossibleKeyIdentifiers.First();
+    }
+
+    void OnSelect (ChangeEventArgs e)
+    {
+        this.keyIdentifier = e.Value.ToString();
+        KeyIdentifierChanged.InvokeAsync(this.keyIdentifier);
     }
 }
