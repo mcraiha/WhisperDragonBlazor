@@ -4,6 +4,12 @@
         <label for="issecure">Is secure @if (IsSecure) {@CommonIcons.secureIcon} else {@CommonIcons.unsecureIcon}</label>
 		<input type="checkbox" id="issecure" @bind="@IsSecure">
 		<br>
+        <br>
+        @if (IsSecure)
+        {
+            <SelectKeyIdentifier PossibleKeyIdentifiers="@PossibleKeyIdentifiers" KeyIdentifierChanged="@KeyIdentifierSelected" />
+            <br>
+        }
 		<label for="filename">Filename</label>
 		<input type="text" id="filename" @bind="@FileName" placeholder="Filename">
 		<br>
@@ -15,13 +21,34 @@
 </section>
 
 @code {
-    [Parameter, EditorRequired]
-    public EventCallback<FileSimplified> OnAddCallback { get; set; }
+    [Parameter]
+    public FileEntry File { get; set; }
 
     [Parameter, EditorRequired]
+    public ISecurityAsyncFunctions SecurityAsyncFunctions { get; set; }
+
+    [Parameter, EditorRequired]
+    public IEnumerable<string> PossibleKeyIdentifiers { get; set; }
+
+    [Parameter]
+    public EventCallback<FileEntry> OnAddCallback { get; set; }
+
+    [Parameter]
+    public EventCallback<(FileEntry, string)> OnAddSecretCallback { get; set; }
+
+    [Parameter]
+    public EventCallback<MouseEventArgs> OnEditedCallback { get; set; }
+
+    [Parameter]
     public EventCallback<MouseEventArgs> OnCancelCallback { get; set; }
 
+    [Parameter]
+    public EventCallback<MouseEventArgs> OnCancelEditCallback { get; set; }
+
+    [Parameter]
     public bool IsSecure { get; set; } = true;
+
+    private string keyIdentifier { get; set; } = "";
 
     public string FileName { get; set; } = "";
 
@@ -43,5 +70,10 @@
     private void TryToAddFile()
     {
         OnAddCallback.InvokeAsync();
+    }
+
+    private void KeyIdentifierSelected(string newSelection)
+    {
+        this.keyIdentifier = newSelection;
     }
 }
