@@ -16,31 +16,31 @@ else if (visibleElement == VisibleElement.ShowPasswordCreators)
 else if (visibleElement == VisibleElement.ShowLoginInformations)
 {
 	<CommonSecretsTopNav OnLoginsClickCallback="@TopNavShowLoginInformations" OnNotesClickCallback="@TopNavShowNotes" OnFilesClickCallback="@TopNavShowFiles" OnContactsClickCallback="@TopNavShowContacts" OnPaymentCardsClickCallback="@TopNavShowPaymentCards"
-		loginsCount="@logins.Count" notesCount="@this.csc.notes.Count" filesCount="@files.Count" contactsCount="@contacts.Count" paymentCardsCount="@paymentCards.Count" />
+		loginsCount="@logins.Count" notesCount="@CountNotes()" filesCount="@CountFiles()" contactsCount="@contacts.Count" paymentCardsCount="@paymentCards.Count" />
 	<ShowLoginInformations Logins="@logins" AddLoginCallback="@ShowAddLoginInformation" DeleteLoginCallback="@DeleteLoginInformationConfirmation" />
 }
 else if (visibleElement == VisibleElement.ShowNotes)
 {
 	<CommonSecretsTopNav OnLoginsClickCallback="@TopNavShowLoginInformations" OnNotesClickCallback="@TopNavShowNotes" OnFilesClickCallback="@TopNavShowFiles" OnContactsClickCallback="@TopNavShowContacts" OnPaymentCardsClickCallback="@TopNavShowPaymentCards" 
-		loginsCount="@logins.Count" notesCount="@csc.notes.Count" filesCount="@files.Count" contactsCount="@contacts.Count" paymentCardsCount="@paymentCards.Count" />
+		loginsCount="@logins.Count" notesCount="@CountNotes()" filesCount="@CountFiles()" contactsCount="@contacts.Count" paymentCardsCount="@paymentCards.Count" />
 	<ShowNotes Notes="@NoteSimplified.CreateNoteSimplifieds(csc.notes, csc.noteSecrets, securityAsyncFunctions, this.derivedPasswords)" AddNoteCallback="@ShowAddNote" EditNoteCallback="@ShowEditNote" DeleteNoteCallback="@DeleteNoteConfirmation" />
 }
 else if (visibleElement == VisibleElement.ShowFiles)
 {
 	<CommonSecretsTopNav OnLoginsClickCallback="@TopNavShowLoginInformations" OnNotesClickCallback="@TopNavShowNotes" OnFilesClickCallback="@TopNavShowFiles" OnContactsClickCallback="@TopNavShowContacts" OnPaymentCardsClickCallback="@TopNavShowPaymentCards" 
-		loginsCount="@logins.Count" notesCount="@this.csc.notes.Count" filesCount="@files.Count" contactsCount="@contacts.Count" paymentCardsCount="@paymentCards.Count" />
-	<ShowFiles Files="@files" AddFileCallback="@ShowAddFile" DeleteFileCallback="@DeleteFileConfirmation" />
+		loginsCount="@logins.Count" notesCount="@CountNotes()" filesCount="@CountFiles()" contactsCount="@contacts.Count" paymentCardsCount="@paymentCards.Count" />
+	<ShowFiles Files="@FileSimplified.CreateFileSimplifieds(csc.files, csc.fileSecrets, securityAsyncFunctions, this.derivedPasswords)" AddFileCallback="@ShowAddFile" EditFileCallback="@ShowEditFile" DeleteFileCallback="@DeleteFileConfirmation" />
 }
 else if (visibleElement == VisibleElement.ShowContacts)
 {
 	<CommonSecretsTopNav OnLoginsClickCallback="@TopNavShowLoginInformations" OnNotesClickCallback="@TopNavShowNotes" OnFilesClickCallback="@TopNavShowFiles" OnContactsClickCallback="@TopNavShowContacts" OnPaymentCardsClickCallback="@TopNavShowPaymentCards" 
-		loginsCount="@logins.Count" notesCount="@this.csc.notes.Count" filesCount="@files.Count" contactsCount="@contacts.Count" paymentCardsCount="@paymentCards.Count" />
+		loginsCount="@logins.Count" notesCount="@CountNotes()" filesCount="@CountFiles()" contactsCount="@contacts.Count" paymentCardsCount="@paymentCards.Count" />
 	<ShowContacts Contacts="@contacts" AddContactCallback="@ShowAddContact" DeleteContactCallback="@DeleteContactConfirmation" />
 }
 else if (visibleElement == VisibleElement.ShowPaymentCards)
 {
 	<CommonSecretsTopNav OnLoginsClickCallback="@TopNavShowLoginInformations" OnNotesClickCallback="@TopNavShowNotes" OnFilesClickCallback="@TopNavShowFiles" OnContactsClickCallback="@TopNavShowContacts" OnPaymentCardsClickCallback="@TopNavShowPaymentCards" 
-		loginsCount="@logins.Count" notesCount="@this.csc.notes.Count" filesCount="@files.Count" contactsCount="@contacts.Count" paymentCardsCount="@paymentCards.Count" />
+		loginsCount="@logins.Count" notesCount="@CountNotes()" filesCount="@CountFiles()" contactsCount="@contacts.Count" paymentCardsCount="@paymentCards.Count" />
 	<ShowPaymentCards PaymentCards="@paymentCards" AddPaymentCardCallback="@ShowAddPaymentCard" DeletePaymentCardCallback="@DeletePaymentCardConfirmation" />
 }
 else if (visibleElement == VisibleElement.AddLoginInformation)
@@ -53,7 +53,7 @@ else if (visibleElement == VisibleElement.AddNote)
 }
 else if (visibleElement == VisibleElement.AddFile)
 {
-	<AddOrEditFile OnAddCallback="@AddFile" OnCancelCallback="@CancelAddFile" />
+	<AddOrEditFile SecurityAsyncFunctions="@securityAsyncFunctions" PossibleKeyIdentifiers="@GetKeyIdentifiers()" OnAddCallback="@AddFile" OnAddSecretCallback="@AddFileSecret" OnCancelCallback="@CancelAddFile" />
 }
 else if (visibleElement == VisibleElement.AddContact)
 {
@@ -73,7 +73,7 @@ else if (visibleElement == VisibleElement.EditNote)
 }
 else if (visibleElement == VisibleElement.EditFile)
 {
-	<AddOrEditFile OnAddCallback="@AddFile" OnCancelCallback="@CancelAddFile" />
+	<AddOrEditFile SecurityAsyncFunctions="@securityAsyncFunctions" PossibleKeyIdentifiers="@GetKeyIdentifiers()" File="@this.fileToEdit" OnEditedCallback="@EditedFile" OnCancelEditCallback="@CancelEditFile" />
 }
 else if (visibleElement == VisibleElement.EditContact)
 {
@@ -165,14 +165,13 @@ else
 
 	private List<LoginSimplified> logins = new List<LoginSimplified>();
 
-	private List<FileSimplified> files = new List<FileSimplified>();
-
 	private List<ContactSimplified> contacts = new List<ContactSimplified>();
 
 	private List<PaymentCardSimplified> paymentCards = new List<PaymentCardSimplified>();
 
 	// Edit related
 	private Note noteToEdit = null;
+	private FileEntry fileToEdit = null;
 
 	// Delete related
 	private ItemType deleteType = ItemType.None;
@@ -222,26 +221,6 @@ else
 				Category = "Samples",
 				Tags = "Samples Demo",
 			},
-		};
-
-		files = new List<FileSimplified>()
-		{
-			new FileSimplified()
-			{
-				zeroBasedIndexNumber = 0,
-				IsSecure = true,
-				Filename = "nature.jpg",
-				Filesize = "234 kB",
-				Filetype = "JPEG"
-			},
-			new FileSimplified()
-			{
-				zeroBasedIndexNumber = 1,
-				IsSecure = false,
-				Filename = "cv.docx",
-				Filesize = "83 kB",
-				Filetype = "Microsoft Word document"
-			}
 		};
 
 		contacts = new List<ContactSimplified>()
@@ -350,6 +329,16 @@ else
 	private void TopNavShowPaymentCards(MouseEventArgs e)
 	{
 		visibleElement = VisibleElement.ShowPaymentCards;
+	}
+
+	private int CountNotes()
+	{
+		return this.csc.notes.Count + this.csc.noteSecrets.Count;
+	}
+
+	private int CountFiles()
+	{
+		return this.csc.files.Count + this.csc.fileSecrets.Count;
 	}
 
 	// Add, edit or delete login information
@@ -474,9 +463,33 @@ else
 		visibleElement = VisibleElement.AddFile;
 	}
 
-	private void AddFile(FileSimplified newFile)
+	private void AddFile(FileEntry newFile)
 	{
-		files.Add(newFile);
+		this.csc.files.Add(newFile);
+		visibleElement = VisibleElement.ShowFiles;
+		this.isModified = true;
+	}
+
+	private async Task AddFileSecret((FileEntry newFile, string keyIdentifier) parameter)
+	{
+		if (this.derivedPasswords.DoesDerivedPasswordExist(parameter.keyIdentifier))
+		{
+			byte[] derivedPassword = this.derivedPasswords.GetDerivedPassword(parameter.keyIdentifier);
+			await this.csc.AddFileEntrySecretAsync(derivedPassword, parameter.newFile, parameter.keyIdentifier, securityAsyncFunctions);
+			this.isModified = true;
+			visibleElement = VisibleElement.ShowFiles;
+		}
+	}
+
+	private void ShowEditFile(int zeroBasedIndexNumber)
+	{
+		this.fileToEdit = this.csc.files[zeroBasedIndexNumber];
+		visibleElement = VisibleElement.EditFile;
+	}
+
+	private void EditedFile()
+	{
+		this.isModified = true;
 		visibleElement = VisibleElement.ShowFiles;
 	}
 
@@ -485,12 +498,18 @@ else
 		visibleElement = VisibleElement.ShowFiles;
 	}
 
+	private void CancelEditFile(MouseEventArgs e)
+	{
+		this.fileToEdit = null;
+		visibleElement = VisibleElement.ShowFiles;
+	}
+
 	private void DeleteFileConfirmation(int zeroBasedIndexNumber)
 	{
 		deleteActualAction = DeleteFileActual;
 		deleteCancelAction = DeleteFileCancel;
 		deleteIndex = zeroBasedIndexNumber;
-		whatToDelete = $"File with filename '{files[zeroBasedIndexNumber].Filename}'";
+		//whatToDelete = $"File with filename '{files[zeroBasedIndexNumber].Filename}'";
 		//deleteType = ItemType.File;
 		visibleElement = VisibleElement.DeleteItemConfirmation;
 	}
@@ -503,9 +522,9 @@ else
 
 	private void DeleteFileActual(MouseEventArgs e)
 	{
-		if (-1 < deleteIndex && deleteIndex < files.Count)
+		if (-1 < deleteIndex && deleteIndex < this.csc.files.Count)
 		{
-			files.RemoveAt(deleteIndex);
+			this.csc.files.RemoveAt(deleteIndex);
 		}
 		ResetDelete();
 		visibleElement = VisibleElement.ShowFiles;
