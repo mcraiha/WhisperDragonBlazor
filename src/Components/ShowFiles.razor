@@ -1,6 +1,6 @@
 @inject IJSRuntime JS
 
-@if (Files == null || Files.Count < 1)
+@if (files == null || files.Count < 1)
 {
 	<p>No files</p>
 }
@@ -10,7 +10,7 @@ else
 @if (!string.IsNullOrEmpty(searchFilter))
 {
 	<br>
-	<p>Filter is matching @FilteredFiles.Count / @Files.Count </p>
+	<p>Filter is matching @filteredFiles.Count / @files.Count </p>
 }
 
 <table id="files">
@@ -29,13 +29,19 @@ else
 				File type
 			</th>
 			<th>
+				Created
+			</th>
+			<th>
+				Modified
+			</th>
+			<th>
 				Actions
 			</th>
 		</tr>
 	</thead>
 
 	<tbody>
-		@foreach (var item in FilteredFiles)
+		@foreach (var item in filteredFiles)
         {
 			int indexToHandle = item.zeroBasedIndexNumber;
 			<tr>
@@ -59,6 +65,12 @@ else
 					@item.Filetype
 				</th>
 				<th>
+					@item.CreationTime
+				</th>
+				<th>
+					@item.ModificationTime
+				</th>
+				<th>
 					<a title="Delete file" @onclick="() => CallDelete(indexToHandle)">🗑️</a>
 				</th>
 			</tr>
@@ -71,15 +83,19 @@ else
 <button title="Add file" @onclick="AddFileCallback">+ Add</button>
 @code {
     [Parameter, EditorRequired]
-    public IReadOnlyList<FileSimplified> Files { get; set; }
+    public Task<FileSimplified[]> Files { get; set; }
 
 	[Parameter, EditorRequired]
 	public EventCallback<MouseEventArgs> AddFileCallback { get; set; }
 
 	[Parameter, EditorRequired]
+	public EventCallback<int> EditFileCallback { get; set; }
+
+	[Parameter, EditorRequired]
 	public EventCallback<int> DeleteFileCallback { get; set; }
 
-	private IReadOnlyList<FileSimplified> FilteredFiles { get; set; }
+	private IReadOnlyList<FileSimplified> files { get; set; }
+	private IReadOnlyList<FileSimplified> filteredFiles { get; set; }
 
 	private static readonly StringComparison searchComparison = StringComparison.OrdinalIgnoreCase;
 	private string searchFilter = "";
@@ -94,25 +110,26 @@ else
 			this.searchFilter = value;
 			if (string.IsNullOrEmpty(this.searchFilter))
 			{
-				this.FilteredFiles = this.Files;
+				this.filteredFiles = this.files;
 			}
 			else
 			{
-				this.FilteredFiles = this.Files.Where(x => x.Filename.Contains(this.searchFilter, searchComparison)).ToList();
+				this.filteredFiles = this.files.Where(x => x.Filename.Contains(this.searchFilter, searchComparison)).ToList();
 			}
 			
 		} 
 	}
 
-	protected override void OnInitialized()
+	protected override async Task OnInitializedAsync()
 	{
-		this.FilteredFiles = this.Files;
+		this.files = await Files;
+		this.filteredFiles = this.files;
 	}
 
 	// Copy to clipboard methods
 	private async Task CallFilenameCopy(int zeroBasedIndexNumber)
 	{
-		await JS.InvokeVoidAsync("copyToClipboard", Files[zeroBasedIndexNumber].Filename);
+		await JS.InvokeVoidAsync("copyToClipboard", files[zeroBasedIndexNumber].Filename);
 	}
 
 	// Delete method
