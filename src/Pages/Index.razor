@@ -409,9 +409,18 @@ else
 		}
 	}
 
-	private void ShowEditNote(int zeroBasedIndexNumber)
+	private async Task ShowEditNote((int zeroBasedIndexNumber, bool isSecure) indexAndSecurity)
 	{
-		this.noteToEdit = this.csc.notes[zeroBasedIndexNumber];
+		int index = indexAndSecurity.zeroBasedIndexNumber;
+		if (indexAndSecurity.isSecure)
+		{
+			string keyIdentifier = this.csc.noteSecrets[index].GetKeyIdentifier();
+			this.noteToEdit = await this.csc.noteSecrets[index].GetNoteAsync(this.derivedPasswords.GetDerivedPassword(keyIdentifier), securityAsyncFunctions);
+		}
+		else
+		{
+			this.noteToEdit = this.csc.notes[index];
+		}
 		this.visibleElement = VisibleElement.EditNote;
 	}
 

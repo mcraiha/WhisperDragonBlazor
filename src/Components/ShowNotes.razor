@@ -83,7 +83,7 @@ else
 	public EventCallback<MouseEventArgs> AddNoteCallback { get; set; }
 
 	[Parameter, EditorRequired]
-	public EventCallback<int> EditNoteCallback { get; set; }
+	public EventCallback<(int, bool)> EditNoteCallback { get; set; }
 
 	[Parameter, EditorRequired]
 	public EventCallback<(int, bool)> DeleteNoteCallback { get; set; }
@@ -133,7 +133,7 @@ else
 	// Edit method
 	private async Task CallEdit(int zeroBasedIndexNumber, bool isSecure)
 	{
-		await EditNoteCallback.InvokeAsync(zeroBasedIndexNumber);
+		await EditNoteCallback.InvokeAsync((zeroBasedIndexNumber, isSecure));
 	}
 
 	// Delete method
