@@ -511,9 +511,19 @@ else
 		}
 	}
 
-	private void ShowEditFile(int zeroBasedIndexNumber)
+	private async Task ShowEditFile((int zeroBasedIndexNumber, bool isSecure) indexAndSecurity)
 	{
-		this.fileToEdit = this.csc.files[zeroBasedIndexNumber];
+		int index = indexAndSecurity.zeroBasedIndexNumber;
+		if (indexAndSecurity.isSecure)
+		{
+			string keyIdentifier = this.csc.fileSecrets[index].GetKeyIdentifier();
+			this.fileToEdit = await this.csc.fileSecrets[index].GetFileEntryAsync(this.derivedPasswords.GetDerivedPassword(keyIdentifier), securityAsyncFunctions);
+		}
+		else
+		{
+			this.fileToEdit = this.csc.files[index];
+		}
+		
 		this.visibleElement = VisibleElement.EditFile;
 	}
 
@@ -534,12 +544,22 @@ else
 		this.visibleElement = VisibleElement.ShowFiles;
 	}
 
-	private void DeleteFileConfirmation(int zeroBasedIndexNumber)
+	private async Task DeleteFileConfirmation((int zeroBasedIndexNumber, bool isSecure) indexAndSecurity)
 	{
-		deleteActualAction = DeleteFileActual;
-		deleteCancelAction = DeleteFileCancel;
-		deleteIndex = zeroBasedIndexNumber;
-		//whatToDelete = $"File with filename '{files[zeroBasedIndexNumber].Filename}'";
+		this.deleteActualAction = DeleteFileActual;
+		this.deleteCancelAction = DeleteFileCancel;
+		this.deleteIndex = indexAndSecurity.zeroBasedIndexNumber;
+		this.deleteSecure = indexAndSecurity.isSecure;
+		if (this.deleteSecure)
+		{
+			string keyIdentifier = this.csc.fileSecrets[this.deleteIndex].GetKeyIdentifier();
+			this.whatToDelete = $"File with filename '{await this.csc.fileSecrets[this.deleteIndex].GetFilenameAsync(this.derivedPasswords.GetDerivedPassword(keyIdentifier), securityAsyncFunctions)}'";
+		}
+		else
+		{
+			this.whatToDelete = $"File with filename '{this.csc.files[this.deleteIndex].GetFilename()}'";
+		}
+		//
 		//deleteType = ItemType.File;
 		this.visibleElement = VisibleElement.DeleteItemConfirmation;
 	}
@@ -552,9 +572,19 @@ else
 
 	private void DeleteFileActual(MouseEventArgs e)
 	{
-		if (-1 < deleteIndex && deleteIndex < this.csc.files.Count)
+		if (this.deleteSecure)
 		{
-			this.csc.files.RemoveAt(deleteIndex);
+			if (-1 < deleteIndex && deleteIndex < this.csc.fileSecrets.Count)
+			{
+				this.csc.fileSecrets.RemoveAt(deleteIndex);
+			}
+		}
+		else
+		{
+			if (-1 < deleteIndex && deleteIndex < this.csc.files.Count)
+			{
+				this.csc.files.RemoveAt(deleteIndex);
+			}
 		}
 		this.ResetDelete();
 		this.visibleElement = VisibleElement.ShowFiles;

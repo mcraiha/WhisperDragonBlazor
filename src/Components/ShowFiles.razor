@@ -44,9 +44,10 @@ else
 		@foreach (var item in filteredFiles)
         {
 			int indexToHandle = item.zeroBasedIndexNumber;
+			bool isSecure = item.IsSecure;
 			<tr>
 				<th>
-					@if (item.IsSecure == true)
+					@if (isSecure)
 					{
 						@CommonIcons.secureIcon
 					}
@@ -56,7 +57,7 @@ else
 					}
 				</th>
 				<th>
-					@item.Filename <a title="Copy filename" @onclick="() => CallFilenameCopy(indexToHandle)">✂️</a>
+					@item.Filename <a title="Copy filename" @onclick="() => CallFilenameCopy(indexToHandle, isSecure)">✂️</a>
 				</th>
 				<th>
 					@item.Filesize
@@ -71,7 +72,7 @@ else
 					@item.ModificationTime
 				</th>
 				<th>
-					<a title="Delete file" @onclick="() => CallDelete(indexToHandle)">🗑️</a>
+					<a title="Delete file" @onclick="() => CallDelete(indexToHandle, isSecure)">Delete 🗑️</a>
 				</th>
 			</tr>
         }
@@ -89,10 +90,10 @@ else
 	public EventCallback<MouseEventArgs> AddFileCallback { get; set; }
 
 	[Parameter, EditorRequired]
-	public EventCallback<int> EditFileCallback { get; set; }
+	public EventCallback<(int, bool)> EditFileCallback { get; set; }
 
 	[Parameter, EditorRequired]
-	public EventCallback<int> DeleteFileCallback { get; set; }
+	public EventCallback<(int, bool)> DeleteFileCallback { get; set; }
 
 	private IReadOnlyList<FileSimplified> files { get; set; }
 	private IReadOnlyList<FileSimplified> filteredFiles { get; set; }
@@ -127,14 +128,14 @@ else
 	}
 
 	// Copy to clipboard methods
-	private async Task CallFilenameCopy(int zeroBasedIndexNumber)
+	private async Task CallFilenameCopy(int zeroBasedIndexNumber, bool isSecure)
 	{
 		await JS.InvokeVoidAsync("copyToClipboard", files[zeroBasedIndexNumber].Filename);
 	}
 
 	// Delete method
-	private async Task CallDelete(int zeroBasedIndexNumber)
+	private async Task CallDelete(int zeroBasedIndexNumber, bool isSecure)
 	{
-		await DeleteFileCallback.InvokeAsync(zeroBasedIndexNumber);
+		await DeleteFileCallback.InvokeAsync((zeroBasedIndexNumber, isSecure));
 	}
 }
