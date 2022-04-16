@@ -1,5 +1,6 @@
 
-<select @onchange="@OnSelect">
+<label for="keyidentifier">Key identifier: </label>
+<select id="keyidentifier" @onchange="@OnSelect">
     @foreach (string keyIdentifier in PossibleKeyIdentifiers)
     {
         <option value="@keyIdentifier">@keyIdentifier</option>
