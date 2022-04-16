@@ -371,7 +371,7 @@ else
 
 	private void DeleteLoginInformationCancel(MouseEventArgs e)
 	{
-		ResetDelete();
+		this.ResetDelete();
 		this.visibleElement = VisibleElement.ShowLoginInformations;
 	}
 
@@ -381,7 +381,7 @@ else
 		{
 			logins.RemoveAt(deleteIndex);
 		}
-		ResetDelete();
+		this.ResetDelete();
 		this.visibleElement = VisibleElement.ShowLoginInformations;
 	}
 
@@ -463,7 +463,7 @@ else
 
 	private void DeleteNoteCancel(MouseEventArgs e)
 	{
-		ResetDelete();
+		this.ResetDelete();
 		this.visibleElement = VisibleElement.ShowNotes;
 	}
 
@@ -483,7 +483,7 @@ else
 				this.csc.notes.RemoveAt(deleteIndex);
 			}
 		}
-		ResetDelete();
+		this.ResetDelete();
 		this.visibleElement = VisibleElement.ShowNotes;
 	}
 
@@ -546,7 +546,7 @@ else
 
 	private void DeleteFileCancel(MouseEventArgs e)
 	{
-		ResetDelete();
+		this.ResetDelete();
 		this.visibleElement = VisibleElement.ShowFiles;
 	}
 
@@ -556,7 +556,7 @@ else
 		{
 			this.csc.files.RemoveAt(deleteIndex);
 		}
-		ResetDelete();
+		this.ResetDelete();
 		this.visibleElement = VisibleElement.ShowFiles;
 	}
 
@@ -589,7 +589,7 @@ else
 
 	private void DeleteContactCancel(MouseEventArgs e)
 	{
-		ResetDelete();
+		this.ResetDelete();
 		this.visibleElement = VisibleElement.ShowContacts;
 	}
 
@@ -599,7 +599,7 @@ else
 		{
 			contacts.RemoveAt(deleteIndex);
 		}
-		ResetDelete();
+		this.ResetDelete();
 		this.visibleElement = VisibleElement.ShowContacts;
 	}
 
@@ -632,7 +632,7 @@ else
 
 	private void DeletePaymentCardCancel(MouseEventArgs e)
 	{
-		ResetDelete();
+		this.ResetDelete();
 		this.visibleElement = VisibleElement.ShowPaymentCards;
 	}
 
@@ -642,7 +642,7 @@ else
 		{
 			paymentCards.RemoveAt(deleteIndex);
 		}
-		ResetDelete();
+		this.ResetDelete();
 		this.visibleElement = VisibleElement.ShowPaymentCards;
 	}
 
