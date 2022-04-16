@@ -189,7 +189,7 @@ else
 	// Wizard
 	private void CreateNewContainer(MouseEventArgs e)
 	{
-		visibleElement = VisibleElement.CreateNewCommonSecretsContainer;
+		this.visibleElement = VisibleElement.CreateNewCommonSecretsContainer;
 	}
 
 	private void OpenExistingContainer(MouseEventArgs e)
@@ -270,23 +270,23 @@ else
 			}
 		};
 
-		visibleElement = VisibleElement.ShowLoginInformations;
+		this.visibleElement = VisibleElement.ShowLoginInformations;
 	}
 
 	private void ShowPasswordCreators(MouseEventArgs e)
 	{
-		visibleElement = VisibleElement.ShowPasswordCreators;
+		this.visibleElement = VisibleElement.ShowPasswordCreators;
 	}
 
 	private void BackFromPasswordCreators(MouseEventArgs e)
 	{
-		visibleElement = VisibleElement.NewAndOpenWizard;
+		this.visibleElement = VisibleElement.NewAndOpenWizard;
 	}
 
 	// Create new common secrets container
 	private void CancelNewCommonSecretsContainerCreation(MouseEventArgs e)
 	{
-		visibleElement = VisibleElement.NewAndOpenWizard;
+		this.visibleElement = VisibleElement.NewAndOpenWizard;
 	}
 
 	private async Task CreateNewCommonSecretsContainer(KdfeAndPassword kdfeAndPassword)
@@ -298,7 +298,7 @@ else
 
 		this.isModified = true;
 
-		visibleElement = VisibleElement.ShowLoginInformations;
+		this.visibleElement = VisibleElement.ShowLoginInformations;
 	}
 
 	private IEnumerable<string> GetKeyIdentifiers()
@@ -309,27 +309,27 @@ else
 	// TopNav actions
 	private void TopNavShowLoginInformations(MouseEventArgs e)
 	{
-		visibleElement = VisibleElement.ShowLoginInformations;
+		this.visibleElement = VisibleElement.ShowLoginInformations;
 	}
 
 	private void TopNavShowNotes(MouseEventArgs e)
 	{
-		visibleElement = VisibleElement.ShowNotes;
+		this.visibleElement = VisibleElement.ShowNotes;
 	}
 
 	private void TopNavShowFiles(MouseEventArgs e)
 	{
-		visibleElement = VisibleElement.ShowFiles;
+		this.visibleElement = VisibleElement.ShowFiles;
 	}
 
 	private void TopNavShowContacts(MouseEventArgs e)
 	{
-		visibleElement = VisibleElement.ShowContacts;
+		this.visibleElement = VisibleElement.ShowContacts;
 	}
 
 	private void TopNavShowPaymentCards(MouseEventArgs e)
 	{
-		visibleElement = VisibleElement.ShowPaymentCards;
+		this.visibleElement = VisibleElement.ShowPaymentCards;
 	}
 
 	private int CountNotes()
@@ -345,18 +345,18 @@ else
 	// Add, edit or delete login information
 	private void ShowAddLoginInformation(MouseEventArgs e)
 	{
-		visibleElement = VisibleElement.AddLoginInformation;
+		this.visibleElement = VisibleElement.AddLoginInformation;
 	}
 
 	private void AddLoginInformation(LoginSimplified newLogin)
 	{
 		logins.Add(newLogin);
-		visibleElement = VisibleElement.ShowLoginInformations;
+		this.visibleElement = VisibleElement.ShowLoginInformations;
 	}
 
 	private void CancelAddLoginInformation(MouseEventArgs e)
 	{
-		visibleElement = VisibleElement.ShowLoginInformations;
+		this.visibleElement = VisibleElement.ShowLoginInformations;
 	}
 
 	private void DeleteLoginInformationConfirmation(int zeroBasedIndexNumber)
@@ -366,13 +366,13 @@ else
 		deleteIndex = zeroBasedIndexNumber;
 		whatToDelete = $"Login information with title '{logins[zeroBasedIndexNumber].Title}'";
 		//deleteType = ItemType.LoginInformation;
-		visibleElement = VisibleElement.DeleteItemConfirmation;
+		this.visibleElement = VisibleElement.DeleteItemConfirmation;
 	}
 
 	private void DeleteLoginInformationCancel(MouseEventArgs e)
 	{
 		ResetDelete();
-		visibleElement = VisibleElement.ShowLoginInformations;
+		this.visibleElement = VisibleElement.ShowLoginInformations;
 	}
 
 	private void DeleteLoginInformationActual(MouseEventArgs e)
@@ -382,20 +382,20 @@ else
 			logins.RemoveAt(deleteIndex);
 		}
 		ResetDelete();
-		visibleElement = VisibleElement.ShowLoginInformations;
+		this.visibleElement = VisibleElement.ShowLoginInformations;
 	}
 
 	// Add, edit or delete note
 	private void ShowAddNote(MouseEventArgs e)
 	{
-		visibleElement = VisibleElement.AddNote;
+		this.visibleElement = VisibleElement.AddNote;
 	}
 
 	private void AddNote(Note newNote)
 	{
 		this.csc.notes.Add(newNote);
 		this.isModified = true;
-		visibleElement = VisibleElement.ShowNotes;
+		this.visibleElement = VisibleElement.ShowNotes;
 	}
 
 	private async Task AddNoteSecret((Note newNote, string keyIdentifier) parameter)
@@ -405,31 +405,31 @@ else
 			byte[] derivedPassword = this.derivedPasswords.GetDerivedPassword(parameter.keyIdentifier);
 			await this.csc.AddNoteSecretAsync(derivedPassword, parameter.newNote, parameter.keyIdentifier, securityAsyncFunctions);
 			this.isModified = true;
-			visibleElement = VisibleElement.ShowNotes;
+			this.visibleElement = VisibleElement.ShowNotes;
 		}
 	}
 
 	private void ShowEditNote(int zeroBasedIndexNumber)
 	{
 		this.noteToEdit = this.csc.notes[zeroBasedIndexNumber];
-		visibleElement = VisibleElement.EditNote;
+		this.visibleElement = VisibleElement.EditNote;
 	}
 
 	private void EditedNote()
 	{
 		this.isModified = true;
-		visibleElement = VisibleElement.ShowNotes;
+		this.visibleElement = VisibleElement.ShowNotes;
 	}
 
 	private void CancelAddNote(MouseEventArgs e)
 	{
-		visibleElement = VisibleElement.ShowNotes;
+		this.visibleElement = VisibleElement.ShowNotes;
 	}
 
 	private void CancelEditNote(MouseEventArgs e)
 	{
 		this.noteToEdit = null;
-		visibleElement = VisibleElement.ShowNotes;
+		this.visibleElement = VisibleElement.ShowNotes;
 	}
 
 	private async Task DeleteNoteConfirmation((int zeroBasedIndexNumber, bool isSecure) indexAndSecurity)
@@ -449,13 +449,13 @@ else
 		}
 		
 		//deleteType = ItemType.Note;
-		visibleElement = VisibleElement.DeleteItemConfirmation;
+		this.visibleElement = VisibleElement.DeleteItemConfirmation;
 	}
 
 	private void DeleteNoteCancel(MouseEventArgs e)
 	{
 		ResetDelete();
-		visibleElement = VisibleElement.ShowNotes;
+		this.visibleElement = VisibleElement.ShowNotes;
 	}
 
 	private void DeleteNoteActual(MouseEventArgs e)
@@ -475,19 +475,19 @@ else
 			}
 		}
 		ResetDelete();
-		visibleElement = VisibleElement.ShowNotes;
+		this.visibleElement = VisibleElement.ShowNotes;
 	}
 
 	// Add, edit or delete file
 	private void ShowAddFile(MouseEventArgs e)
 	{
-		visibleElement = VisibleElement.AddFile;
+		this.visibleElement = VisibleElement.AddFile;
 	}
 
 	private void AddFile(FileEntry newFile)
 	{
 		this.csc.files.Add(newFile);
-		visibleElement = VisibleElement.ShowFiles;
+		this.visibleElement = VisibleElement.ShowFiles;
 		this.isModified = true;
 	}
 
@@ -498,31 +498,31 @@ else
 			byte[] derivedPassword = this.derivedPasswords.GetDerivedPassword(parameter.keyIdentifier);
 			await this.csc.AddFileEntrySecretAsync(derivedPassword, parameter.newFile, parameter.keyIdentifier, securityAsyncFunctions);
 			this.isModified = true;
-			visibleElement = VisibleElement.ShowFiles;
+			this.visibleElement = VisibleElement.ShowFiles;
 		}
 	}
 
 	private void ShowEditFile(int zeroBasedIndexNumber)
 	{
 		this.fileToEdit = this.csc.files[zeroBasedIndexNumber];
-		visibleElement = VisibleElement.EditFile;
+		this.visibleElement = VisibleElement.EditFile;
 	}
 
 	private void EditedFile()
 	{
 		this.isModified = true;
-		visibleElement = VisibleElement.ShowFiles;
+		this.visibleElement = VisibleElement.ShowFiles;
 	}
 
 	private void CancelAddFile(MouseEventArgs e)
 	{
-		visibleElement = VisibleElement.ShowFiles;
+		this.visibleElement = VisibleElement.ShowFiles;
 	}
 
 	private void CancelEditFile(MouseEventArgs e)
 	{
 		this.fileToEdit = null;
-		visibleElement = VisibleElement.ShowFiles;
+		this.visibleElement = VisibleElement.ShowFiles;
 	}
 
 	private void DeleteFileConfirmation(int zeroBasedIndexNumber)
@@ -532,13 +532,13 @@ else
 		deleteIndex = zeroBasedIndexNumber;
 		//whatToDelete = $"File with filename '{files[zeroBasedIndexNumber].Filename}'";
 		//deleteType = ItemType.File;
-		visibleElement = VisibleElement.DeleteItemConfirmation;
+		this.visibleElement = VisibleElement.DeleteItemConfirmation;
 	}
 
 	private void DeleteFileCancel(MouseEventArgs e)
 	{
 		ResetDelete();
-		visibleElement = VisibleElement.ShowFiles;
+		this.visibleElement = VisibleElement.ShowFiles;
 	}
 
 	private void DeleteFileActual(MouseEventArgs e)
@@ -548,24 +548,24 @@ else
 			this.csc.files.RemoveAt(deleteIndex);
 		}
 		ResetDelete();
-		visibleElement = VisibleElement.ShowFiles;
+		this.visibleElement = VisibleElement.ShowFiles;
 	}
 
 	// Add, edit or delete contact
 	private void ShowAddContact(MouseEventArgs e)
 	{
-		visibleElement = VisibleElement.AddContact;
+		this.visibleElement = VisibleElement.AddContact;
 	}
 
 	private void AddContact(ContactSimplified newContact)
 	{
 		contacts.Add(newContact);
-		visibleElement = VisibleElement.ShowContacts;
+		this.visibleElement = VisibleElement.ShowContacts;
 	}
 
 	private void CancelAddContact(MouseEventArgs e)
 	{
-		visibleElement = VisibleElement.ShowContacts;
+		this.visibleElement = VisibleElement.ShowContacts;
 	}
 
 	private void DeleteContactConfirmation(int zeroBasedIndexNumber)
@@ -575,13 +575,13 @@ else
 		deleteIndex = zeroBasedIndexNumber;
 		whatToDelete = $"Contact with name '{contacts[zeroBasedIndexNumber].FirstName} {contacts[zeroBasedIndexNumber].LastName}'";
 		//deleteType = ItemType.ContactInformation;
-		visibleElement = VisibleElement.DeleteItemConfirmation;
+		this.visibleElement = VisibleElement.DeleteItemConfirmation;
 	}
 
 	private void DeleteContactCancel(MouseEventArgs e)
 	{
 		ResetDelete();
-		visibleElement = VisibleElement.ShowContacts;
+		this.visibleElement = VisibleElement.ShowContacts;
 	}
 
 	private void DeleteContactActual(MouseEventArgs e)
@@ -591,24 +591,24 @@ else
 			contacts.RemoveAt(deleteIndex);
 		}
 		ResetDelete();
-		visibleElement = VisibleElement.ShowContacts;
+		this.visibleElement = VisibleElement.ShowContacts;
 	}
 
 	// Add, edit or delete  payment card
 	private void ShowAddPaymentCard(MouseEventArgs e)
 	{
-		visibleElement = VisibleElement.AddPaymentCard;
+		this.visibleElement = VisibleElement.AddPaymentCard;
 	}
 
 	private void AddPaymentCard(PaymentCardSimplified newPaymentCard)
 	{
 		paymentCards.Add(newPaymentCard);
-		visibleElement = VisibleElement.ShowPaymentCards;
+		this.visibleElement = VisibleElement.ShowPaymentCards;
 	}
 
 	private void CancelAddPaymentCard(MouseEventArgs e)
 	{
-		visibleElement = VisibleElement.ShowPaymentCards;
+		this.visibleElement = VisibleElement.ShowPaymentCards;
 	}
 
 	private void DeletePaymentCardConfirmation(int zeroBasedIndexNumber)
@@ -618,13 +618,13 @@ else
 		deleteIndex = zeroBasedIndexNumber;
 		whatToDelete = $"Payment card with title '{paymentCards[zeroBasedIndexNumber].Title}'";
 		//deleteType = ItemType.PaymentCard;
-		visibleElement = VisibleElement.DeleteItemConfirmation;
+		this.visibleElement = VisibleElement.DeleteItemConfirmation;
 	}
 
 	private void DeletePaymentCardCancel(MouseEventArgs e)
 	{
 		ResetDelete();
-		visibleElement = VisibleElement.ShowPaymentCards;
+		this.visibleElement = VisibleElement.ShowPaymentCards;
 	}
 
 	private void DeletePaymentCardActual(MouseEventArgs e)
@@ -634,7 +634,7 @@ else
 			paymentCards.RemoveAt(deleteIndex);
 		}
 		ResetDelete();
-		visibleElement = VisibleElement.ShowPaymentCards;
+		this.visibleElement = VisibleElement.ShowPaymentCards;
 	}
 
 	// Delete common
