@@ -176,6 +176,7 @@ else
 	// Delete related
 	private ItemType deleteType = ItemType.None;
 	private int deleteIndex = -1;
+	private bool deleteSecure = false;
 	private Action<MouseEventArgs> deleteCancelAction;
 	private Action<MouseEventArgs> deleteActualAction;
 	private string whatToDelete = "";
@@ -431,12 +432,22 @@ else
 		visibleElement = VisibleElement.ShowNotes;
 	}
 
-	private void DeleteNoteConfirmation(int zeroBasedIndexNumber)
+	private async Task DeleteNoteConfirmation((int zeroBasedIndexNumber, bool isSecure) indexAndSecurity)
 	{
-		deleteActualAction = DeleteNoteActual;
-		deleteCancelAction = DeleteNoteCancel;
-		deleteIndex = zeroBasedIndexNumber;
-		whatToDelete = $"Note with title '{this.csc.notes[zeroBasedIndexNumber].GetNoteTitle()}'";
+		this.deleteActualAction = DeleteNoteActual;
+		this.deleteCancelAction = DeleteNoteCancel;
+		this.deleteIndex = indexAndSecurity.zeroBasedIndexNumber;
+		this.deleteSecure = indexAndSecurity.isSecure;
+		if (this.deleteSecure)
+		{
+			string keyIdentifier = this.csc.noteSecrets[this.deleteIndex].GetKeyIdentifier();
+			this.whatToDelete = $"Note with title '{await this.csc.noteSecrets[this.deleteIndex].GetNoteTitleAsync(this.derivedPasswords.GetDerivedPassword(keyIdentifier), securityAsyncFunctions)}'";
+		}
+		else
+		{
+			this.whatToDelete = $"Note with title '{this.csc.notes[this.deleteIndex].GetNoteTitle()}'";
+		}
+		
 		//deleteType = ItemType.Note;
 		visibleElement = VisibleElement.DeleteItemConfirmation;
 	}
@@ -449,9 +460,19 @@ else
 
 	private void DeleteNoteActual(MouseEventArgs e)
 	{
-		if (-1 < deleteIndex && deleteIndex < this.csc.notes.Count)
+		if (this.deleteSecure)
 		{
-			this.csc.notes.RemoveAt(deleteIndex);
+			if (-1 < deleteIndex && deleteIndex < this.csc.noteSecrets.Count)
+			{
+				this.csc.noteSecrets.RemoveAt(deleteIndex);
+			}
+		}
+		else
+		{
+			if (-1 < deleteIndex && deleteIndex < this.csc.notes.Count)
+			{
+				this.csc.notes.RemoveAt(deleteIndex);
+			}
 		}
 		ResetDelete();
 		visibleElement = VisibleElement.ShowNotes;
@@ -622,6 +643,7 @@ else
 		deleteActualAction = null;
 		deleteCancelAction = null;
 		deleteIndex = -1;
+		deleteSecure = false;
 		deleteType = ItemType.None;
 		whatToDelete = "";
 	}

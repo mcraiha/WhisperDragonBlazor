@@ -40,9 +40,10 @@ else
 		@foreach (var item in filteredNotes)
         {
 			int indexToHandle = item.zeroBasedIndexNumber;
+			bool isSecure = item.IsSecure;
 			<tr>
 				<th>
-					@if (item.IsSecure == true)
+					@if (isSecure == true)
 					{
 						@CommonIcons.secureIcon
 					}
@@ -52,10 +53,10 @@ else
 					}
 				</th>
 				<th>
-					@item.Title <a title="Copy title" @onclick="() => CallTitleCopy(indexToHandle)">✂️</a>
+					@item.Title <a title="Copy title" @onclick="() => CallTitleCopy(indexToHandle, isSecure)">✂️</a>
 				</th>
 				<th>
-					@item.Text <a title="Copy text" @onclick="() => CallTextCopy(indexToHandle)">✂️</a>
+					@item.Text <a title="Copy text" @onclick="() => CallTextCopy(indexToHandle, isSecure)">✂️</a>
 				</th>
 				<th>
 					@item.CreationTime
@@ -64,7 +65,7 @@ else
 					@item.ModificationTime
 				</th>
 				<th>
-					<a title="Edit note" @onclick="() => CallEdit(indexToHandle)">Edit 🖊️</a> | <a title="Delete note" @onclick="() => CallDelete(indexToHandle)">Delete 🗑️</a>
+					<a title="Edit note" @onclick="() => CallEdit(indexToHandle, isSecure)">Edit 🖊️</a> | <a title="Delete note" @onclick="() => CallDelete(indexToHandle, isSecure)">Delete 🗑️</a>
 				</th>
 			</tr>
         }
@@ -85,7 +86,7 @@ else
 	public EventCallback<int> EditNoteCallback { get; set; }
 
 	[Parameter, EditorRequired]
-	public EventCallback<int> DeleteNoteCallback { get; set; }
+	public EventCallback<(int, bool)> DeleteNoteCallback { get; set; }
 
 	private IReadOnlyList<NoteSimplified> notes { get; set; }
 	private IReadOnlyList<NoteSimplified> filteredNotes { get; set; }
@@ -119,25 +120,25 @@ else
 	}
 
 	// Copy to clipboard methods
-	private async Task CallTitleCopy(int zeroBasedIndexNumber)
+	private async Task CallTitleCopy(int zeroBasedIndexNumber, bool isSecure)
 	{
 		await JS.InvokeVoidAsync("copyToClipboard", notes[zeroBasedIndexNumber].Title);
 	}
 
-	private async Task CallTextCopy(int zeroBasedIndexNumber)
+	private async Task CallTextCopy(int zeroBasedIndexNumber, bool isSecure)
 	{
 		await JS.InvokeVoidAsync("copyToClipboard", notes[zeroBasedIndexNumber].Text);
 	}
 
 	// Edit method
-	private async Task CallEdit(int zeroBasedIndexNumber)
+	private async Task CallEdit(int zeroBasedIndexNumber, bool isSecure)
 	{
 		await EditNoteCallback.InvokeAsync(zeroBasedIndexNumber);
 	}
 
 	// Delete method
-	private async Task CallDelete(int zeroBasedIndexNumber)
+	private async Task CallDelete(int zeroBasedIndexNumber, bool isSecure)
 	{
-		await DeleteNoteCallback.InvokeAsync(zeroBasedIndexNumber);
+		await DeleteNoteCallback.InvokeAsync((zeroBasedIndexNumber, isSecure));
 	}
 }
