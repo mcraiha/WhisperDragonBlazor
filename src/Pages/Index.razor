@@ -41,7 +41,7 @@ else if (visibleElement == VisibleElement.ShowPaymentCards)
 {
 	<CommonSecretsTopNav OnLoginsClickCallback="@TopNavShowLoginInformations" OnNotesClickCallback="@TopNavShowNotes" OnFilesClickCallback="@TopNavShowFiles" OnContactsClickCallback="@TopNavShowContacts" OnPaymentCardsClickCallback="@TopNavShowPaymentCards" 
 		loginsCount="@logins.Count" notesCount="@CountNotes()" filesCount="@CountFiles()" contactsCount="@contacts.Count" paymentCardsCount="@CountPaymentCards()" />
-	<ShowPaymentCards PaymentCards="@paymentCards" AddPaymentCardCallback="@ShowAddPaymentCard" DeletePaymentCardCallback="@DeletePaymentCardConfirmation" />
+	<ShowPaymentCards PaymentCards="@PaymentCardSimplified.CreatePaymentCardSimplifieds(csc.paymentCards, csc.paymentCardSecrets, securityAsyncFunctions, this.derivedPasswords)" AddPaymentCardCallback="@ShowAddPaymentCard" EditPaymentCardCallback="@ShowEditPaymentCard" DeletePaymentCardCallback="@DeletePaymentCardConfirmation" />
 }
 else if (visibleElement == VisibleElement.AddLoginInformation)
 {
@@ -61,7 +61,7 @@ else if (visibleElement == VisibleElement.AddContact)
 }
 else if (visibleElement == VisibleElement.AddPaymentCard)
 {
-	<AddOrEditPaymentCard OnAddCallback="@AddPaymentCard" OnCancelCallback="@CancelAddPaymentCard" />
+	<AddOrEditPaymentCard SecurityAsyncFunctions="@securityAsyncFunctions" PossibleKeyIdentifiers="@GetKeyIdentifiers()" OnAddCallback="@AddPaymentCard" OnAddSecretCallback="@AddPaymentCardSecret" OnCancelCallback="@CancelAddPaymentCard" />
 }
 else if (visibleElement == VisibleElement.EditLoginInformation)
 {
@@ -81,7 +81,7 @@ else if (visibleElement == VisibleElement.EditContact)
 }
 else if (visibleElement == VisibleElement.EditPaymentCard)
 {
-	<AddOrEditPaymentCard OnAddCallback="@AddPaymentCard" OnCancelCallback="@CancelAddPaymentCard" />
+	<AddOrEditPaymentCard SecurityAsyncFunctions="@securityAsyncFunctions" PossibleKeyIdentifiers="@GetKeyIdentifiers()" paymentCard="@this.paymentCardToEdit" OnEditedCallback="@EditedPaymentCard" OnCancelEditCallback="@CancelEditPaymentCard" />
 }
 else if (visibleElement == VisibleElement.DeleteItemConfirmation)
 {
@@ -167,11 +167,10 @@ else
 
 	private List<ContactSimplified> contacts = new List<ContactSimplified>();
 
-	private List<PaymentCardSimplified> paymentCards = new List<PaymentCardSimplified>();
-
 	// Edit related
 	private Note noteToEdit = null;
 	private FileEntry fileToEdit = null;
+	private PaymentCard paymentCardToEdit = null;
 
 	// Delete related
 	private ItemType deleteType = ItemType.None;
@@ -620,9 +619,42 @@ else
 		this.visibleElement = VisibleElement.AddPaymentCard;
 	}
 
-	private void AddPaymentCard(PaymentCardSimplified newPaymentCard)
+	private void AddPaymentCard(PaymentCard newPaymentCard)
 	{
-		paymentCards.Add(newPaymentCard);
+		this.csc.paymentCards.Add(newPaymentCard);
+		this.isModified = true;
+		this.visibleElement = VisibleElement.ShowPaymentCards;
+	}
+
+	private async Task AddPaymentCardSecret((PaymentCard newPaymentCard, string keyIdentifier) parameter)
+	{
+		if (this.derivedPasswords.DoesDerivedPasswordExist(parameter.keyIdentifier))
+		{
+			byte[] derivedPassword = this.derivedPasswords.GetDerivedPassword(parameter.keyIdentifier);
+			await this.csc.AddPaymentCardSecretAsync(derivedPassword, parameter.newPaymentCard, parameter.keyIdentifier, securityAsyncFunctions);
+			this.isModified = true;
+			this.visibleElement = VisibleElement.ShowPaymentCards;
+		}
+	}
+
+	private async Task ShowEditPaymentCard((int zeroBasedIndexNumber, bool isSecure) indexAndSecurity)
+	{
+		int index = indexAndSecurity.zeroBasedIndexNumber;
+		if (indexAndSecurity.isSecure)
+		{
+			string keyIdentifier = this.csc.paymentCardSecrets[index].GetKeyIdentifier();
+			this.paymentCardToEdit = await this.csc.paymentCardSecrets[index].GetPaymentCardAsync(this.derivedPasswords.GetDerivedPassword(keyIdentifier), securityAsyncFunctions);
+		}
+		else
+		{
+			this.paymentCardToEdit = this.csc.paymentCards[index];
+		}
+		this.visibleElement = VisibleElement.EditPaymentCard;
+	}
+
+	private void EditedPaymentCard()
+	{
+		this.isModified = true;
 		this.visibleElement = VisibleElement.ShowPaymentCards;
 	}
 
@@ -631,12 +663,28 @@ else
 		this.visibleElement = VisibleElement.ShowPaymentCards;
 	}
 
-	private void DeletePaymentCardConfirmation(int zeroBasedIndexNumber)
+	private void CancelEditPaymentCard(MouseEventArgs e)
 	{
-		deleteActualAction = DeletePaymentCardActual;
-		deleteCancelAction = DeletePaymentCardCancel;
-		deleteIndex = zeroBasedIndexNumber;
-		whatToDelete = $"Payment card with title '{paymentCards[zeroBasedIndexNumber].Title}'";
+		this.paymentCardToEdit = null;
+		this.visibleElement = VisibleElement.ShowPaymentCards;
+	}
+
+	private async Task DeletePaymentCardConfirmation((int zeroBasedIndexNumber, bool isSecure) indexAndSecurity)
+	{
+		this.deleteActualAction = DeletePaymentCardActual;
+		this.deleteCancelAction = DeletePaymentCardCancel;
+		this.deleteIndex = indexAndSecurity.zeroBasedIndexNumber;
+		this.deleteSecure = indexAndSecurity.isSecure;
+		if (this.deleteSecure)
+		{
+			string keyIdentifier = this.csc.paymentCardSecrets[this.deleteIndex].GetKeyIdentifier();
+			this.whatToDelete = $"Payment card with title '{await this.csc.paymentCardSecrets[this.deleteIndex].GetTitleAsync(this.derivedPasswords.GetDerivedPassword(keyIdentifier), securityAsyncFunctions)}'";
+		}
+		else
+		{
+			this.whatToDelete = $"Payment card with title '{this.csc.paymentCards[this.deleteIndex].GetTitle()}'";
+		}
+		
 		//deleteType = ItemType.PaymentCard;
 		this.visibleElement = VisibleElement.DeleteItemConfirmation;
 	}
@@ -649,9 +697,19 @@ else
 
 	private void DeletePaymentCardActual(MouseEventArgs e)
 	{
-		if (-1 < deleteIndex && deleteIndex < paymentCards.Count)
+		if (this.deleteSecure)
 		{
-			paymentCards.RemoveAt(deleteIndex);
+			if (-1 < deleteIndex && deleteIndex < this.csc.paymentCardSecrets.Count)
+			{
+				this.csc.paymentCardSecrets.RemoveAt(deleteIndex);
+			}
+		}
+		else
+		{
+			if (-1 < deleteIndex && deleteIndex < this.csc.paymentCards.Count)
+			{
+				this.csc.paymentCards.RemoveAt(deleteIndex);
+			}
 		}
 		this.ResetDelete();
 		this.visibleElement = VisibleElement.ShowPaymentCards;

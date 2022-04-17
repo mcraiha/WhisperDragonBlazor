@@ -1,8 +1,8 @@
 @inject IJSRuntime JS
 
-@if (PaymentCards == null || PaymentCards.Count < 1)
+@if (PaymentCards == null || paymentCards.Count < 1)
 {
-	<p>No contacts</p>
+	<p>No payment cards</p>
 }
 else
 {
@@ -10,7 +10,7 @@ else
 @if (!string.IsNullOrEmpty(searchFilter))
 {
 	<br>
-	<p>Filter is matching @FilteredPaymentCards.Count / @PaymentCards.Count </p>
+	<p>Filter is matching @filteredPaymentCards.Count / @paymentCards.Count </p>
 }
 
 <table id="paymentcards">
@@ -35,18 +35,25 @@ else
 				Security code
 			</th>
 			<th>
+				Created
+			</th>
+			<th>
+				Modified
+			</th>
+			<th>
 				Actions
 			</th>
 		</tr>
 	</thead>
 
 	<tbody>
-		@foreach (var item in FilteredPaymentCards)
+		@foreach (var item in filteredPaymentCards)
         {
 			int indexToHandle = item.zeroBasedIndexNumber;
+			bool isSecure = item.IsSecure;
 			<tr>
 				<th>
-					@if (item.IsSecure == true)
+					@if (isSecure == true)
 					{
 						@CommonIcons.secureIcon
 					}
@@ -56,22 +63,22 @@ else
 					}
 				</th>
 				<th>
-					@item.Title <a title="Copy title" @onclick="() => CallTitleCopy(indexToHandle)">✂️</a>
+					@item.Title <a title="Copy title" @onclick="() => CallTitleCopy(indexToHandle, isSecure)">✂️</a>
 				</th>
 				<th>
-					@item.NameOnTheCard <a title="Copy name on the card" @onclick="() => CallNameOnTheCardCopy(indexToHandle)">✂️</a>
+					@item.NameOnTheCard <a title="Copy name on the card" @onclick="() => CallNameOnTheCardCopy(indexToHandle, isSecure)">✂️</a>
 				</th>
                 <th>
 					@item.CardType
 				</th>
                 <th>
-					@item.Number <a title="Copy number" @onclick="() => CallNumberCopy(indexToHandle)">✂️</a>
+					@item.Number <a title="Copy number" @onclick="() => CallNumberCopy(indexToHandle, isSecure)">✂️</a>
 				</th>
                 <th>
-					@item.SecurityCode <a title="Copy security code" @onclick="() => CallSecurityCodeCopy(indexToHandle)">✂️</a>
+					@item.SecurityCode <a title="Copy security code" @onclick="() => CallSecurityCodeCopy(indexToHandle, isSecure)">✂️</a>
 				</th>
 				<th>
-					<a title="Delete payment card" @onclick="() => CallDelete(indexToHandle)">🗑️</a>
+					<a title="Delete payment card" @onclick="() => CallDelete(indexToHandle, isSecure)">🗑️</a>
 				</th>
 			</tr>
         }
@@ -83,15 +90,19 @@ else
 <button title="Add payment card" @onclick="AddPaymentCardCallback">+ Add</button>
 @code {
     [Parameter, EditorRequired]
-    public IReadOnlyList<PaymentCardSimplified> PaymentCards { get; set; }
+    public Task<PaymentCardSimplified[]> PaymentCards { get; set; }
 
 	[Parameter, EditorRequired]
 	public EventCallback<MouseEventArgs> AddPaymentCardCallback { get; set; }
 
 	[Parameter, EditorRequired]
-	public EventCallback<int> DeletePaymentCardCallback { get; set; }
+	public EventCallback<(int, bool)> EditPaymentCardCallback { get; set; }
 
-	private IReadOnlyList<PaymentCardSimplified> FilteredPaymentCards { get; set; }
+	[Parameter, EditorRequired]
+	public EventCallback<(int, bool)> DeletePaymentCardCallback { get; set; }
+
+	private IReadOnlyList<PaymentCardSimplified> paymentCards { get; set; }
+	private IReadOnlyList<PaymentCardSimplified> filteredPaymentCards { get; set; }
 
 	private static readonly StringComparison searchComparison = StringComparison.OrdinalIgnoreCase;
 	private string searchFilter = "";
@@ -106,45 +117,46 @@ else
 			this.searchFilter = value;
 			if (string.IsNullOrEmpty(this.searchFilter))
 			{
-				this.FilteredPaymentCards = this.PaymentCards;
+				this.filteredPaymentCards = this.paymentCards;
 			}
 			else
 			{
-				this.FilteredPaymentCards = this.PaymentCards.Where(x => x.Title.Contains(this.searchFilter, searchComparison) || x.NameOnTheCard.Contains(this.searchFilter, searchComparison) || x.Number.Contains(this.searchFilter, searchComparison) || x.SecurityCode.Contains(this.searchFilter, searchComparison)).ToList();
+				this.filteredPaymentCards = this.paymentCards.Where(x => x.Title.Contains(this.searchFilter, searchComparison) || x.NameOnTheCard.Contains(this.searchFilter, searchComparison) || x.Number.Contains(this.searchFilter, searchComparison) || x.SecurityCode.Contains(this.searchFilter, searchComparison)).ToList();
 			}
 			
 		} 
 	}
 
-	protected override void OnInitialized()
+	protected override async Task OnInitializedAsync()
 	{
-		this.FilteredPaymentCards = this.PaymentCards;
+		this.paymentCards = await PaymentCards;
+		this.filteredPaymentCards = this.paymentCards;
 	}
 
 	// Copy to clipboard methods
-	private async Task CallTitleCopy(int zeroBasedIndexNumber)
+	private async Task CallTitleCopy(int zeroBasedIndexNumber, bool isSecure)
 	{
-		await JS.InvokeVoidAsync("copyToClipboard", PaymentCards[zeroBasedIndexNumber].Title);
+		await JS.InvokeVoidAsync("copyToClipboard", paymentCards[zeroBasedIndexNumber].Title);
 	}
 
-	private async Task CallNameOnTheCardCopy(int zeroBasedIndexNumber)
+	private async Task CallNameOnTheCardCopy(int zeroBasedIndexNumber, bool isSecure)
 	{
-		await JS.InvokeVoidAsync("copyToClipboard", PaymentCards[zeroBasedIndexNumber].NameOnTheCard);
+		await JS.InvokeVoidAsync("copyToClipboard", paymentCards[zeroBasedIndexNumber].NameOnTheCard);
 	}
 
-	private async Task CallNumberCopy(int zeroBasedIndexNumber)
+	private async Task CallNumberCopy(int zeroBasedIndexNumber, bool isSecure)
 	{
-		await JS.InvokeVoidAsync("copyToClipboard", PaymentCards[zeroBasedIndexNumber].Number);
+		await JS.InvokeVoidAsync("copyToClipboard", paymentCards[zeroBasedIndexNumber].Number);
 	}
 
-	private async Task CallSecurityCodeCopy(int zeroBasedIndexNumber)
+	private async Task CallSecurityCodeCopy(int zeroBasedIndexNumber, bool isSecure)
 	{
-		await JS.InvokeVoidAsync("copyToClipboard", PaymentCards[zeroBasedIndexNumber].SecurityCode);
+		await JS.InvokeVoidAsync("copyToClipboard", paymentCards[zeroBasedIndexNumber].SecurityCode);
 	}
 
 	// Delete method
-	private async Task CallDelete(int zeroBasedIndexNumber)
+	private async Task CallDelete(int zeroBasedIndexNumber, bool isSecure)
 	{
-		await DeletePaymentCardCallback.InvokeAsync(zeroBasedIndexNumber);
+		await DeletePaymentCardCallback.InvokeAsync((zeroBasedIndexNumber, isSecure));
 	}
 }

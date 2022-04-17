@@ -4,6 +4,12 @@
         <label for="issecure">Is secure @if (IsSecure) {@CommonIcons.secureIcon} else {@CommonIcons.unsecureIcon}</label>
 		<input type="checkbox" id="issecure" @bind="@IsSecure">
 		<br>
+        @if (IsSecure)
+        {
+            <SelectKeyIdentifier PossibleKeyIdentifiers="@PossibleKeyIdentifiers" KeyIdentifierChanged="@KeyIdentifierSelected" />
+            <br>
+        }
+
 		<label for="cardtitle">Title</label>
 		<input type="text" id="cardtitle" @bind="@CardTitle" placeholder="Title for the card">
 		<br>
@@ -29,18 +35,50 @@
         <textarea id="notetext" @bind="@NoteText" rows="20" placeholder="Notes for the card"></textarea>
         <br>
         <br>
-        <button type="button" id="cancel" @onclick="OnCancelCallback">Cancel</button> <button type="button" id="addpaymentcard" @onclick="TryToAddPaymentCard">Add payment card</button>
+
+        @if (paymentCard != null)
+        {
+            <button type="button" id="cancelEdit" @onclick="OnCancelEditCallback">Cancel</button> 
+            <button type="button" id="editpaymentcard" @onclick="TryToEditPaymentCard">Save changes</button>
+        }
+        else
+        {
+            <button type="button" id="cancelAdd" @onclick="OnCancelAddCallback">Cancel</button> 
+            <button type="button" id="addpaymentcard" @onclick="TryToAddPaymentCard">Add payment card</button>
+        }
+        
     </form>
 </section>
 
 @code {
-    [Parameter, EditorRequired]
-    public EventCallback<PaymentCardSimplified> OnAddCallback { get; set; }
+    [Parameter]
+    public PaymentCard paymentCard { get; set; }
 
     [Parameter, EditorRequired]
-    public EventCallback<MouseEventArgs> OnCancelCallback { get; set; }
+    public ISecurityAsyncFunctions SecurityAsyncFunctions { get; set; }
 
+    [Parameter, EditorRequired]
+    public IEnumerable<string> PossibleKeyIdentifiers { get; set; }
+
+    [Parameter]
+    public EventCallback<PaymentCard> OnAddCallback { get; set; }
+
+    [Parameter]
+    public EventCallback<(PaymentCard, string)> OnAddSecretCallback { get; set; }
+
+    [Parameter]
+    public EventCallback<MouseEventArgs> OnEditedCallback { get; set; }
+
+    [Parameter]
+    public EventCallback<MouseEventArgs> OnCancelAddCallback { get; set; }
+
+    [Parameter]
+    public EventCallback<MouseEventArgs> OnCancelEditCallback { get; set; }
+
+    [Parameter]
     public bool IsSecure { get; set; } = true;
+
+    private string keyIdentifier { get; set; } = "";
 
     public string CardTitle { get; set; } = "";
 
@@ -58,8 +96,50 @@
 
     public string NoteText { get; set; } = "";
 
-    private void TryToAddPaymentCard()
+    protected override void OnInitialized()
+	{
+        if (this.paymentCard != null)
+        {
+            this.CardTitle = paymentCard.GetTitle();
+            this.NameOnCard = paymentCard.GetNameOnCard();
+            this.CardType = paymentCard.GetCardType();
+            this.CardNumber = paymentCard.GetNumber();
+            this.CardSecurityCode = paymentCard.GetSecurityCode();
+            this.CardStartDate = paymentCard.GetStartDate();
+            this.CardExpirationDate = paymentCard.GetExpirationDate();
+            this.NoteText = paymentCard.GetNotes();
+        }
+
+        this.keyIdentifier = PossibleKeyIdentifiers.First();
+	}
+
+    private async Task TryToAddPaymentCard()
     {
-        OnAddCallback.InvokeAsync(new PaymentCardSimplified() { IsSecure = this.IsSecure, Title = CardTitle, NameOnTheCard = NameOnCard, CardType = CardType, Number = CardNumber, SecurityCode = CardSecurityCode });
+        PaymentCard newPaymentCard = await PaymentCard.CreatePaymentCardAsync(this.CardTitle, this.NameOnCard, this.CardType, this.CardNumber, this.CardSecurityCode, this.CardStartDate, this.CardExpirationDate, this.NoteText, this.SecurityAsyncFunctions);
+        
+        // New payment card (either secret or not)
+        if (IsSecure)
+        {
+            await OnAddSecretCallback.InvokeAsync((newPaymentCard, keyIdentifier));
+        }
+        else
+        {
+            await OnAddCallback.InvokeAsync(newPaymentCard);
+        }
+    }
+
+    /// <summary>
+    /// When user saves changes to existing payment card
+    /// </summary>
+    /// <returns></returns>
+    private async Task TryToEditPaymentCard()
+    {
+        //await this.paymentCard.up .note.UpdateNoteAsync(this.NoteTitle, this.NoteText, this.SecurityAsyncFunctions);
+        await OnEditedCallback.InvokeAsync();
+    }
+
+    private void KeyIdentifierSelected(string newSelection)
+    {
+        this.keyIdentifier = newSelection;
     }
 }
