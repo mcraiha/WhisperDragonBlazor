@@ -1,6 +1,13 @@
 <section>
     <form>
-        <header>Add file</header>
+        @if (FileEntry != null)
+        {
+            <header>Edit file</header>
+        }
+        else
+        {
+            <header>Add file</header>
+        }
         <label for="issecure">Is secure @if (IsSecure) {@CommonIcons.secureIcon} else {@CommonIcons.unsecureIcon}</label>
 		<input type="checkbox" id="issecure" @bind="@IsSecure">
 		<br>
@@ -16,7 +23,17 @@
         <InputFile OnChange="@LoadFiles"/>
         <br>
         <br>
-        <button type="button" id="cancel" @onclick="OnCancelCallback">Cancel</button> <button type="button" id="addnote" @onclick="TryToAddFile">Add file</button>
+
+        @if (FileEntry != null)
+        {
+            <button type="button" id="cancelEdit" @onclick="OnCancelEditCallback">Cancel</button> 
+            <button type="button" id="editfile" @onclick="TryToEditFileEntry">Save changes</button>
+        }
+        else
+        {
+            <button type="button" id="cancelAdd" @onclick="OnCancelAddCallback">Cancel</button> 
+            <button type="button" id="addfile" @onclick="TryToAddFileEntry">Add file</button>
+        }   
     </form>
 </section>
 
@@ -40,7 +57,7 @@
     public EventCallback<MouseEventArgs> OnEditedCallback { get; set; }
 
     [Parameter]
-    public EventCallback<MouseEventArgs> OnCancelCallback { get; set; }
+    public EventCallback<MouseEventArgs> OnCancelAddCallback { get; set; }
 
     [Parameter]
     public EventCallback<MouseEventArgs> OnCancelEditCallback { get; set; }
@@ -67,9 +84,19 @@
         }
     }
 
-    private void TryToAddFile()
+    private void TryToAddFileEntry()
     {
         OnAddCallback.InvokeAsync();
+    }
+
+    /// <summary>
+    /// When user saves changes to existing file entry
+    /// </summary>
+    /// <returns></returns>
+    private async Task TryToEditFileEntry()
+    {
+        await this.FileEntry.UpdateFileEntryAsync(FileName, fileContent, this.SecurityAsyncFunctions);
+        await OnEditedCallback.InvokeAsync();
     }
 
     private void KeyIdentifierSelected(string newSelection)
