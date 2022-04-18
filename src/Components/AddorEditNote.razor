@@ -5,7 +5,7 @@
 	}
     <form>
 
-        @if (note != null)
+        @if (Note != null)
         {
             <header>Edit note</header>
         }
@@ -31,7 +31,7 @@
         <br>
         <br>
         
-        @if (note != null)
+        @if (Note != null)
         {
             <button type="button" id="cancelEdit" @onclick="OnCancelEditCallback">Cancel</button> 
             <button type="button" id="editnote" @onclick="TryToEditNote">Save changes</button>
@@ -46,7 +46,7 @@
 
 @code {
     [Parameter]
-    public Note note { get; set; }
+    public Note Note { get; set; }
 
     [Parameter, EditorRequired]
     public ISecurityAsyncFunctions SecurityAsyncFunctions { get; set; }
@@ -80,10 +80,10 @@
 
     protected override void OnInitialized()
 	{
-        if (this.note != null)
+        if (this.Note != null)
         {
-            this.NoteTitle = note.GetNoteTitle();
-            this.NoteText = note.GetNoteText();
+            this.NoteTitle = Note.GetNoteTitle();
+            this.NoteText = Note.GetNoteText();
         }
 
         this.keyIdentifier = PossibleKeyIdentifiers.First();
@@ -114,7 +114,7 @@
     /// <returns></returns>
     private async Task TryToEditNote()
     {
-        await this.note.UpdateNoteAsync(this.NoteTitle, this.NoteText, this.SecurityAsyncFunctions);
+        await this.Note.UpdateNoteAsync(this.NoteTitle, this.NoteText, this.SecurityAsyncFunctions);
         await OnEditedCallback.InvokeAsync();
     }
 
