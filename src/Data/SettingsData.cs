@@ -10,7 +10,7 @@ public enum ShowMode
 }
 
 /// <summary>
-/// All settings for WhisperDragonBlazor
+/// All settings for WhisperDragonBlazor (this class should be seriable)
 /// </summary>
 public sealed class SettingsData
 {
