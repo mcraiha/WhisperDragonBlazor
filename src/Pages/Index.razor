@@ -73,7 +73,7 @@ else if (visibleElement == VisibleElement.EditNote)
 }
 else if (visibleElement == VisibleElement.EditFile)
 {
-	<AddOrEditFile SecurityAsyncFunctions="@securityAsyncFunctions" PossibleKeyIdentifiers="@GetKeyIdentifiers()" File="@this.fileEntryToEdit" OnEditedCallback="@EditedFile" OnCancelEditCallback="@CancelEditFile" />
+	<AddOrEditFile SecurityAsyncFunctions="@securityAsyncFunctions" PossibleKeyIdentifiers="@GetKeyIdentifiers()" FileEntry="@this.fileEntryToEdit" OnEditedCallback="@EditedFile" OnCancelEditCallback="@CancelEditFile" />
 }
 else if (visibleElement == VisibleElement.EditContact)
 {
