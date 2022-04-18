@@ -73,7 +73,7 @@ else if (visibleElement == VisibleElement.EditNote)
 }
 else if (visibleElement == VisibleElement.EditFile)
 {
-	<AddOrEditFile SecurityAsyncFunctions="@securityAsyncFunctions" PossibleKeyIdentifiers="@GetKeyIdentifiers()" File="@this.fileToEdit" OnEditedCallback="@EditedFile" OnCancelEditCallback="@CancelEditFile" />
+	<AddOrEditFile SecurityAsyncFunctions="@securityAsyncFunctions" PossibleKeyIdentifiers="@GetKeyIdentifiers()" File="@this.fileEntryToEdit" OnEditedCallback="@EditedFile" OnCancelEditCallback="@CancelEditFile" />
 }
 else if (visibleElement == VisibleElement.EditContact)
 {
@@ -169,7 +169,7 @@ else
 
 	// Edit related
 	private Note noteToEdit = null;
-	private FileEntry fileToEdit = null;
+	private FileEntry fileEntryToEdit = null;
 	private PaymentCard paymentCardToEdit = null;
 
 	// Delete related
@@ -497,11 +497,11 @@ else
 		if (indexAndSecurity.isSecure)
 		{
 			string keyIdentifier = this.csc.fileSecrets[index].GetKeyIdentifier();
-			this.fileToEdit = await this.csc.fileSecrets[index].GetFileEntryAsync(this.derivedPasswords.GetDerivedPassword(keyIdentifier), securityAsyncFunctions);
+			this.fileEntryToEdit = await this.csc.fileSecrets[index].GetFileEntryAsync(this.derivedPasswords.GetDerivedPassword(keyIdentifier), securityAsyncFunctions);
 		}
 		else
 		{
-			this.fileToEdit = this.csc.files[index];
+			this.fileEntryToEdit = this.csc.files[index];
 		}
 		
 		this.visibleElement = VisibleElement.EditFile;
@@ -520,7 +520,7 @@ else
 
 	private void CancelEditFile(MouseEventArgs e)
 	{
-		this.fileToEdit = null;
+		this.fileEntryToEdit = null;
 		this.visibleElement = VisibleElement.ShowFiles;
 	}
 
