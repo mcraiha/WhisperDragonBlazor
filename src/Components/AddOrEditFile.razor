@@ -84,9 +84,23 @@
         }
     }
 
-    private void TryToAddFileEntry()
+    /// <summary>
+    /// When user adds new file entry
+    /// </summary>
+    /// <returns></returns>
+    private async Task TryToAddFileEntry()
     {
-        OnAddCallback.InvokeAsync();
+        FileEntry newFileEntry = await FileEntry.CreateFileEntryAsync(this.FileName, this.fileContent, this.SecurityAsyncFunctions);
+
+        // New file entry (either secret or not)
+        if (IsSecure)
+        {
+            await OnAddSecretCallback.InvokeAsync((newFileEntry, keyIdentifier));
+        }
+        else
+        {
+            await OnAddCallback.InvokeAsync(newFileEntry);
+        }
     }
 
     /// <summary>
