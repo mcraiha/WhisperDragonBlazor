@@ -1,11 +1,10 @@
 using System;
 using System.ComponentModel.DataAnnotations;
-//using System.Security.Cryptography;
 using CSCommonSecrets;
 
 public class KeyDerivationFunctionData
 {
-	private byte[] salt = new byte[16];
+	private readonly byte[] salt = new byte[16];
 
 	public KeyDerivationPseudoRandomFunction SelectedPseudorandomFunction { get; set; } = KeyDerivationPseudoRandomFunction.HMACSHA256;
 
