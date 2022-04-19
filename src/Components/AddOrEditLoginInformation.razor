@@ -1,9 +1,23 @@
 <section>
     <form>
-        <header>Add login information</header>
+        @if (LoginInformation != null)
+        {
+            <header>Edit login information</header>
+        }
+        else
+        {
+            <header>Add login information</header>
+        }
+        
         <label for="issecure">Is secure @if (IsSecure) {@CommonIcons.secureIcon} else {@CommonIcons.unsecureIcon}</label>
 		<input type="checkbox" id="issecure" @bind="@IsSecure">
 		<br>
+        @if (IsSecure)
+        {
+            <SelectKeyIdentifier PossibleKeyIdentifiers="@PossibleKeyIdentifiers" KeyIdentifierChanged="@KeyIdentifierSelected" />
+            <br>
+        }
+
 		<label for="logininformationtitle">Login title</label>
 		<input type="text" id="logininformationtitle" @bind="@LoginInformationTitle" placeholder="Title for the login information">
 		<br>
@@ -34,13 +48,25 @@
 </section>
 
 @code {
+    [Parameter]
+    public LoginInformation LoginInformation { get; set; }
+
+    [Parameter, EditorRequired]
+    public ISecurityAsyncFunctions SecurityAsyncFunctions { get; set; }
+
+    [Parameter, EditorRequired]
+    public IEnumerable<string> PossibleKeyIdentifiers { get; set; }
+
     [Parameter, EditorRequired]
     public EventCallback<LoginSimplified> OnAddCallback { get; set; }
 
     [Parameter, EditorRequired]
     public EventCallback<MouseEventArgs> OnCancelCallback { get; set; }
 
+    [Parameter]
     public bool IsSecure { get; set; } = true;
+
+    private string keyIdentifier { get; set; } = "";
 
     public string LoginInformationTitle { get; set; } = "";
 
@@ -61,5 +87,10 @@
     private void TryToAddLoginInformation()
     {
         OnAddCallback.InvokeAsync(new LoginSimplified() { IsSecure = this.IsSecure, Title = LoginInformationTitle, URL = LoginInformationURL, Email = LoginInformationEmail, Username = LoginInformationUsername, Password = LoginInformationPassword, Notes = LoginInformationNote, Category = LoginInformationCategory, Tags = LoginInformationTags });
+    }
+
+    private void KeyIdentifierSelected(string newSelection)
+    {
+        this.keyIdentifier = newSelection;
     }
 }

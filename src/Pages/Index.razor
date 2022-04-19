@@ -45,7 +45,7 @@ else if (visibleElement == VisibleElement.ShowPaymentCards)
 }
 else if (visibleElement == VisibleElement.AddLoginInformation)
 {
-	<AddOrEditLoginInformation OnAddCallback="@AddLoginInformation" OnCancelCallback="@CancelAddLoginInformation" />
+	<AddOrEditLoginInformation SecurityAsyncFunctions="@securityAsyncFunctions" PossibleKeyIdentifiers="@GetKeyIdentifiers()" OnAddCallback="@AddLoginInformation" OnCancelCallback="@CancelAddLoginInformation" />
 }
 else if (visibleElement == VisibleElement.AddNote)
 {
@@ -65,7 +65,7 @@ else if (visibleElement == VisibleElement.AddPaymentCard)
 }
 else if (visibleElement == VisibleElement.EditLoginInformation)
 {
-	<AddOrEditLoginInformation OnAddCallback="@AddLoginInformation" OnCancelCallback="@CancelAddLoginInformation" />
+	<AddOrEditLoginInformation SecurityAsyncFunctions="@securityAsyncFunctions" PossibleKeyIdentifiers="@GetKeyIdentifiers()" OnAddCallback="@AddLoginInformation" OnCancelCallback="@CancelAddLoginInformation" />
 }
 else if (visibleElement == VisibleElement.EditNote)
 {
