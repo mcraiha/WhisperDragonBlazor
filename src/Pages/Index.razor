@@ -16,36 +16,36 @@ else if (visibleElement == VisibleElement.ShowPasswordCreators)
 else if (visibleElement == VisibleElement.ShowLoginInformations)
 {
 	<CommonSecretsTopNav OnLoginsClickCallback="@TopNavShowLoginInformations" OnNotesClickCallback="@TopNavShowNotes" OnFilesClickCallback="@TopNavShowFiles" OnContactsClickCallback="@TopNavShowContacts" OnPaymentCardsClickCallback="@TopNavShowPaymentCards"
-		loginsCount="@logins.Count" notesCount="@CountNotes()" filesCount="@CountFiles()" contactsCount="@contacts.Count" paymentCardsCount="@CountPaymentCards()" />
-	<ShowLoginInformations Logins="@logins" AddLoginCallback="@ShowAddLoginInformation" DeleteLoginCallback="@DeleteLoginInformationConfirmation" />
+		loginsCount="@CountLogins()" notesCount="@CountNotes()" filesCount="@CountFiles()" contactsCount="@contacts.Count" paymentCardsCount="@CountPaymentCards()" />
+	<ShowLoginInformations Logins="@LoginSimplified.CreatLoginInformationSimplifieds(csc.loginInformations, csc.loginInformationSecrets, securityAsyncFunctions, this.derivedPasswords)" AddLoginCallback="@ShowAddLoginInformation" EditLoginCallback="@ShowEditLoginInformation" DeleteLoginCallback="@DeleteLoginInformationConfirmation" />
 }
 else if (visibleElement == VisibleElement.ShowNotes)
 {
 	<CommonSecretsTopNav OnLoginsClickCallback="@TopNavShowLoginInformations" OnNotesClickCallback="@TopNavShowNotes" OnFilesClickCallback="@TopNavShowFiles" OnContactsClickCallback="@TopNavShowContacts" OnPaymentCardsClickCallback="@TopNavShowPaymentCards" 
-		loginsCount="@logins.Count" notesCount="@CountNotes()" filesCount="@CountFiles()" contactsCount="@contacts.Count" paymentCardsCount="@CountPaymentCards()" />
+		loginsCount="@CountLogins()" notesCount="@CountNotes()" filesCount="@CountFiles()" contactsCount="@contacts.Count" paymentCardsCount="@CountPaymentCards()" />
 	<ShowNotes Notes="@NoteSimplified.CreateNoteSimplifieds(csc.notes, csc.noteSecrets, securityAsyncFunctions, this.derivedPasswords)" AddNoteCallback="@ShowAddNote" EditNoteCallback="@ShowEditNote" DeleteNoteCallback="@DeleteNoteConfirmation" />
 }
 else if (visibleElement == VisibleElement.ShowFiles)
 {
 	<CommonSecretsTopNav OnLoginsClickCallback="@TopNavShowLoginInformations" OnNotesClickCallback="@TopNavShowNotes" OnFilesClickCallback="@TopNavShowFiles" OnContactsClickCallback="@TopNavShowContacts" OnPaymentCardsClickCallback="@TopNavShowPaymentCards" 
-		loginsCount="@logins.Count" notesCount="@CountNotes()" filesCount="@CountFiles()" contactsCount="@contacts.Count" paymentCardsCount="@CountPaymentCards()" />
+		loginsCount="@CountLogins()" notesCount="@CountNotes()" filesCount="@CountFiles()" contactsCount="@contacts.Count" paymentCardsCount="@CountPaymentCards()" />
 	<ShowFiles Files="@FileSimplified.CreateFileSimplifieds(csc.files, csc.fileSecrets, securityAsyncFunctions, this.derivedPasswords)" AddFileCallback="@ShowAddFile" EditFileCallback="@ShowEditFile" DeleteFileCallback="@DeleteFileConfirmation" />
 }
 else if (visibleElement == VisibleElement.ShowContacts)
 {
 	<CommonSecretsTopNav OnLoginsClickCallback="@TopNavShowLoginInformations" OnNotesClickCallback="@TopNavShowNotes" OnFilesClickCallback="@TopNavShowFiles" OnContactsClickCallback="@TopNavShowContacts" OnPaymentCardsClickCallback="@TopNavShowPaymentCards" 
-		loginsCount="@logins.Count" notesCount="@CountNotes()" filesCount="@CountFiles()" contactsCount="@contacts.Count" paymentCardsCount="@CountPaymentCards()" />
+		loginsCount="@CountLogins()" notesCount="@CountNotes()" filesCount="@CountFiles()" contactsCount="@contacts.Count" paymentCardsCount="@CountPaymentCards()" />
 	<ShowContacts Contacts="@contacts" AddContactCallback="@ShowAddContact" DeleteContactCallback="@DeleteContactConfirmation" />
 }
 else if (visibleElement == VisibleElement.ShowPaymentCards)
 {
 	<CommonSecretsTopNav OnLoginsClickCallback="@TopNavShowLoginInformations" OnNotesClickCallback="@TopNavShowNotes" OnFilesClickCallback="@TopNavShowFiles" OnContactsClickCallback="@TopNavShowContacts" OnPaymentCardsClickCallback="@TopNavShowPaymentCards" 
-		loginsCount="@logins.Count" notesCount="@CountNotes()" filesCount="@CountFiles()" contactsCount="@contacts.Count" paymentCardsCount="@CountPaymentCards()" />
+		loginsCount="@CountLogins()" notesCount="@CountNotes()" filesCount="@CountFiles()" contactsCount="@contacts.Count" paymentCardsCount="@CountPaymentCards()" />
 	<ShowPaymentCards PaymentCards="@PaymentCardSimplified.CreatePaymentCardSimplifieds(csc.paymentCards, csc.paymentCardSecrets, securityAsyncFunctions, this.derivedPasswords)" AddPaymentCardCallback="@ShowAddPaymentCard" EditPaymentCardCallback="@ShowEditPaymentCard" DeletePaymentCardCallback="@DeletePaymentCardConfirmation" />
 }
 else if (visibleElement == VisibleElement.AddLoginInformation)
 {
-	<AddOrEditLoginInformation SecurityAsyncFunctions="@securityAsyncFunctions" PossibleKeyIdentifiers="@GetKeyIdentifiers()" OnAddCallback="@AddLoginInformation" OnCancelCallback="@CancelAddLoginInformation" />
+	<AddOrEditLoginInformation SecurityAsyncFunctions="@securityAsyncFunctions" PossibleKeyIdentifiers="@GetKeyIdentifiers()" OnAddCallback="@AddLoginInformation" OnAddSecretCallback="@AddLoginInformationSecret" OnCancelAddCallback="@CancelAddLoginInformation" />
 }
 else if (visibleElement == VisibleElement.AddNote)
 {
@@ -53,7 +53,7 @@ else if (visibleElement == VisibleElement.AddNote)
 }
 else if (visibleElement == VisibleElement.AddFile)
 {
-	<AddOrEditFile SecurityAsyncFunctions="@securityAsyncFunctions" PossibleKeyIdentifiers="@GetKeyIdentifiers()" OnAddCallback="@AddFile" OnAddSecretCallback="@AddFileSecret" OnCancelCallback="@CancelAddFile" />
+	<AddOrEditFile SecurityAsyncFunctions="@securityAsyncFunctions" PossibleKeyIdentifiers="@GetKeyIdentifiers()" OnAddCallback="@AddFile" OnAddSecretCallback="@AddFileSecret" OnCancelAddCallback="@CancelAddFile" />
 }
 else if (visibleElement == VisibleElement.AddContact)
 {
@@ -61,11 +61,11 @@ else if (visibleElement == VisibleElement.AddContact)
 }
 else if (visibleElement == VisibleElement.AddPaymentCard)
 {
-	<AddOrEditPaymentCard SecurityAsyncFunctions="@securityAsyncFunctions" PossibleKeyIdentifiers="@GetKeyIdentifiers()" OnAddCallback="@AddPaymentCard" OnAddSecretCallback="@AddPaymentCardSecret" OnCancelCallback="@CancelAddPaymentCard" />
+	<AddOrEditPaymentCard SecurityAsyncFunctions="@securityAsyncFunctions" PossibleKeyIdentifiers="@GetKeyIdentifiers()" OnAddCallback="@AddPaymentCard" OnAddSecretCallback="@AddPaymentCardSecret" OnCancelEditCallback="@CancelAddPaymentCard" />
 }
 else if (visibleElement == VisibleElement.EditLoginInformation)
 {
-	<AddOrEditLoginInformation SecurityAsyncFunctions="@securityAsyncFunctions" PossibleKeyIdentifiers="@GetKeyIdentifiers()" OnAddCallback="@AddLoginInformation" OnCancelCallback="@CancelAddLoginInformation" />
+	<AddOrEditLoginInformation SecurityAsyncFunctions="@securityAsyncFunctions" PossibleKeyIdentifiers="@GetKeyIdentifiers()" LoginInformation="@this.loginToEdit" OnEditedCallback="@EditedLoginInformation" OnCancelEditCallback="@CancelEditLoginInformation" />
 }
 else if (visibleElement == VisibleElement.EditNote)
 {
@@ -163,11 +163,10 @@ else
 	/// </summary>
 	private readonly DerivedPasswordStorage derivedPasswords = new DerivedPasswordStorage();
 
-	private List<LoginSimplified> logins = new List<LoginSimplified>();
-
 	private List<ContactSimplified> contacts = new List<ContactSimplified>();
 
 	// Edit related
+	private LoginInformation loginToEdit = null;
 	private Note noteToEdit = null;
 	private FileEntry fileEntryToEdit = null;
 	private PaymentCard paymentCardToEdit = null;
@@ -194,34 +193,6 @@ else
 	private void OpenExistingContainer(MouseEventArgs e)
 	{
 		//visibleElement = VisibleElement.OpenExistingCommonSecretsContainer;
-
-		logins = new List<LoginSimplified>() 
-		{
-			new LoginSimplified() 
-			{
-				zeroBasedIndexNumber = 0,
-				IsSecure = true,
-				Title = "Fake service",
-				URL = "https://fakeservice.com",
-				Email = "sample@email.com",
-				Username = "Dragon",
-				Password = "gwWTY#¤&%36",
-				Category = "Samples",
-				Tags = "Samples Demo",
-			},
-			new LoginSimplified() 
-			{
-				zeroBasedIndexNumber = 1,
-				IsSecure = false,
-				Title = "Fake mail",
-				URL = "https://fakemail.com",
-				Email = "sample@email.com",
-				Username = "Dragon",
-				Password = "Si0bSww5bYeKp7Rs",
-				Category = "Samples",
-				Tags = "Samples Demo",
-			},
-		};
 
 		contacts = new List<ContactSimplified>()
 		{
@@ -307,6 +278,12 @@ else
 		this.visibleElement = VisibleElement.ShowPaymentCards;
 	}
 
+	private int CountLogins()
+	{
+		return this.csc.loginInformations.Count + this.csc.loginInformationSecrets.Count;
+	}
+	
+
 	private int CountNotes()
 	{
 		return this.csc.notes.Count + this.csc.noteSecrets.Count;
@@ -328,9 +305,42 @@ else
 		this.visibleElement = VisibleElement.AddLoginInformation;
 	}
 
-	private void AddLoginInformation(LoginSimplified newLogin)
+	private void AddLoginInformation(LoginInformation newLogin)
 	{
-		logins.Add(newLogin);
+		this.csc.loginInformations.Add(newLogin);
+		this.isModified = true;
+		this.visibleElement = VisibleElement.ShowLoginInformations;
+	}
+
+	private async Task AddLoginInformationSecret((LoginInformation newLogin, string keyIdentifier) parameter)
+	{
+		if (this.derivedPasswords.DoesDerivedPasswordExist(parameter.keyIdentifier))
+		{
+			byte[] derivedPassword = this.derivedPasswords.GetDerivedPassword(parameter.keyIdentifier);
+			await this.csc.AddLoginInformationSecretAsync(derivedPassword, parameter.newLogin, parameter.keyIdentifier, securityAsyncFunctions);
+			this.isModified = true;
+			this.visibleElement = VisibleElement.ShowLoginInformations;
+		}
+	}
+
+	private async Task ShowEditLoginInformation((int zeroBasedIndexNumber, bool isSecure) indexAndSecurity)
+	{
+		int index = indexAndSecurity.zeroBasedIndexNumber;
+		if (indexAndSecurity.isSecure)
+		{
+			string keyIdentifier = this.csc.noteSecrets[index].GetKeyIdentifier();
+			this.loginToEdit = await this.csc.loginInformationSecrets[index].GetLoginInformationAsync(this.derivedPasswords.GetDerivedPassword(keyIdentifier), securityAsyncFunctions);
+		}
+		else
+		{
+			this.loginToEdit = this.csc.loginInformations[index];
+		}
+		this.visibleElement = VisibleElement.EditLoginInformation;
+	}
+
+	private void EditedLoginInformation()
+	{
+		this.isModified = true;
 		this.visibleElement = VisibleElement.ShowLoginInformations;
 	}
 
@@ -339,12 +349,28 @@ else
 		this.visibleElement = VisibleElement.ShowLoginInformations;
 	}
 
-	private void DeleteLoginInformationConfirmation(int zeroBasedIndexNumber)
+	private void CancelEditLoginInformation(MouseEventArgs e)
 	{
-		deleteActualAction = DeleteLoginInformationActual;
-		deleteCancelAction = DeleteLoginInformationCancel;
-		deleteIndex = zeroBasedIndexNumber;
-		whatToDelete = $"Login information with title '{logins[zeroBasedIndexNumber].Title}'";
+		this.loginToEdit = null;
+		this.visibleElement = VisibleElement.ShowLoginInformations;
+	}
+
+	private async Task DeleteLoginInformationConfirmation((int zeroBasedIndexNumber, bool isSecure) indexAndSecurity)
+	{
+		this.deleteActualAction = DeleteLoginInformationActual;
+		this.deleteCancelAction = DeleteLoginInformationCancel;
+		this.deleteIndex = indexAndSecurity.zeroBasedIndexNumber;
+		this.deleteSecure = indexAndSecurity.isSecure;
+		if (this.deleteSecure)
+		{
+			string keyIdentifier = this.csc.loginInformationSecrets[this.deleteIndex].GetKeyIdentifier();
+			whatToDelete = $"Login information with title '{await this.csc.loginInformationSecrets[this.deleteIndex].GetTitleAsync(this.derivedPasswords.GetDerivedPassword(keyIdentifier), securityAsyncFunctions)}'";
+		}
+		else
+		{
+			whatToDelete = $"Login information with title '{this.csc.loginInformations[this.deleteIndex].GetTitle()}'";
+		}
+		
 		//deleteType = ItemType.LoginInformation;
 		this.visibleElement = VisibleElement.DeleteItemConfirmation;
 	}
@@ -357,9 +383,19 @@ else
 
 	private void DeleteLoginInformationActual(MouseEventArgs e)
 	{
-		if (-1 < deleteIndex && deleteIndex < logins.Count)
+		if (this.deleteSecure)
 		{
-			logins.RemoveAt(deleteIndex);
+			if (-1 < deleteIndex && deleteIndex < this.csc.loginInformationSecrets.Count)
+			{
+				this.csc.loginInformationSecrets.RemoveAt(deleteIndex);
+			}
+		}
+		else
+		{
+			if (-1 < deleteIndex && deleteIndex < this.csc.loginInformations.Count)
+			{
+				this.csc.loginInformations.RemoveAt(deleteIndex);
+			}
 		}
 		this.ResetDelete();
 		this.visibleElement = VisibleElement.ShowLoginInformations;

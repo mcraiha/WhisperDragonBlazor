@@ -1,6 +1,6 @@
 @inject IJSRuntime JS
 
-@if (Logins == null || Logins.Count < 1)
+@if (logins == null || logins.Count < 1)
 {
 	<p>No login informations</p>
 }
@@ -10,7 +10,7 @@ else
 @if (!string.IsNullOrEmpty(searchFilter))
 {
 	<br>
-	<p>Filter is matching @FilteredLogins.Count / @Logins.Count </p>
+	<p>Filter is matching @filteredLogins.Count / @logins.Count </p>
 }
 
 <table id="logins">
@@ -41,6 +41,12 @@ else
 				Tags
 			</th>
 			<th>
+				Created
+			</th>
+			<th>
+				Modified
+			</th>
+			<th>
 				Actions
 			</th>
 		</tr>
@@ -48,12 +54,13 @@ else
 
 	<tbody>
 		
-		@foreach (var item in FilteredLogins)
+		@foreach (var item in filteredLogins)
         {
 			int indexToHandle = item.zeroBasedIndexNumber;
+			bool isSecure = item.IsSecure;
 			<tr>
 				<th>
-					@if (item.IsSecure == true)
+					@if (isSecure == true)
 					{
 						@CommonIcons.secureIcon
 					}
@@ -63,19 +70,19 @@ else
 					}
 				</th>
 				<th>
-					@item.Title <a title="Copy title" @onclick="() => CallTitleCopy(indexToHandle)">✂️</a>
+					@item.Title <a title="Copy title" @onclick="() => CallTitleCopy(indexToHandle, isSecure)">✂️</a>
 				</th>
 				<th>
-					<a target="_blank" rel="noopener noreferrer" href="@item.URL">@item.URL</a> <a title="Copy URL" @onclick="() => CallURLCopy(indexToHandle)">✂️</a>
+					<a target="_blank" rel="noopener noreferrer" href="@item.URL">@item.URL</a> <a title="Copy URL" @onclick="() => CallURLCopy(indexToHandle, isSecure)">✂️</a>
 				</th>
 				<th>
-					@item.Email <a title="Copy email" @onclick="() => CallEmailCopy(indexToHandle)">✂️</a>
+					@item.Email <a title="Copy email" @onclick="() => CallEmailCopy(indexToHandle, isSecure)">✂️</a>
 				</th>
 				<th>
-					@item.Username <a title="Copy username" @onclick="() => CallUsernameCopy(indexToHandle)">✂️</a>
+					@item.Username <a title="Copy username" @onclick="() => CallUsernameCopy(indexToHandle, isSecure)">✂️</a>
 				</th>
 				<th>
-					@item.Password <a title="Copy password" @onclick="() => CallPasswordCopy(indexToHandle)">✂️</a>
+					@item.Password <a title="Copy password" @onclick="() => CallPasswordCopy(indexToHandle, isSecure)">✂️</a>
 				</th>
 				<th>
 					@item.Category
@@ -84,7 +91,13 @@ else
 					@item.Tags
 				</th>
 				<th>
-					<a title="Delete login" @onclick="() => CallDelete(indexToHandle)">🗑️</a>
+					@item.CreationTime
+				</th>
+				<th>
+					@item.ModificationTime
+				</th>
+				<th>
+					<a title="Delete login" @onclick="() => CallDelete(indexToHandle, isSecure)">🗑️</a>
 				</th>
 			</tr>
         }
@@ -96,15 +109,19 @@ else
 <button title="Add login information" @onclick="AddLoginCallback">+ Add</button>
 @code {
     [Parameter, EditorRequired]
-    public IReadOnlyList<LoginSimplified> Logins { get; set; }
+    public Task<LoginSimplified[]> Logins { get; set; }
 
 	[Parameter, EditorRequired]
 	public EventCallback<MouseEventArgs> AddLoginCallback { get; set; }
 
 	[Parameter, EditorRequired]
-	public EventCallback<int> DeleteLoginCallback { get; set; }
+	public EventCallback<(int, bool)> EditLoginCallback { get; set; }
 
-	private IReadOnlyList<LoginSimplified> FilteredLogins { get; set; }
+	[Parameter, EditorRequired]
+	public EventCallback<(int, bool)> DeleteLoginCallback { get; set; }
+
+	private IReadOnlyList<LoginSimplified> logins { get; set; }
+	private IReadOnlyList<LoginSimplified> filteredLogins { get; set; }
 
 	private static readonly StringComparison searchComparison = StringComparison.OrdinalIgnoreCase;
 	private string searchFilter = "";
@@ -119,50 +136,51 @@ else
 			this.searchFilter = value;
 			if (string.IsNullOrEmpty(this.searchFilter))
 			{
-				this.FilteredLogins = this.Logins;
+				this.filteredLogins = this.logins;
 			}
 			else
 			{
-				this.FilteredLogins = this.Logins.Where(x => x.Title.Contains(this.searchFilter, searchComparison) || x.URL.Contains(this.searchFilter, searchComparison) || x.Email.Contains(this.searchFilter, searchComparison) || x.Username.Contains(this.searchFilter, searchComparison)).ToList();
+				this.filteredLogins = this.logins.Where(x => x.Title.Contains(this.searchFilter, searchComparison) || x.URL.Contains(this.searchFilter, searchComparison) || x.Email.Contains(this.searchFilter, searchComparison) || x.Username.Contains(this.searchFilter, searchComparison)).ToList();
 			}
 			
 		} 
 	}
 
-	protected override void OnInitialized()
+	protected override async Task OnInitializedAsync()
 	{
-		this.FilteredLogins = this.Logins;
+		this.logins = await Logins;
+		this.filteredLogins = this.logins;
 	}
 
 	// Copy to clipboard methods
-	private async Task CallTitleCopy(int zeroBasedIndexNumber)
+	private async Task CallTitleCopy(int zeroBasedIndexNumber, bool isSecure)
 	{
-		await JS.InvokeVoidAsync("copyToClipboard", Logins[zeroBasedIndexNumber].Title);
+		await JS.InvokeVoidAsync("copyToClipboard", logins[zeroBasedIndexNumber].Title);
 	}
 
-	private async Task CallURLCopy(int zeroBasedIndexNumber)
+	private async Task CallURLCopy(int zeroBasedIndexNumber, bool isSecure)
 	{
-		await JS.InvokeVoidAsync("copyToClipboard", Logins[zeroBasedIndexNumber].URL);
+		await JS.InvokeVoidAsync("copyToClipboard", logins[zeroBasedIndexNumber].URL);
 	}
 
-	private async Task CallEmailCopy(int zeroBasedIndexNumber)
+	private async Task CallEmailCopy(int zeroBasedIndexNumber, bool isSecure)
 	{
-		await JS.InvokeVoidAsync("copyToClipboard", Logins[zeroBasedIndexNumber].Email);
+		await JS.InvokeVoidAsync("copyToClipboard", logins[zeroBasedIndexNumber].Email);
 	}
 
-	private async Task CallUsernameCopy(int zeroBasedIndexNumber)
+	private async Task CallUsernameCopy(int zeroBasedIndexNumber, bool isSecure)
 	{
-		await JS.InvokeVoidAsync("copyToClipboard", Logins[zeroBasedIndexNumber].Username);
+		await JS.InvokeVoidAsync("copyToClipboard", logins[zeroBasedIndexNumber].Username);
 	}
 
-	private async Task CallPasswordCopy(int zeroBasedIndexNumber)
+	private async Task CallPasswordCopy(int zeroBasedIndexNumber, bool isSecure)
 	{
-		await JS.InvokeVoidAsync("copyToClipboard", Logins[zeroBasedIndexNumber].Password);
+		await JS.InvokeVoidAsync("copyToClipboard", logins[zeroBasedIndexNumber].Password);
 	}
 
 	// Delete method
-	private async Task CallDelete(int zeroBasedIndexNumber)
+	private async Task CallDelete(int zeroBasedIndexNumber, bool isSecure)
 	{
-		await DeleteLoginCallback.InvokeAsync(zeroBasedIndexNumber);
+		await DeleteLoginCallback.InvokeAsync((zeroBasedIndexNumber, isSecure));
 	}
 }

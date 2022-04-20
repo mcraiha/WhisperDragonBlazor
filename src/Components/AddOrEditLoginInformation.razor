@@ -43,7 +43,18 @@
 		<input type="text" id="logininformationtags" @bind="@LoginInformationTags" placeholder="Tags for the login information">
 		<br>
         <br>
-        <button type="button" id="cancel" @onclick="OnCancelCallback">Cancel</button> <button type="button" id="addlogininformation" @onclick="TryToAddLoginInformation">Add login information</button>
+
+        @if (LoginInformation != null)
+        {
+            <button type="button" id="cancelEdit" @onclick="OnCancelEditCallback">Cancel</button> 
+            <button type="button" id="editlogininformation" @onclick="TryToEditLoginInformation">Save changes</button>
+        }
+        else
+        {
+            <button type="button" id="cancel" @onclick="OnCancelAddCallback">Cancel</button> 
+            <button type="button" id="addlogininformation" @onclick="TryToAddLoginInformation">Add login information</button>
+        }
+        
     </form>
 </section>
 
@@ -57,11 +68,20 @@
     [Parameter, EditorRequired]
     public IEnumerable<string> PossibleKeyIdentifiers { get; set; }
 
-    [Parameter, EditorRequired]
-    public EventCallback<LoginSimplified> OnAddCallback { get; set; }
+    [Parameter]
+    public EventCallback<LoginInformation> OnAddCallback { get; set; }
 
-    [Parameter, EditorRequired]
-    public EventCallback<MouseEventArgs> OnCancelCallback { get; set; }
+    [Parameter]
+    public EventCallback<(LoginInformation, string)> OnAddSecretCallback { get; set; }
+
+    [Parameter]
+    public EventCallback<MouseEventArgs> OnEditedCallback { get; set; }
+
+    [Parameter]
+    public EventCallback<MouseEventArgs> OnCancelAddCallback { get; set; }
+
+    [Parameter]
+    public EventCallback<MouseEventArgs> OnCancelEditCallback { get; set; }
 
     [Parameter]
     public bool IsSecure { get; set; } = true;
@@ -86,7 +106,28 @@
 
     private void TryToAddLoginInformation()
     {
-        OnAddCallback.InvokeAsync(new LoginSimplified() { IsSecure = this.IsSecure, Title = LoginInformationTitle, URL = LoginInformationURL, Email = LoginInformationEmail, Username = LoginInformationUsername, Password = LoginInformationPassword, Notes = LoginInformationNote, Category = LoginInformationCategory, Tags = LoginInformationTags });
+        /*LoginInformation newLogin = await LoginInformation.CreateLoginInformationAsync(this.NoteTitle, this.NoteText, this.SecurityAsyncFunctions);
+
+        // New note (either secret or not)
+        if (IsSecure)
+        {
+            await OnAddSecretCallback.InvokeAsync((newLogin, keyIdentifier));
+        }
+        else
+        {
+            await OnAddCallback.InvokeAsync(newLogin);
+        }
+        */
+    }
+
+    /// <summary>
+    /// When user saves changes to existing note
+    /// </summary>
+    /// <returns></returns>
+    private async Task TryToEditLoginInformation()
+    {
+        //await this.LoginInformation.UpdateNoteAsync(this.NoteTitle, this.NoteText, this.SecurityAsyncFunctions);
+        await OnEditedCallback.InvokeAsync();
     }
 
     private void KeyIdentifierSelected(string newSelection)
