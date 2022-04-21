@@ -104,9 +104,11 @@
 
     public string LoginInformationTags { get; set; } = "";
 
-    private void TryToAddLoginInformation()
+    private async Task TryToAddLoginInformation()
     {
-        /*LoginInformation newLogin = await LoginInformation.CreateLoginInformationAsync(this.NoteTitle, this.NoteText, this.SecurityAsyncFunctions);
+        LoginInformation newLogin = 
+        await LoginInformation.CreateLoginInformationAsync(this.LoginInformationTitle, this.LoginInformationURL, this.LoginInformationEmail, this.LoginInformationUsername, this.LoginInformationPassword, 
+                                                            this.LoginInformationNote, "", new byte[0], this.LoginInformationCategory, this.LoginInformationTags, this.SecurityAsyncFunctions);
 
         // New note (either secret or not)
         if (IsSecure)
@@ -117,7 +119,7 @@
         {
             await OnAddCallback.InvokeAsync(newLogin);
         }
-        */
+        
     }
 
     /// <summary>
