@@ -10,7 +10,7 @@ You have to have newish [internet browser](https://docs.microsoft.com/en-us/aspn
 
 ## Requirements (develop)
 
-.NET 6 or newer
+.NET 7 or newer
 
 ## How to run / develop
 Move to [src](src) folder and the run
@@ -26,7 +26,7 @@ Move to [src](src) folder and the run
 dotnet publish -c Release
 ```
   
-and content should be in **bin\Release\net6.0\publish\wwwroot** folder.
+and content should be in **bin\Release\net7.0\publish\wwwroot** folder.
 
 ## Docker
 
